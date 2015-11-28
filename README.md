@@ -1,2 +1,2 @@
-# com2002-database-groupproject
-Group project for COM2002
+# COM2002 Database Group Project
+## MySQL Login Details
