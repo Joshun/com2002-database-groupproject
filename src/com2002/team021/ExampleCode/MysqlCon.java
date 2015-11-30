@@ -1,3 +1,5 @@
+package com2002.team021.ExampleCode;
+
 import java.sql.*;
 
 class MysqlCon{
