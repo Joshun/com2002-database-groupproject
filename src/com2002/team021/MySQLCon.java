@@ -1,11 +1,14 @@
+package com2002.team021;
+
 import java.sql.*;
+import com2002.team021.config.*;
 
 class MysqlCon{
     public static void main(String args[]){
         try{
             Class.forName("com.mysql.jdbc.Driver");
 
-            Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/sonoo","root","root");
+            Connection con=DriverManager.getConnection(config.SQL.DB_CONNECTION_STRING);
 //here sonoo is the database name, root is the username and root is the password
             Statement stmt=con.createStatement();
 
