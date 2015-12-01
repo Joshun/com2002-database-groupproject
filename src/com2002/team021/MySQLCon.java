@@ -8,7 +8,7 @@ class MySQLCon {
         try{
             Class.forName("com.mysql.jdbc.Driver");
 
-            Connection con=DriverManager.getConnection(config.SQL.DB_CONNECTION_STRING);
+            Connection con=DriverManager.getConnection(com2002.team021.config.SQL.DB_CONNECTION_STRING);
 //here sonoo is the database name, root is the username and root is the password
             Statement stmt=con.createStatement();
 
