@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
  * Calendar.java
  */
 
-public class Calendar extends JFrame {
+public abstract class Calendar extends JFrame {
     private Date week_beginning;
     private Date[][] month_days;
 
