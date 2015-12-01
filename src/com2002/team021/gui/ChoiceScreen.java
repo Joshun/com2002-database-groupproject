@@ -12,16 +12,42 @@ import java.awt.event.ActionListener;
 
 public class ChoiceScreen extends JFrame {
     private String[] choices;
+
+    private class ButtonHandler implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            ChoiceButton button = (ChoiceButton) e.getSource();
+            System.out.println("You clicked " + button.getIndex());
+        }
+    }
+
     public ChoiceScreen(String title, String[] choices) {
         setTitle(title);
         this.choices = choices;
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
-        for (String choice: choices) {
-            contentPane.add(new JButton(choice));
+        ButtonHandler buttonListener = new ButtonHandler();
+        for (int i=0; i<choices.length; i++) {
+            ChoiceButton newButton = new ChoiceButton(choices[i], i);
+            newButton.addActionListener(buttonListener);
+            contentPane.add(newButton);
         }
         this.pack();
     }
+
+    private class ChoiceButton extends JButton {
+        private int index;
+
+        public ChoiceButton(String text, int index) {
+            super(text);
+            this.index = index;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+    }
+
+
 
     public static void main(String[] args) {
         String[] secretaryChoices = { "View / Edit Calendar", "Patient Management"};
