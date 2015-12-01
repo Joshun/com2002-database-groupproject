@@ -3,7 +3,7 @@ package com2002.team021;
 import java.sql.*;
 import com2002.team021.config.*;
 
-class MysqlCon{
+class MySQLCon {
     public static void main(String args[]){
         try{
             Class.forName("com.mysql.jdbc.Driver");
