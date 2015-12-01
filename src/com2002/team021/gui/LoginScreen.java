@@ -19,6 +19,7 @@ public class LoginScreen extends JFrame {
         contentPane.add(new JButton("Secretary"));
         contentPane.add(new JButton("Hygienist"));
         contentPane.add(new JButton("Dentist"));
+        contentPane.add(new JButton("Exit"));
         this.pack();
     }
 
