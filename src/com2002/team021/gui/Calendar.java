@@ -6,6 +6,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+
+import java.awt.geom.*;
+import java.awt.font.*;
+
 /**
  * Calendar.java
  */
@@ -28,7 +33,7 @@ public class Calendar extends JFrame {
 	}
 
 	private void drawTimeText(Graphics2D g2) {
-		for (int i=0; i<HOURS_PER_WORKING_DAY; i++) {
+		for (int i=0; i<HOURS_PER_WORKING_DAY+1; i++) {
 			int hour = i + 9;
 			String timeText = hour + ":00";
 			g2.drawString(timeText, i*80, SCREEN_OFFSET);
