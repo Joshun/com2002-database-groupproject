@@ -63,6 +63,7 @@ public class Calendar extends JFrame {
     	contentPane.add(calendarPanel);
     	contentPane.add(buttonsGrid);
     	this.pack();
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 
