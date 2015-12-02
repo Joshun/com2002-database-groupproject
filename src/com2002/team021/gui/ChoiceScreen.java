@@ -6,8 +6,20 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/*
+ * ChoiceScreen.java         1.1 01/12/
+ * 
+ */
+
 /**
  * ChoiceScreen.java
+ * 
+ * 
+ * 
+ * @version 1.1
+ * 
+ * @author 
+ *
  */
 
 public class ChoiceScreen extends JFrame {

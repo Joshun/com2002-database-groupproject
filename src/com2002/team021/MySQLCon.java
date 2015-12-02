@@ -9,7 +9,7 @@ class MySQLCon {
 	public static void main(String args[]) {
 		
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName(DB_DRIVER);
 			Connection con = DriverManager.getConnection(DB_HOST, DB_USER, DB_PASS);
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM patients;");
