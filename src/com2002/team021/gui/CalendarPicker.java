@@ -13,6 +13,7 @@ import java.awt.*;
  * Calendar.java
  */
 public class CalendarPicker extends JFrame {
+    private final int MILLIS_PER_DAY = 86400 * 1000;
     private enum Practitioner  { DENTIST, HYGIENIST }
     private final String[] WEEK_DAYS = { "Mon", "Tue", "Wed", "Thu", "Fri" };
 
@@ -89,12 +90,12 @@ public class CalendarPicker extends JFrame {
 
     private Date nextWeek(Date current) {
 
-        long theFuture = current.getTime() + (86400 * 7 * 1000);
+        long theFuture = current.getTime() + (MILLIS_PER_DAY * 7);
         return new Date(theFuture);
     }
 
     private Date prevWeek(Date current) {
-        long thePast = current.getTime() - (86400 * 7 * 1000);
+        long thePast = current.getTime() - (MILLIS_PER_DAY * 7);
         return new Date(thePast);
     }
 
@@ -112,11 +113,11 @@ public class CalendarPicker extends JFrame {
             long mondayTimestamp;
             if ( weekDay == Calendar.SUNDAY) {
                 // SUNDAY has index 1 but we want to go back 6 days to get to the last Monday
-                mondayTimestamp = currentTimestamp - (86400 * 6 * 1000);
+                mondayTimestamp = currentTimestamp - (MILLIS_PER_DAY * 6);
             }
             else {
                 // weekDay-2 is used because SUNDAY has index 1, MONDAY has index 2 etc. and we juts want the difference
-                mondayTimestamp = currentTimestamp - (86400 * (weekDay - 2) * 1000);
+                mondayTimestamp = currentTimestamp - (MILLIS_PER_DAY * (weekDay - 2));
             }
             return new Date(mondayTimestamp);
         }
@@ -171,7 +172,7 @@ public class CalendarPicker extends JFrame {
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Date prevMonday  = getMonday(nextWeek(new Date()));
-        Date prevSunday = new Date(prevMonday.getTime() - (86400 * 1000));
+        Date prevSunday = new Date(prevMonday.getTime() - (MILLIS_PER_DAY));
         System.out.println(prevMonday);
         System.out.println(prevSunday);
         System.out.println(getMonday(prevSunday));
