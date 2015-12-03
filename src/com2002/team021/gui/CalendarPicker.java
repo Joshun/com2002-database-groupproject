@@ -134,6 +134,7 @@ public class CalendarPicker extends JFrame {
             Practitioner practitioner = button.getPractitioner();
             int day = button.getDayNum();
             System.out.println("Day: " + day + " Practitioner: " + practitioner);
+            System.out.println("Date: " + computeButtonDate(day));
         }
     }
 
