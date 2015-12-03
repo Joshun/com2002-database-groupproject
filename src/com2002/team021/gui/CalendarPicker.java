@@ -54,6 +54,7 @@ public class CalendarPicker extends JFrame {
                     break;
             }
             System.out.println("Changed date to " + weekBeginning);
+            setDateLabel(weekBeginning);
         }
     }
 
