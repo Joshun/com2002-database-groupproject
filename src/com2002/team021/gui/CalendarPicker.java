@@ -56,7 +56,15 @@ public class CalendarPicker extends JFrame {
         if ( weekDay != Calendar.MONDAY ) {
             System.out.println(weekDay);
             long currentTimestamp = current.getTime();
-            long mondayTimestamp = currentTimestamp - (86400 * (weekDay - 2) * 1000);
+            long mondayTimestamp;
+            if ( weekDay == Calendar.SUNDAY) {
+                // SUNDAY has index 1 but we want to go back 6 days to get to the last Monday
+                mondayTimestamp = currentTimestamp - (86400 * 6 * 1000);
+            }
+            else {
+                // weekDay-2 is used because SUNDAY has index 1, MONDAY has index 2 etc. and we juts want the difference
+                mondayTimestamp = currentTimestamp - (86400 * (weekDay - 2) * 1000);
+            }
             return new Date(mondayTimestamp);
         }
         else {
