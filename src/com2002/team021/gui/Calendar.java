@@ -25,8 +25,8 @@ public class Calendar extends JFrame {
     private final int CALENDAR_WIDTH = 400;
     private final int CALENDAR_HEIGHT = 400;
     private Graphics2D calendarPaintComponent;
-	private final int HORIZONTAL_SPACING = 10;
-	private final int VERTICAL_SPACING = 10;
+	private final int HORIZONTAL_SPACING = 30;
+	private final int VERTICAL_SPACING = 30;
 
 	private class StringMeasurer {
 		Font font;
@@ -46,17 +46,17 @@ public class Calendar extends JFrame {
 
 	private void drawDayText(Graphics2D g2) {
 		StringMeasurer measurer = new StringMeasurer(g2);
-		int drawBeginY = SCREEN_OFFSET + 50;
+		int drawBeginY = SCREEN_OFFSET + 40;
 		for (int i=0; i<5; i++) {
 			String dayText = WEEK_DAYS[i];
-			g2.drawString(dayText, 0, drawBeginY);
+			g2.drawString(dayText, 10, drawBeginY);
 			drawBeginY += measurer.getDimensions(dayText)[1] + VERTICAL_SPACING;
 		}
 	}
 
 	private void drawTimeText(Graphics2D g2) {
 		StringMeasurer measurer = new StringMeasurer(g2);
-		int drawBeginX = 0;
+		int drawBeginX = 80;
 		for (int i=0; i<HOURS_PER_WORKING_DAY+1; i++) {
 			int hour = i + 9;
 			String timeText = hour + ":00";
