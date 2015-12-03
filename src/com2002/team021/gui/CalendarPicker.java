@@ -1,5 +1,7 @@
 package com2002.team021.gui;
 
+import com2002.team021.Appointment;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -18,8 +20,8 @@ public class CalendarPicker extends JFrame {
     private final String[] WEEK_DAYS = { "Mon", "Tue", "Wed", "Thu", "Fri" };
 
     private boolean noModify = false;
-    private JButton[] dentistButtons = new JButton[WEEK_DAYS.length];
-    private JButton[] hygienistButtons = new JButton[WEEK_DAYS.length];
+    private AppointmentButton[] dentistButtons = new AppointmentButton[WEEK_DAYS.length];
+    private AppointmentButton[] hygienistButtons = new AppointmentButton[WEEK_DAYS.length];
     private Date weekBeginning;
     private JLabel dateLabel = new JLabel("");
 
@@ -126,6 +128,34 @@ public class CalendarPicker extends JFrame {
         }
     }
 
+    private class AppointmentButtonHandler implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            AppointmentButton button = (AppointmentButton) e.getSource();
+            Practitioner practitioner = button.getPractitioner();
+            int day = button.getDayNum();
+            System.out.println("Day: " + day + " Practitioner: " + practitioner);
+        }
+    }
+
+    private class AppointmentButton extends JButton {
+        private Practitioner practitioner;
+        private int dayNum;
+
+        private AppointmentButton(Practitioner practitioner, int dayNum) {
+            super(makeAppointmentButtonLabel(practitioner));
+            this.practitioner = practitioner;
+            this.dayNum = dayNum;
+        }
+
+        public Practitioner getPractitioner() {
+            return practitioner;
+        }
+
+        public int getDayNum() {
+            return dayNum;
+        }
+    }
+
     public CalendarPicker() {
         weekBeginning = getMonday(new Date());
         setTitle("Choose day");
@@ -141,8 +171,12 @@ public class CalendarPicker extends JFrame {
             JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
 
             JLabel label = new JLabel(WEEK_DAYS[i]);
-            JButton dentistAppointments = new JButton(makeAppointmentButtonLabel(Practitioner.DENTIST));
-            JButton hygienistAppointments = new JButton(makeAppointmentButtonLabel(Practitioner.HYGIENIST));
+            AppointmentButton dentistAppointments = new AppointmentButton(Practitioner.DENTIST, i);
+            AppointmentButton hygienistAppointments = new AppointmentButton(Practitioner.HYGIENIST, i);
+//            JButton dentistAppointments = new JButton(makeAppointmentButtonLabel(Practitioner.DENTIST));
+//            JButton hygienistAppointments = new JButton(makeAppointmentButtonLabel(Practitioner.HYGIENIST));
+            dentistAppointments.addActionListener(new AppointmentButtonHandler());
+            hygienistAppointments.addActionListener(new AppointmentButtonHandler());
             dentistButtons[i] = dentistAppointments;
             hygienistButtons[i] = hygienistAppointments;
 
