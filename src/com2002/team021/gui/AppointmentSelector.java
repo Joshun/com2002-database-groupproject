@@ -14,14 +14,14 @@ import java.awt.event.ActionListener;
  * Assumes appointments are with the same Practitioner and Date and are sorted
  */
 public class AppointmentSelector extends JFrame {
-    public AppointmentSelector(Appointment[] appointments, Boolean canAddAppointments) {
+    public AppointmentSelector(Appointment[] appointments, Boolean userIsSecretary) {
 //        setSize(500, 500);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
         String appointmentDate = dateFormat.format(appointments[0].getStartTime());
         String practitioner = appointments[0].getPractitioner().toString();
         setTitle("Choose " + practitioner + " appointment (" + appointmentDate + ")");
         Container contentPane = getContentPane();
-        if (canAddAppointments) {
+        if (userIsSecretary) {
             contentPane.setLayout(new GridLayout(3, 1));
         }
         else {
@@ -43,7 +43,7 @@ public class AppointmentSelector extends JFrame {
         }
         contentPane.add(descriptionLabel);
         contentPane.add(appointmentListPane);
-        if (canAddAppointments) {
+        if (userIsSecretary) {
             contentPane.add(addAppointmentButton);
         }
 
