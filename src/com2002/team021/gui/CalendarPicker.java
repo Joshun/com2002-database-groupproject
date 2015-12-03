@@ -17,6 +17,8 @@ public class CalendarPicker extends JFrame {
     private boolean noModify = false;
     private JButton[] dentistButtons = new JButton[WEEK_DAYS.length];
     private JButton[] hygienistButtons = new JButton[WEEK_DAYS.length];
+    private Date weekBeginning;
+    private JLabel dateLabel = new JLabel("");
 
 
     private String makeAppointmentButtonLabel(Practitioner p) {
@@ -46,6 +48,10 @@ public class CalendarPicker extends JFrame {
         return new Date(thePast);
     }
 
+    private void setDateLabel(Date date) {
+        dateLabel.setText("W/B: " + date);
+    }
+
     private Date getMonday(Date current) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(current);
@@ -70,9 +76,14 @@ public class CalendarPicker extends JFrame {
     }
 
     public CalendarPicker() {
+        weekBeginning = getMonday(new Date());
         setTitle("Choose day");
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(2, 1));
+        contentPane.setLayout(new GridLayout(3, 1));
+
+        setDateLabel(weekBeginning);
+        contentPane.add(dateLabel);
+
         JPanel weekContainer = new JPanel(new GridLayout(1, WEEK_DAYS.length));
         for (int i=0; i<WEEK_DAYS.length; i++) {
             JPanel dayContainer = new JPanel(new GridLayout(2, 1));
