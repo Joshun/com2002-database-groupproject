@@ -25,9 +25,11 @@ public class Calendar extends JFrame {
     private final int CALENDAR_WIDTH = 400;
     private final int CALENDAR_HEIGHT = 400;
     private Graphics2D calendarPaintComponent;
-	private final int HORIZONTAL_SPACING = 10;
-	private final int VERTICAL_SPACING = 10;
+	private final int HORIZONTAL_SPACING = 30;
+	private final int VERTICAL_SPACING = 30;
+
 	private int[] dayOffsets = new int[WEEK_DAYS.length];
+	private int[] timeOffsets = new int[HOURS_PER_WORKING_DAY+1];
 
 	private class StringMeasurer {
 		Font font;
@@ -47,10 +49,10 @@ public class Calendar extends JFrame {
 
 	private void drawDayText(Graphics2D g2) {
 		StringMeasurer measurer = new StringMeasurer(g2);
-		int drawBeginY = SCREEN_OFFSET + 50;
+		int drawBeginY = SCREEN_OFFSET + 40;
 		for (int i=0; i<5; i++) {
 			String dayText = WEEK_DAYS[i];
-			g2.drawString(dayText, 0, drawBeginY);
+			g2.drawString(dayText, 10, drawBeginY);
 			dayOffsets[i] = drawBeginY;
 			drawBeginY += measurer.getDimensions(dayText)[1] + VERTICAL_SPACING;
 		}
@@ -58,17 +60,18 @@ public class Calendar extends JFrame {
 
 	private void drawTimeText(Graphics2D g2) {
 		StringMeasurer measurer = new StringMeasurer(g2);
-		int drawBeginX = 0;
+		int drawBeginX = 80;
 		for (int i=0; i<HOURS_PER_WORKING_DAY+1; i++) {
 			int hour = i + 9;
 			String timeText = hour + ":00";
 			g2.drawString(timeText, drawBeginX, SCREEN_OFFSET);
+			timeOffsets[i] = drawBeginX;
 			drawBeginX += measurer.getDimensions(timeText)[0] + HORIZONTAL_SPACING;
 		}
 	}
 
 	private void drawAppointments(Graphics2D g2) {
-		Rectangle2D.Double rect = new Rectangle2D.Double(50, dayOffsets[0], 100, dayOffsets[0]);
+		Rectangle2D.Double rect = new Rectangle2D.Double(timeOffsets[1], dayOffsets[1], 100, 30);
 		g2.draw(rect);
 	}
     
@@ -81,10 +84,11 @@ public class Calendar extends JFrame {
     		g2.setRenderingHint(
     				RenderingHints.KEY_ANTIALIASING,
     				RenderingHints.VALUE_ANTIALIAS_ON );
+//    		g2.drawString("Test", 0, 40);
 			drawDayText(g2);
 			drawTimeText(g2);
 			drawAppointments(g2);
-		}
+    	}
     }
     
     public Calendar() {
