@@ -137,9 +137,20 @@ public class CalendarPicker extends JFrame {
         }
     }
 
+    private Date computeButtonDate(int dayNum) {
+        if (dayNum > 0) {
+            long futureDateStamp = weekBeginning.getTime() + (dayNum * MILLIS_PER_DAY);
+            return new Date(futureDateStamp);
+        }
+        else {
+            return weekBeginning;
+        }
+    }
+
     private class AppointmentButton extends JButton {
         private Practitioner practitioner;
         private int dayNum;
+        private Date date;
 
         private AppointmentButton(Practitioner practitioner, int dayNum) {
             super(makeAppointmentButtonLabel(practitioner));
