@@ -27,6 +27,7 @@ public class Calendar extends JFrame {
     private Graphics2D calendarPaintComponent;
 	private final int HORIZONTAL_SPACING = 10;
 	private final int VERTICAL_SPACING = 10;
+	private int[] dayOffsets = new int[WEEK_DAYS.length];
 
 	private class StringMeasurer {
 		Font font;
@@ -50,6 +51,7 @@ public class Calendar extends JFrame {
 		for (int i=0; i<5; i++) {
 			String dayText = WEEK_DAYS[i];
 			g2.drawString(dayText, 0, drawBeginY);
+			dayOffsets[i] = drawBeginY;
 			drawBeginY += measurer.getDimensions(dayText)[1] + VERTICAL_SPACING;
 		}
 	}
@@ -64,6 +66,11 @@ public class Calendar extends JFrame {
 			drawBeginX += measurer.getDimensions(timeText)[0] + HORIZONTAL_SPACING;
 		}
 	}
+
+	private void drawAppointments(Graphics2D g2) {
+		Rectangle2D.Double rect = new Rectangle2D.Double(50, dayOffsets[0], 100, dayOffsets[0]);
+		g2.draw(rect);
+	}
     
     private class CalendarPanel extends JPanel {
     	public void paintComponent(Graphics g) {
@@ -76,6 +83,7 @@ public class Calendar extends JFrame {
     				RenderingHints.VALUE_ANTIALIAS_ON );
 			drawDayText(g2);
 			drawTimeText(g2);
+			drawAppointments(g2);
 		}
     }
     
