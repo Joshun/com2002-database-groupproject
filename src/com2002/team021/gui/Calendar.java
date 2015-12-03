@@ -1,5 +1,10 @@
 package com2002.team021.gui;
 
+import sun.util.resources.ar.CalendarData_ar;
+
+import java.util.Date;
+
+
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +37,16 @@ public class Calendar extends JFrame {
                 label = "Undefined";
         }
         return label;
+    }
+
+    private Date nextWeek(Date current) {
+        long theFuture = current.getTime() + (86400 * 7 * 1000);
+        return new Date(theFuture);
+    }
+
+    private Date prevWeek(Date current) {
+        long thePast = current.getTime() - (86400 * 7 * 1000);
+        return new Date(thePast);
     }
 
     public Calendar() {
@@ -68,6 +83,7 @@ public class Calendar extends JFrame {
 
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        System.out.println(prevWeek(new Date()));
     }
 
     public Calendar (Practitioner p) {
@@ -88,7 +104,7 @@ public class Calendar extends JFrame {
     }
 
     public static void main(String[] args) {
-        Calendar cal = new Calendar(Practitioner.DENTIST);
+        Calendar cal = new Calendar(Practitioner.HYGIENIST);
         cal.setVisible(true);
     }
 }
