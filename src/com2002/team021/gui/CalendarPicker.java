@@ -1,5 +1,7 @@
 package com2002.team021.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -19,6 +21,52 @@ public class CalendarPicker extends JFrame {
     private JButton[] hygienistButtons = new JButton[WEEK_DAYS.length];
     private Date weekBeginning;
     private JLabel dateLabel = new JLabel("");
+
+    private enum NavigationButtonType {
+        PREV, TODAY, NEXT;
+        public String toString() {
+            switch (name()) {
+                case "PREV":
+                    return "<";
+                case "TODAY":
+                    return "today";
+                case "NEXT":
+                    return ">";
+                default:
+                    return "-";
+            }
+        }
+
+    }
+
+    private class NavigationButtonHandler implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            NavigationButton navButton = (NavigationButton) e.getSource();
+            switch (navButton.getNavType()) {
+                case PREV:
+                    weekBeginning = prevWeek(weekBeginning);
+                    break;
+                case TODAY:
+                    weekBeginning = getMonday(new Date());
+                    break;
+                case NEXT:
+                    weekBeginning = nextWeek(weekBeginning);
+                    break;
+            }
+        }
+    }
+
+    private class NavigationButton extends JButton {
+        private NavigationButtonType navType;
+        public NavigationButton(NavigationButtonType navType) {
+            super(navType.toString());
+            this.navType = navType;
+        }
+
+        public NavigationButtonType getNavType() {
+            return navType;
+        }
+    }
 
 
     private String makeAppointmentButtonLabel(Practitioner p) {
