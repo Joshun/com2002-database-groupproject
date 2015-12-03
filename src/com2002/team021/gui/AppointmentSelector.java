@@ -14,14 +14,19 @@ import java.awt.event.ActionListener;
  * Assumes appointments are with the same Practitioner and Date and are sorted
  */
 public class AppointmentSelector extends JFrame {
-    public AppointmentSelector(Appointment[] appointments) {
+    public AppointmentSelector(Appointment[] appointments, Boolean canAddAppointments) {
 //        setSize(500, 500);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
         String appointmentDate = dateFormat.format(appointments[0].getStartTime());
         String practitioner = appointments[0].getPractitioner().toString();
         setTitle("Choose " + practitioner + " appointment (" + appointmentDate + ")");
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(3, 1));
+        if (canAddAppointments) {
+            contentPane.setLayout(new GridLayout(3, 1));
+        }
+        else {
+            contentPane.setLayout(new GridLayout(2, 1));
+        }
 
         JLabel descriptionLabel = new JLabel("Listing " + practitioner + " appointments for " + appointmentDate + ":");
         JButton addAppointmentButton = new JButton("***Add appointment***");
@@ -38,7 +43,9 @@ public class AppointmentSelector extends JFrame {
         }
         contentPane.add(descriptionLabel);
         contentPane.add(appointmentListPane);
-        contentPane.add(addAppointmentButton);
+        if (canAddAppointments) {
+            contentPane.add(addAppointmentButton);
+        }
 
         pack();
 //        setPreferredSize(new Dimension(1000, 100));
@@ -47,7 +54,7 @@ public class AppointmentSelector extends JFrame {
 
     public static void main(String[] args) {
         Appointment[] appointments = { new Appointment(), new Appointment() };
-        AppointmentSelector appSel = new AppointmentSelector(appointments);
+        AppointmentSelector appSel = new AppointmentSelector(appointments, true);
         appSel.setVisible(true);
     }
 }
