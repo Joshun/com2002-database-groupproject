@@ -12,10 +12,10 @@ import java.awt.geom.*;
 import java.awt.font.*;
 
 /**
- * Calendar.java
+ * OldCalendar.java
  */
 
-public class Calendar extends JFrame {
+public class OldCalendar extends JFrame {
     private Date week_beginning;
     private Date[][] month_days;
 	private final int SCREEN_OFFSET = 40;
@@ -63,7 +63,8 @@ public class Calendar extends JFrame {
 		int drawBeginX = 80;
 		for (int i=0; i<HOURS_PER_WORKING_DAY+1; i++) {
 			int hour = i + 9;
-			String timeText = hour + ":00";
+			String digit = String.valueOf(hour);
+			String timeText = digit.length() == 1 ? "0" + digit + ":00" : hour + ":00";
 			g2.drawString(timeText, drawBeginX, SCREEN_OFFSET);
 			System.out.println(drawBeginX);
 			timeOffsets[i] = drawBeginX;
@@ -71,11 +72,24 @@ public class Calendar extends JFrame {
 		}
 	}
 
-	private void drawAppointments(Graphics2D g2) {
-		System.out.println(timeOffsets[0]);
-		Rectangle2D.Double rect = new Rectangle2D.Double(timeOffsets[0], dayOffsets[0] - VERTICAL_SPACING, timeOffsets[1] - timeOffsets[0], timeOffsets[1] - timeOffsets[0] - VERTICAL_SPACING);
-		g2.draw(rect);
+	private int computeTimeWidth(Graphics2D g2, int hour) {
+		StringMeasurer measurer = new StringMeasurer(g2);
+		String timeString = hour + ":00";
+		return measurer.getDimensions(timeString)[0];
 	}
+
+
+
+//	private void drawAppointments(Graphics2D g2) {
+//		for (int i=0; i<(8*20); i++) {
+//			if (i % 3 == 0) {
+//				System.out.println("Hour: " + (i/3));
+//			}
+//			else {
+//				System.out.println("Minute: " + ((i/3)*20) - (i*20));
+//			}
+//		}
+//	}
     
     private class CalendarPanel extends JPanel {
     	public void paintComponent(Graphics g) {
@@ -89,11 +103,11 @@ public class Calendar extends JFrame {
 //    		g2.drawString("Test", 0, 40);
 			drawDayText(g2);
 			drawTimeText(g2);
-			drawAppointments(g2);
+//			drawAppointments(g2);
     	}
     }
     
-    public Calendar() {
+    public OldCalendar() {
     	setTitle("Calendar");                                   //Size of Frame
     	Container contentPane = getContentPane();               //Container
     	contentPane.setLayout(new GridLayout(2, 1));
@@ -116,7 +130,7 @@ public class Calendar extends JFrame {
     }
     
     public static void main (String[] args) {
-    	JFrame calendar = new Calendar();
+    	JFrame calendar = new OldCalendar();
     	calendar.setVisible(true);
     }
 
