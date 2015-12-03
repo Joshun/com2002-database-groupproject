@@ -1,20 +1,16 @@
 package com2002.team021.gui;
 
-import sun.util.resources.ar.CalendarData_ar;
-
+import java.util.Calendar;
 import java.util.Date;
 
 
-import java.util.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Calendar.java
  */
-public class Calendar extends JFrame {
+public class CalendarPicker extends JFrame {
     private enum Practitioner  { DENTIST, HYGIENIST }
     private final String[] WEEK_DAYS = { "Mon", "Tue", "Wed", "Thu", "Fri" };
 
@@ -40,6 +36,7 @@ public class Calendar extends JFrame {
     }
 
     private Date nextWeek(Date current) {
+
         long theFuture = current.getTime() + (86400 * 7 * 1000);
         return new Date(theFuture);
     }
@@ -49,7 +46,22 @@ public class Calendar extends JFrame {
         return new Date(thePast);
     }
 
-    public Calendar() {
+    private Date getMonday(Date current) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(current);
+
+        int weekDay = calendar.DAY_OF_WEEK;
+        if (weekDay > 0) {
+            long currentTimestamp = current.getTime();
+            long mondayTimestamp = currentTimestamp - (86400 * weekDay * 1000);
+            return new Date(mondayTimestamp);
+        }
+        else {
+            return current;
+        }
+    }
+
+    public CalendarPicker() {
         setTitle("Choose day");
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(2, 1));
@@ -86,7 +98,7 @@ public class Calendar extends JFrame {
         System.out.println(prevWeek(new Date()));
     }
 
-    public Calendar (Practitioner p) {
+    public CalendarPicker(Practitioner p) {
         this();
         noModify = true;
         switch (p) {
@@ -104,7 +116,7 @@ public class Calendar extends JFrame {
     }
 
     public static void main(String[] args) {
-        Calendar cal = new Calendar(Practitioner.HYGIENIST);
+        CalendarPicker cal = new CalendarPicker(Practitioner.HYGIENIST);
         cal.setVisible(true);
     }
 }
