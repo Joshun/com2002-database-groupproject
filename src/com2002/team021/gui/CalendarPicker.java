@@ -48,12 +48,15 @@ public class CalendarPicker extends JFrame {
 
     private Date getMonday(Date current) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(current);
+        calendar.setTime(new Date(System.currentTimeMillis()));
 
-        int weekDay = calendar.DAY_OF_WEEK;
-        if (weekDay > 0) {
+        System.out.println(calendar);
+        System.out.println(calendar.DAY_OF_WEEK);
+        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+        if ( weekDay != Calendar.MONDAY ) {
+            System.out.println(weekDay);
             long currentTimestamp = current.getTime();
-            long mondayTimestamp = currentTimestamp - (86400 * weekDay * 1000);
+            long mondayTimestamp = currentTimestamp - (86400 * (weekDay - 2) * 1000);
             return new Date(mondayTimestamp);
         }
         else {
@@ -95,7 +98,7 @@ public class CalendarPicker extends JFrame {
 
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        System.out.println(prevWeek(new Date()));
+        System.out.println(getMonday(nextWeek(new Date())));
     }
 
     public CalendarPicker(Practitioner p) {
