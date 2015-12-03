@@ -53,6 +53,7 @@ public class CalendarPicker extends JFrame {
                     weekBeginning = nextWeek(weekBeginning);
                     break;
             }
+            System.out.println("Changed date to " + weekBeginning);
         }
     }
 
@@ -152,12 +153,18 @@ public class CalendarPicker extends JFrame {
         contentPane.add(weekContainer);
 
         JPanel controlContainer = new JPanel(new GridLayout(1, 3));
-        JButton prev = new JButton("<");
-        JButton next = new JButton(">");
-        JButton today = new JButton("today");
+        NavigationButton prev = new NavigationButton(NavigationButtonType.PREV);
+        NavigationButton today = new NavigationButton(NavigationButtonType.TODAY);
+        NavigationButton next = new NavigationButton(NavigationButtonType.NEXT);
+
+        prev.addActionListener(new NavigationButtonHandler());
+        today.addActionListener(new NavigationButtonHandler());
+        next.addActionListener(new NavigationButtonHandler());
+
         controlContainer.add(prev);
         controlContainer.add(today);
         controlContainer.add(next);
+
         contentPane.add(controlContainer);
 
         pack();
