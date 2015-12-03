@@ -6,6 +6,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
+
+import java.awt.geom.*;
+import java.awt.font.*;
+
 /**
  * Calendar.java
  */
@@ -20,19 +25,51 @@ public class Calendar extends JFrame {
     private final int CALENDAR_WIDTH = 400;
     private final int CALENDAR_HEIGHT = 400;
     private Graphics2D calendarPaintComponent;
+	private final int HORIZONTAL_SPACING = 10;
+	private final int VERTICAL_SPACING = 10;
+	private int[] dayOffsets = new int[WEEK_DAYS.length];
+
+	private class StringMeasurer {
+		Font font;
+		FontRenderContext context;
+
+		public StringMeasurer(Graphics2D g2) {
+			font = g2.getFont();
+			context = g2.getFontRenderContext();
+		}
+
+		public int[] getDimensions(String text) {
+			Rectangle2D bounds = font.getStringBounds(text, context);
+			int[] widthAndHeight = { (int)bounds.getWidth(), (int)bounds.getHeight() };
+			return widthAndHeight;
+		}
+	}
 
 	private void drawDayText(Graphics2D g2) {
+		StringMeasurer measurer = new StringMeasurer(g2);
+		int drawBeginY = SCREEN_OFFSET + 50;
 		for (int i=0; i<5; i++) {
-			g2.drawString(WEEK_DAYS[i], 0, (SCREEN_OFFSET + 30) + i*30);
+			String dayText = WEEK_DAYS[i];
+			g2.drawString(dayText, 0, drawBeginY);
+			dayOffsets[i] = drawBeginY;
+			drawBeginY += measurer.getDimensions(dayText)[1] + VERTICAL_SPACING;
 		}
 	}
 
 	private void drawTimeText(Graphics2D g2) {
-		for (int i=0; i<HOURS_PER_WORKING_DAY; i++) {
+		StringMeasurer measurer = new StringMeasurer(g2);
+		int drawBeginX = 0;
+		for (int i=0; i<HOURS_PER_WORKING_DAY+1; i++) {
 			int hour = i + 9;
 			String timeText = hour + ":00";
-			g2.drawString(timeText, i*80, SCREEN_OFFSET);
+			g2.drawString(timeText, drawBeginX, SCREEN_OFFSET);
+			drawBeginX += measurer.getDimensions(timeText)[0] + HORIZONTAL_SPACING;
 		}
+	}
+
+	private void drawAppointments(Graphics2D g2) {
+		Rectangle2D.Double rect = new Rectangle2D.Double(50, dayOffsets[0], 100, dayOffsets[0]);
+		g2.draw(rect);
 	}
     
     private class CalendarPanel extends JPanel {
@@ -44,10 +81,10 @@ public class Calendar extends JFrame {
     		g2.setRenderingHint(
     				RenderingHints.KEY_ANTIALIASING,
     				RenderingHints.VALUE_ANTIALIAS_ON );
-//    		g2.drawString("Test", 0, 40);
 			drawDayText(g2);
 			drawTimeText(g2);
-    	}
+			drawAppointments(g2);
+		}
     }
     
     public Calendar() {
