@@ -37,7 +37,8 @@ public class Calendar extends JFrame {
     public Calendar() {
         setTitle("Choose day");
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(1, WEEK_DAYS.length));
+        contentPane.setLayout(new GridLayout(2, 1));
+        JPanel weekContainer = new JPanel(new GridLayout(1, WEEK_DAYS.length));
         for (int i=0; i<WEEK_DAYS.length; i++) {
             JPanel dayContainer = new JPanel(new GridLayout(2, 1));
             JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
@@ -52,8 +53,19 @@ public class Calendar extends JFrame {
             buttonContainer.add(hygienistAppointments);
             dayContainer.add(label);
             dayContainer.add(buttonContainer);
-            contentPane.add(dayContainer);
+            weekContainer.add(dayContainer);
         }
+        contentPane.add(weekContainer);
+
+        JPanel controlContainer = new JPanel(new GridLayout(1, 3));
+        JButton prev = new JButton("<");
+        JButton next = new JButton(">");
+        JButton today = new JButton("today");
+        controlContainer.add(prev);
+        controlContainer.add(today);
+        controlContainer.add(next);
+        contentPane.add(controlContainer);
+
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
