@@ -65,13 +65,15 @@ public class Calendar extends JFrame {
 			int hour = i + 9;
 			String timeText = hour + ":00";
 			g2.drawString(timeText, drawBeginX, SCREEN_OFFSET);
+			System.out.println(drawBeginX);
 			timeOffsets[i] = drawBeginX;
 			drawBeginX += measurer.getDimensions(timeText)[0] + HORIZONTAL_SPACING;
 		}
 	}
 
 	private void drawAppointments(Graphics2D g2) {
-		Rectangle2D.Double rect = new Rectangle2D.Double(timeOffsets[1], dayOffsets[1], 100, 30);
+		System.out.println(timeOffsets[0]);
+		Rectangle2D.Double rect = new Rectangle2D.Double(timeOffsets[0], dayOffsets[0] - VERTICAL_SPACING, timeOffsets[1] - timeOffsets[0], timeOffsets[1] - timeOffsets[0] - VERTICAL_SPACING);
 		g2.draw(rect);
 	}
     
