@@ -35,6 +35,7 @@ public class LogTreatment extends JFrame {
         contentPane.add(appointmentListingPane);
         contentPane.add(addTreatmentButton);
         pack();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {
