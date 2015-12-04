@@ -16,7 +16,12 @@ public class Appointment {
 		Date start = new Date((long)startTime*1000);
 		Date end = new Date((long)endTime);
 		
-		Patient patient = new Patient("Larry");
+		try {
+			Patient patient = new Patient(1);
+		} catch (Exception e) {
+			
+		}
+		
 		Practitioner practitioner = new Practitioner("Dentist");
 		Treatment treatment = new Treatment("CheckUp");
 		
