@@ -68,7 +68,7 @@ public class Patient {
 	public static void main (String args[]) {
 		
 		try {
-			Patient patient = new Patient(2);
+			Patient patient = new Patient(1);
 			
 			System.out.println(patient);
 			System.out.println(patient.getAddress());

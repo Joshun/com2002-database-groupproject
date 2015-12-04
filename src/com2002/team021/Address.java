@@ -41,7 +41,7 @@ public class Address {
 	public String getStreetName() { return this.streetName; }
 	public String getDistrict() { return this.district; }
 	public String getCity() { return this.city; }
-	public String getPostcode() { return this.postcodushe; }
+	public String getPostcode() { return this.postcode; }
 	
 	public String toString () {
 		return this.houseNumber + " " + this.streetName + "\n" + this.district + "\n" + this.city + "\n" + this.postcode;
