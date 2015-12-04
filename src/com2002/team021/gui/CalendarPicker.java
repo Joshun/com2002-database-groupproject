@@ -256,6 +256,13 @@ public class CalendarPicker extends JFrame {
     }
 
     public static void main(String[] args) {
+        //Look and feel
+        try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
+        catch (ClassNotFoundException e) {}
+        catch (InstantiationException e) {}
+        catch (IllegalAccessException e) {}
+        catch (UnsupportedLookAndFeelException e) {}
+
         CalendarPicker cal = new CalendarPicker(Practitioner.HYGIENIST);
         cal.setVisible(true);
     }
