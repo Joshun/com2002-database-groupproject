@@ -36,8 +36,12 @@ public class Treatment {
 		return this.cost;
 	}
 
-	public String toString () {
-		return "Treatment: " + this.name + "\nCost: " + this.cost;
+//	public String toString () {
+//		return "Treatment: " + this.name + "\nCost: " + this.cost;
+//	}
+
+	public String toString() {
+		return this.name + " (£" + this.cost + ")";
 	}
 
 	public static void main (String args[]) {
