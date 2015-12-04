@@ -42,14 +42,14 @@ public class CalendarPicker extends JFrame {
 
     }
 
-    private Appointment[] getAppointments(Date d, Practitioner p) {
-        Appointment[] appointments = new Appointment[3];
-        for (int i=0; i<appointments.length; i++) {
-            appointments[i] = new Appointment();
-        }
-        // MYSQL query to go here
-        return appointments;
-    }
+//    private Appointment[] getAppointments(Date d, Practitioner p)  {
+//        Appointment[] appointments = new Appointment[3];
+//        for (int i=0; i<appointments.length; i++) {
+//            appointments[i] = new Appointment();
+//        }
+//        // MYSQL query to go here
+//        return appointments;
+//    }
 
     private int getAppointmentTotal(Date d, Practitioner p) {
         // MYSQL query to go here

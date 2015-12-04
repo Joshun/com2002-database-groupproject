@@ -22,7 +22,7 @@ public class Patient {
 			this.forename = dbPatient.getForename();
 			this.surname = dbPatient.getSurname();
 			this.dob = dbPatient.getDob();
-			this.phone = dbPatient.getPhone();x`x
+			this.phone = dbPatient.getPhone();
 			this.houseNumber = dbPatient.getHouseNumber();
 			this.postcode = dbPatient.getPostcode();
 			this.subscription = dbPatient.getSubscription();
