@@ -1,5 +1,7 @@
 package com2002.team021.gui;
 
+import com2002.team021.Practitioner;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -14,10 +16,12 @@ import java.awt.*;
  */
 public class CalendarPicker extends JFrame {
     private final int MILLIS_PER_DAY = 86400 * 1000;
-    private enum PractitionerType { DENTIST, HYGIENIST }
+//    private enum PractitionerType { DENTIST, HYGIENIST }
     private final String[] WEEK_DAYS = { "Mon", "Tue", "Wed", "Thu", "Fri" };
 
-    private boolean noModify = false;
+    private String user;
+
+    private boolean userCanModifyAppointments = false;
     private AppointmentButton[] dentistButtons = new AppointmentButton[WEEK_DAYS.length];
     private AppointmentButton[] hygienistButtons = new AppointmentButton[WEEK_DAYS.length];
     private Date weekBeginning;
@@ -49,7 +53,7 @@ public class CalendarPicker extends JFrame {
 //        return appointments;
 //    }
 
-    private int getAppointmentTotal(Date d, PractitionerType p) {
+    private int getAppointmentTotal(Date d, Practitioner p) {
         // MYSQL query to go here
         return 5;
     }
@@ -86,14 +90,14 @@ public class CalendarPicker extends JFrame {
     }
 
 
-    private String makeAppointmentButtonLabel(PractitionerType p, int numAppointments) {
+    private String makeAppointmentButtonLabel(Practitioner p, int numAppointments) {
 //        int numAppointments = 0;
         String label;
-        switch (p) {
-            case DENTIST:
+        switch (p.getRole()) {
+            case "Dentist":
                 label = "Dentist " + "(" + numAppointments + ")";
                 break;
-            case HYGIENIST:
+            case "Hygienist":
                 label = "Hygienist " + "(" + numAppointments + ")";
                 break;
             default:
@@ -143,9 +147,9 @@ public class CalendarPicker extends JFrame {
     private class AppointmentButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             AppointmentButton button = (AppointmentButton) e.getSource();
-            PractitionerType practitionerType = button.getPractitionerType();
+            Practitioner practitioner = button.getPractitioner();
             int day = button.getDayNum();
-            System.out.println("Day: " + day + " Practitioner: " + practitionerType);
+            System.out.println("Day: " + day + " Practitioner: " + practitioner.getRole());
             System.out.println("Date: " + computeButtonDate(day));
         }
     }
@@ -161,18 +165,18 @@ public class CalendarPicker extends JFrame {
     }
 
     private class AppointmentButton extends JButton {
-        private PractitionerType practitionerType;
+        private Practitioner practitioner;
         private int dayNum;
         private Date date;
 
-        private AppointmentButton(PractitionerType practitionerType, int dayNum) {
-            super(makeAppointmentButtonLabel(practitionerType, getAppointmentTotal(computeButtonDate(dayNum), practitionerType)));
-            this.practitionerType = practitionerType;
+        private AppointmentButton(Practitioner practitioner, int dayNum) {
+            super(makeAppointmentButtonLabel(practitioner, getAppointmentTotal(computeButtonDate(dayNum), practitioner)));
+            this.practitioner = practitioner;
             this.dayNum = dayNum;
         }
 
-        public PractitionerType getPractitionerType() {
-            return practitionerType;
+        public Practitioner getPractitioner() {
+            return practitioner;
         }
 
         public int getDayNum() {
@@ -180,7 +184,8 @@ public class CalendarPicker extends JFrame {
         }
     }
 
-    public CalendarPicker() {
+    public CalendarPicker(Practitioner dentist, Practitioner hygienist, String user) {
+        this.user = user;
         weekBeginning = getMonday(new Date());
         setTitle("Choose day");
         Container contentPane = getContentPane();
@@ -195,8 +200,8 @@ public class CalendarPicker extends JFrame {
             JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
 
             JLabel label = new JLabel(WEEK_DAYS[i]);
-            AppointmentButton dentistAppointments = new AppointmentButton(PractitionerType.DENTIST, i);
-            AppointmentButton hygienistAppointments = new AppointmentButton(PractitionerType.HYGIENIST, i);
+            AppointmentButton dentistAppointments = new AppointmentButton(dentist, i);
+            AppointmentButton hygienistAppointments = new AppointmentButton(hygienist, i);
 //            JButton dentistAppointments = new JButton(makeAppointmentButtonLabel(Practitioner.DENTIST));
 //            JButton hygienistAppointments = new JButton(makeAppointmentButtonLabel(Practitioner.HYGIENIST));
             dentistAppointments.addActionListener(new AppointmentButtonHandler());
@@ -234,24 +239,21 @@ public class CalendarPicker extends JFrame {
         System.out.println(prevMonday);
         System.out.println(prevSunday);
         System.out.println(getMonday(prevSunday));
-    }
 
-    public CalendarPicker(PractitionerType p) {
-        this();
-        noModify = true;
-        switch (p) {
-            case HYGIENIST:
+        switch (user) {
+            case "Hygienist":
                 for (JButton b: dentistButtons) {
                     b.setEnabled(false);
                 }
                 break;
-            case DENTIST:
+            case "Dentist":
                 for (JButton b: hygienistButtons) {
                     b.setEnabled(false);
                 }
                 break;
         }
     }
+
 
     public static void main(String[] args) {
         //Look and feel
@@ -261,7 +263,7 @@ public class CalendarPicker extends JFrame {
         catch (IllegalAccessException e) {}
         catch (UnsupportedLookAndFeelException e) {}
 
-        CalendarPicker cal = new CalendarPicker(PractitionerType.HYGIENIST);
+        CalendarPicker cal = new CalendarPicker(new Practitioner("John Doe", "Dentist"), new Practitioner("Jane Doe", "Hygienist"), "Secretary");
         cal.setVisible(true);
     }
 }
