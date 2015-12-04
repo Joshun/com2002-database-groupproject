@@ -1,20 +1,15 @@
 package com2002.team021.gui;
 
-import sun.util.resources.ar.CalendarData_ar;
-
 import java.util.Date;
 
 
-import java.util.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Calendar.java
  */
-public class Calendar extends JFrame {
+public class StyledCalendar extends JFrame {
     private enum Practitioner  { DENTIST, HYGIENIST }
     private final String[] WEEK_DAYS = { "Mon", "Tue", "Wed", "Thu", "Fri" };
 
@@ -49,7 +44,7 @@ public class Calendar extends JFrame {
         return new Date(thePast);
     }
 
-    public Calendar() {
+    public StyledCalendar() {
         setTitle("Choose day");
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(2, 1));
@@ -86,7 +81,7 @@ public class Calendar extends JFrame {
         System.out.println(prevWeek(new Date()));
     }
 
-    public Calendar (Practitioner p) {
+    public StyledCalendar(Practitioner p) {
         this();
         noModify = true;
         switch (p) {
@@ -116,7 +111,7 @@ public class Calendar extends JFrame {
 
         catch (UnsupportedLookAndFeelException e) {}
 
-        Calendar cal = new Calendar(Practitioner.HYGIENIST);
+        StyledCalendar cal = new StyledCalendar(Practitioner.HYGIENIST);
         cal.setVisible(true);
     }
 }
