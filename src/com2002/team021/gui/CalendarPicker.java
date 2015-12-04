@@ -187,7 +187,7 @@ public class CalendarPicker extends JFrame {
     public CalendarPicker(Practitioner dentist, Practitioner hygienist, String user) {
         this.user = user;
         weekBeginning = getMonday(new Date());
-        setTitle("Choose day");
+        setTitle("<" + user + "> Choose day");
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(3, 1));
 
