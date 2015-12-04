@@ -42,6 +42,20 @@ public class CalendarPicker extends JFrame {
 
     }
 
+    private Appointment[] getAppointments(Date d, Practitioner p) {
+        Appointment[] appointments = new Appointment[3];
+        for (int i=0; i<appointments.length; i++) {
+            appointments[i] = new Appointment();
+        }
+        // MYSQL query to go here
+        return appointments;
+    }
+
+    private int getAppointmentTotal(Date d, Practitioner p) {
+        // MYSQL query to go here
+        return 5;
+    }
+
     private class NavigationButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             NavigationButton navButton = (NavigationButton) e.getSource();
@@ -74,8 +88,8 @@ public class CalendarPicker extends JFrame {
     }
 
 
-    private String makeAppointmentButtonLabel(Practitioner p) {
-        int numAppointments = 0;
+    private String makeAppointmentButtonLabel(Practitioner p, int numAppointments) {
+//        int numAppointments = 0;
         String label;
         switch (p) {
             case DENTIST:
@@ -154,7 +168,7 @@ public class CalendarPicker extends JFrame {
         private Date date;
 
         private AppointmentButton(Practitioner practitioner, int dayNum) {
-            super(makeAppointmentButtonLabel(practitioner));
+            super(makeAppointmentButtonLabel(practitioner, getAppointmentTotal(computeButtonDate(dayNum), practitioner)));
             this.practitioner = practitioner;
             this.dayNum = dayNum;
         }
@@ -242,6 +256,13 @@ public class CalendarPicker extends JFrame {
     }
 
     public static void main(String[] args) {
+        //Look and feel
+        try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
+        catch (ClassNotFoundException e) {}
+        catch (InstantiationException e) {}
+        catch (IllegalAccessException e) {}
+        catch (UnsupportedLookAndFeelException e) {}
+
         CalendarPicker cal = new CalendarPicker(Practitioner.HYGIENIST);
         cal.setVisible(true);
     }
