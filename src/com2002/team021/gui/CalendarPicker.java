@@ -1,7 +1,5 @@
 package com2002.team021.gui;
 
-import com2002.team021.Appointment;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -16,7 +14,7 @@ import java.awt.*;
  */
 public class CalendarPicker extends JFrame {
     private final int MILLIS_PER_DAY = 86400 * 1000;
-    private enum Practitioner  { DENTIST, HYGIENIST }
+    private enum PractitionerType { DENTIST, HYGIENIST }
     private final String[] WEEK_DAYS = { "Mon", "Tue", "Wed", "Thu", "Fri" };
 
     private boolean noModify = false;
@@ -51,7 +49,7 @@ public class CalendarPicker extends JFrame {
 //        return appointments;
 //    }
 
-    private int getAppointmentTotal(Date d, Practitioner p) {
+    private int getAppointmentTotal(Date d, PractitionerType p) {
         // MYSQL query to go here
         return 5;
     }
@@ -88,7 +86,7 @@ public class CalendarPicker extends JFrame {
     }
 
 
-    private String makeAppointmentButtonLabel(Practitioner p, int numAppointments) {
+    private String makeAppointmentButtonLabel(PractitionerType p, int numAppointments) {
 //        int numAppointments = 0;
         String label;
         switch (p) {
@@ -145,9 +143,9 @@ public class CalendarPicker extends JFrame {
     private class AppointmentButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             AppointmentButton button = (AppointmentButton) e.getSource();
-            Practitioner practitioner = button.getPractitioner();
+            PractitionerType practitionerType = button.getPractitionerType();
             int day = button.getDayNum();
-            System.out.println("Day: " + day + " Practitioner: " + practitioner);
+            System.out.println("Day: " + day + " Practitioner: " + practitionerType);
             System.out.println("Date: " + computeButtonDate(day));
         }
     }
@@ -163,18 +161,18 @@ public class CalendarPicker extends JFrame {
     }
 
     private class AppointmentButton extends JButton {
-        private Practitioner practitioner;
+        private PractitionerType practitionerType;
         private int dayNum;
         private Date date;
 
-        private AppointmentButton(Practitioner practitioner, int dayNum) {
-            super(makeAppointmentButtonLabel(practitioner, getAppointmentTotal(computeButtonDate(dayNum), practitioner)));
-            this.practitioner = practitioner;
+        private AppointmentButton(PractitionerType practitionerType, int dayNum) {
+            super(makeAppointmentButtonLabel(practitionerType, getAppointmentTotal(computeButtonDate(dayNum), practitionerType)));
+            this.practitionerType = practitionerType;
             this.dayNum = dayNum;
         }
 
-        public Practitioner getPractitioner() {
-            return practitioner;
+        public PractitionerType getPractitionerType() {
+            return practitionerType;
         }
 
         public int getDayNum() {
@@ -197,8 +195,8 @@ public class CalendarPicker extends JFrame {
             JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
 
             JLabel label = new JLabel(WEEK_DAYS[i]);
-            AppointmentButton dentistAppointments = new AppointmentButton(Practitioner.DENTIST, i);
-            AppointmentButton hygienistAppointments = new AppointmentButton(Practitioner.HYGIENIST, i);
+            AppointmentButton dentistAppointments = new AppointmentButton(PractitionerType.DENTIST, i);
+            AppointmentButton hygienistAppointments = new AppointmentButton(PractitionerType.HYGIENIST, i);
 //            JButton dentistAppointments = new JButton(makeAppointmentButtonLabel(Practitioner.DENTIST));
 //            JButton hygienistAppointments = new JButton(makeAppointmentButtonLabel(Practitioner.HYGIENIST));
             dentistAppointments.addActionListener(new AppointmentButtonHandler());
@@ -238,7 +236,7 @@ public class CalendarPicker extends JFrame {
         System.out.println(getMonday(prevSunday));
     }
 
-    public CalendarPicker(Practitioner p) {
+    public CalendarPicker(PractitionerType p) {
         this();
         noModify = true;
         switch (p) {
@@ -263,7 +261,7 @@ public class CalendarPicker extends JFrame {
         catch (IllegalAccessException e) {}
         catch (UnsupportedLookAndFeelException e) {}
 
-        CalendarPicker cal = new CalendarPicker(Practitioner.HYGIENIST);
+        CalendarPicker cal = new CalendarPicker(PractitionerType.HYGIENIST);
         cal.setVisible(true);
     }
 }
