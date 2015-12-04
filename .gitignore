@@ -1,4 +1,5 @@
 bin/
+out/
 Thumbs.db
 .DS_STORE
 .idea/
