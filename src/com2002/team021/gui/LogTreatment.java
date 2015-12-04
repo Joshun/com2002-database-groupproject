@@ -1,6 +1,5 @@
-package com2002.team021;
+package com2002.team021.gui;
 
-import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
