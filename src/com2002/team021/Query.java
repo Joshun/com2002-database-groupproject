@@ -49,7 +49,7 @@ public class Query {
 
 	}// getPatient()
 
-	public Address getPatientAddress (int patientID) {
+	public Address getPatientAddress (int patientID) throws SQLException {
 		String query = "SELECT * FROM addresses WHERE (houseNumber, postcode) IN (SELECT houseNumber, postcode FROM patients WHERE id = ?) LIMIT 1;";
 
 		try {
@@ -66,14 +66,12 @@ public class Query {
 				rs.getString("postcode")
 			);
 
-		} catch (Exception e) {
-			System.out.println(e);
+		} catch (SQLException e) {
+			throw new SQLException(e);
 
 		}// trycat
 
-		return null;
-
-	}// getPatientAddress
+	}// getPatientAddress()
 
 	public Address getAddress (String houseNumber, String postcode) throws SQLException {
 		String query = "SELECT * FROM addresses WHERE houseNumber = ? AND postcode = ? LIMIT 1";
@@ -119,7 +117,7 @@ public class Query {
 
 		}// trycat
 
-	}
+	}// getPractitioner()
 
 	public Treatment getTreatment(String treatmentName) throws SQLException {
 		String query = "SELECT * FROM treatments WHERE name = ? LIMIT 1;";
@@ -141,7 +139,31 @@ public class Query {
 		}// trycat
 
 	}
+	
+	public HealthcarePlan getHealthcarePlan (String planName) throws SQLException {
+		String query = "SELECT * FROM healthcarePlans WHERE name = ? LIMIT 1;";
 
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, planName);
+			rs = stmt.executeQuery();
+			rs.first();
+
+			return new HealthcarePlan(
+				rs.getString("name"),
+				rs.getInt("cost"),
+				rs.getInt("checkUps"),
+				rs.getInt("hygieneVisits"),
+				rs.getInt("repairs")
+			);
+
+		} catch (SQLException e) {
+			throw new SQLException(e);
+
+		}// trycat
+		
+	}
+	
 	public static void main (String args[]) {
 
 		try {
