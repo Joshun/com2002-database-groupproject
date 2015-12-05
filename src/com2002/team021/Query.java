@@ -2,6 +2,7 @@ package com2002.team021;
 
 import static com2002.team021.config.SQL.*;
 
+import java.util.ArrayList;
 import java.sql.*;
 
 public class Query {
@@ -161,6 +162,34 @@ public class Query {
 			throw new SQLException(e);
 
 		}// trycat
+		
+	}
+	
+	public ArrayList<HealthcarePlan> getHealthcarePlans () throws SQLException {
+		String query = "SELECT * FROM healthcarePlans ORDER BY cost ASC;";
+		ArrayList<HealthcarePlan> plans = new ArrayList<HealthcarePlan>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				plans.add(new HealthcarePlan(
+					rs.getString("name"),
+					rs.getInt("cost"),
+					rs.getInt("checkUps"),
+					rs.getInt("hygieneVisits"),
+					rs.getInt("repairs")
+				));
+				
+			}
+
+		} catch (SQLException e) {
+			throw new SQLException(e);
+
+		}// trycat
+		
+		return plans;
 		
 	}
 	

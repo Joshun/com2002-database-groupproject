@@ -1,6 +1,9 @@
 package com2002.team021.gui;
 
+import com2002.team021.Query;
+import com2002.team021.Address;
 import com2002.team021.Patient;
+import com2002.team021.HealthcarePlan;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.ArrayList;
 import java.sql.SQLException;
 
 
@@ -109,8 +113,25 @@ public class AddPatient extends JFrame {
         contentPane.add(phoneEntry);
 
         contentPane.add(new JLabel("Plan:"));
-        String[] plans = { "NHSFreePlan", "Maintenance", "Oral Health", "Dental Repair"};
-        planEntry = new JComboBox<>(plans);
+        
+        ArrayList<HealthcarePlan> healthcarePlans = null;
+        
+        try {
+            healthcarePlans = new Query().getHealthcarePlans();
+            
+        } catch (SQLException e) {
+            System.out.println("Couldn't get treatment list\n" + e);
+        }
+        
+        String[] planStrings = new String[healthcarePlans.size()];
+        
+        int i = 0;
+        for (HealthcarePlan t : healthcarePlans) {
+            planStrings[i] = t.getName();
+            i++;
+        }
+        
+        planEntry = new JComboBox<>(planStrings);
         contentPane.add(planEntry);
 
         contentPane.add(new JLabel());

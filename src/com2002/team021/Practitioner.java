@@ -39,7 +39,9 @@ public class Practitioner {
 	}
 	
 	public ArrayList<Appointment> getAppointments () {
+		
 		return null;
+		
 	}
 	
 	public String toString () {
