@@ -15,7 +15,7 @@ public class CalendarView {
 
     static Container contentPane;
     static DefaultTableModel tableModel;
-    static int year, month, day, actualYear, actualMonth;
+    static int year, month, day, actualDay, actualYear, actualMonth;
     static JButton prev, next, newApt, delApt;
     static JComboBox comboBox;
     static JFrame mainFrame;
@@ -23,6 +23,7 @@ public class CalendarView {
     static JPanel panel;
     static JScrollPane scrollPane;
     static JTable table;
+    static Point selectedCell;
 
     public CalendarView() {
         //Look and feel
@@ -93,6 +94,7 @@ public class CalendarView {
         day = cal.get(GregorianCalendar.DAY_OF_MONTH);      //Get current day
         month = cal.get(GregorianCalendar.MONTH);          //Get current month
         year = cal.get(GregorianCalendar.YEAR);            //Get current year
+        actualDay = day;
         actualMonth = month;
         actualYear = year;
 
@@ -217,6 +219,8 @@ public class CalendarView {
         @Override
         public void actionPerformed(ActionEvent e) {
 
+            System.out.println(actualDay + "/" + actualMonth + "/" + actualYear);
+
         }
     }
 
@@ -244,8 +248,10 @@ public class CalendarView {
             Object day = e.getSource();
             int x = table.getSelectedColumn();
             int y = table.getSelectedRow();
+
             tblCalendarRenderer a = new tblCalendarRenderer();
             Point point = new Point(y,x);
+            selectedCell = point;
 
             Object value = tableModel.getValueAt(point.x, point.y);
 
@@ -254,6 +260,7 @@ public class CalendarView {
                 if (value != null){
                     System.out.print(value + " at ");
                     System.out.println(point.x + ", " + point.y);
+                    actualDay = (int) value;
                     refresh(actualMonth, actualYear);
                 }
             }
