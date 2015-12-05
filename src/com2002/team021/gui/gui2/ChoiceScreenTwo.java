@@ -18,6 +18,7 @@ public class ChoiceScreenTwo extends JFrame {
     static JFrame choiceScreen;
     static JButton viewCal, logTreat, editCal, ptnMan;
     static Container contentPane;
+    static String practitionerRole = "";
 
     public ChoiceScreenTwo (String title) {
         //Look and feel
@@ -67,6 +68,11 @@ public class ChoiceScreenTwo extends JFrame {
         choiceScreen.setResizable(false);
         choiceScreen.setVisible(true);
 
+    }
+
+    public ChoiceScreenTwo (String title, String practitionerRole) {
+        super(title);
+        this.practitionerRole = practitionerRole;
     }
 
     static class btnEditCal_Action implements ActionListener {
