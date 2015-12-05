@@ -8,17 +8,17 @@ import java.awt.event.ActionListener;
 
 /*
  * ChoiceScreen.java         1.1 01/12/
- * 
+ *
  */
 
 /**
  * ChoiceScreen.java
- * 
- * 
- * 
+ *
+ *
+ *
  * @version 1.1
- * 
- * @author 
+ *
+ * @author
  *
  */
 

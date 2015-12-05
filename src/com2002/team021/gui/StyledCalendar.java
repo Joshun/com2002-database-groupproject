@@ -102,16 +102,14 @@ public class StyledCalendar extends JFrame {
         //Look and feel
 
         try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
-
         catch (ClassNotFoundException e) {}
-
         catch (InstantiationException e) {}
-
         catch (IllegalAccessException e) {}
-
         catch (UnsupportedLookAndFeelException e) {}
 
         StyledCalendar cal = new StyledCalendar(Practitioner.HYGIENIST);
         cal.setVisible(true);
+        int x = 2%7;
+        System.out.println(x);
     }
 }
