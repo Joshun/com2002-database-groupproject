@@ -1,7 +1,11 @@
 package com2002.team021.gui;
 
+import com2002.team021.Patient;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -23,8 +27,26 @@ public class AddPatient extends JFrame {
     private JComboBox<String> planEntry;
     private JButton addPatientButton;
 
+    private class AddPatientButtonHandler implements ActionListener {
+        public void actionPerformed(ActionEvent actionEvent) {
+            String forename = forenameEntry.getText();
+            String surname = surnameEntry.getText();
+            int dOBDay = dOBDayEntryModel.getNumber().intValue();
+            int dOBMonth = dOBMonthEntryModel.getNumber().intValue();
+            int dOBYear = dOBYearEntryModel.getNumber().intValue();
+            String houseNo = houseNoEntry.getText();
+            String postcode = postcodeEntry.getText();
+            String phone = phoneEntry.getText();
+            String plan = (String) planEntry.getSelectedItem();
+
+            // TODO: need to generate patient ID, need to have a String for phone, need to have an object for DoB
+            Patient newPatient = new Patient(1, forename, surname, 1, 1, houseNo, postcode, plan);
+            System.out.println("Created new patient " + newPatient);
+        }
+    }
+
     public AddPatient() {
-        setTitle("Add patient");;
+        setTitle("Add patient");
         Container contentPane = getContentPane();
         /**
          * First name
@@ -83,8 +105,8 @@ public class AddPatient extends JFrame {
 
         contentPane.add(new JLabel());
         addPatientButton = new JButton("Add patient");
+        addPatientButton.addActionListener(new AddPatientButtonHandler());
         contentPane.add(addPatientButton);
-
 
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
