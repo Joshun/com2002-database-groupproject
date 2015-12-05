@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.sql.SQLException;
+
 
 /**
  * Created by joshua on 04/12/15.
@@ -39,8 +41,16 @@ public class AddPatient extends JFrame {
             String phone = phoneEntry.getText();
             String plan = (String) planEntry.getSelectedItem();
 
+            Patient newPatient = null;
+            
             // TODO: need to generate patient ID, need to have a String for phone, need to have an object for DoB
-            Patient newPatient = new Patient(1, forename, surname, 1, 1, houseNo, postcode, plan);
+            try {
+                newPatient = new Patient(forename, surname, 1, 1, houseNo, postcode, plan);
+                
+            } catch (SQLException e) {
+                System.out.println("Coudlnt create patient.\n" + e);
+            }
+            
             System.out.println("Created new patient " + newPatient);
         }
     }
@@ -99,7 +109,7 @@ public class AddPatient extends JFrame {
         contentPane.add(phoneEntry);
 
         contentPane.add(new JLabel("Plan:"));
-        String[] plans = { "NHS Free", "Maintenance", "Oral Health", "Dental Repair"};
+        String[] plans = { "NHSFreePlan", "Maintenance", "Oral Health", "Dental Repair"};
         planEntry = new JComboBox<>(plans);
         contentPane.add(planEntry);
 

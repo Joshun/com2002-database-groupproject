@@ -22,7 +22,7 @@ public class Address {
 		
 			
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("Address not in database.", e);
 			
 		}
 		

@@ -1,5 +1,7 @@
 package com2002.team021;
-import java.sql.*;
+
+import java.util.ArrayList;
+import java.sql.SQLException;
 
 public class Practitioner {
 
@@ -35,7 +37,11 @@ public class Practitioner {
 	public String getRole() {
 		return this.role;
 	}
-
+	
+	public ArrayList<Appointment> getAppointments () {
+		return null;
+	}
+	
 	public String toString () {
 		return this.role + " " + this.name;
 	}
@@ -47,5 +53,4 @@ public class Practitioner {
 
 		}
 	}
-
 }
