@@ -99,7 +99,7 @@ public class AddPatient extends JFrame {
         contentPane.add(phoneEntry);
 
         contentPane.add(new JLabel("Plan:"));
-        String[] plans = { "NHS Free", "Paid"};
+        String[] plans = { "NHS Free", "Maintenance", "Oral Health", "Dental Repair"};
         planEntry = new JComboBox<>(plans);
         contentPane.add(planEntry);
 
