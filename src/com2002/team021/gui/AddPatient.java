@@ -21,31 +21,32 @@ import java.sql.SQLException;
 public class AddPatient extends JFrame {
     private JTextField forenameEntry;
     private JTextField surnameEntry;
-    private JSpinner dOBDayEntry;
-    private SpinnerNumberModel dOBDayEntryModel;
-    private JSpinner dOBMonthEntry;
-    private SpinnerNumberModel dOBMonthEntryModel;
-    private JSpinner dOBYearEntry;
-    private SpinnerNumberModel dOBYearEntryModel;
+    private JComboBox<Integer> dOBDayEntry;
+    private JComboBox<Integer> dOBMonthEntry;
+    private JComboBox<Integer> dOBYearEntry;
     private JTextField houseNoEntry;
     private JTextField postcodeEntry;
     private JTextField phoneEntry;
     private JComboBox<String> planEntry;
     private JButton addPatientButton;
+    private Calendar calendar;
 
     private class AddPatientButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
             String forename = forenameEntry.getText();
             String surname = surnameEntry.getText();
-            int dOBDay = dOBDayEntryModel.getNumber().intValue();
-            int dOBMonth = dOBMonthEntryModel.getNumber().intValue();
-            int dOBYear = dOBYearEntryModel.getNumber().intValue();
+            int dOBDay = (Integer) dOBDayEntry.getSelectedItem();
+            int dOBMonth = (Integer) dOBMonthEntry.getSelectedItem();
+            int dOBYear = (Integer) dOBYearEntry.getSelectedItem();
+
             String houseNo = houseNoEntry.getText();
             String postcode = postcodeEntry.getText();
             String phone = phoneEntry.getText();
             String plan = (String) planEntry.getSelectedItem();
 
             Patient newPatient = null;
+
+            System.out.println(dOBDay + "/" + dOBMonth + "/" + dOBYear);
             
             // TODO: need to generate patient ID, need to have a String for phone, need to have an object for DoB
             try {
@@ -60,6 +61,7 @@ public class AddPatient extends JFrame {
     }
 
     public AddPatient() {
+        calendar = new GregorianCalendar();
         setTitle("Add patient");
         Container contentPane = getContentPane();
         /**
@@ -85,19 +87,41 @@ public class AddPatient extends JFrame {
         dOBContainer.add(new JLabel("Month"));
         dOBContainer.add(new JLabel("Year"));
 
-        dOBDayEntryModel = new SpinnerNumberModel(1, 1, 31, 1);
-        dOBDayEntry = new JSpinner(dOBDayEntryModel);
-        dOBContainer.add(dOBDayEntry);
+//        dOBDayEntryModel = new SpinnerNumberModel(1, 1, 31, 1);
+//        dOBDayEntry = new JSpinner(dOBDayEntryModel);
 
-        dOBMonthEntryModel = new SpinnerNumberModel(1, 1, 12, 1);
-        dOBMonthEntry = new JSpinner(dOBMonthEntryModel);
+
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        ArrayList<Integer> days = new ArrayList<>();
+        ArrayList<Integer> months = new ArrayList<>();
+        ArrayList<Integer> years = new ArrayList<>();
+
+
+
+        dOBDayEntry = new JComboBox<>();
+        dOBMonthEntry = new JComboBox<>();
+        dOBYearEntry = new JComboBox<>();
+
+        for (int i=0; i<31; i++) {
+            dOBDayEntry.addItem(new Integer(i+1));
+        }
+        for (int i=0; i<12; i++) {
+            dOBMonthEntry.addItem(new Integer(i+1));
+        }
+
+        for (int i=0; i<120; i++) {
+            dOBYearEntry.addItem(new Integer(currentYear-i));
+        }
+
+        dOBContainer.add(dOBDayEntry);
         dOBContainer.add(dOBMonthEntry);
+        dOBContainer.add(dOBYearEntry);
+
 
         Calendar calendar = new GregorianCalendar();
         int year = calendar.get(Calendar.YEAR);
-        dOBYearEntryModel = new SpinnerNumberModel(1900, 1900, year, 1);
-        dOBYearEntry = new JSpinner(dOBYearEntryModel);
-        dOBContainer.add(dOBYearEntry);
+//        dOBYearEntry = new JSpinner(dOBYearEntryModel);
 
         contentPane.add(new JLabel("Date of Birth:"));
         contentPane.add(dOBContainer);
