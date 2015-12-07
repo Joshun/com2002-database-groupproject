@@ -31,6 +31,7 @@ public class AddPatient extends JFrame {
     private JComboBox<String> planEntry;
     private JButton addPatientButton;
     private Calendar calendar;
+    private PatientManager patientManager;
 
     private void errorDialog(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -59,21 +60,19 @@ public class AddPatient extends JFrame {
 
             String plan = (String) planEntry.getSelectedItem();
 
-            if ( forename.length() == 0
+            if (forename.length() == 0
                     || surname.length() == 0
                     || houseNo.length() == 0
                     || postcode.length() == 0
                     || phoneString.length() == 0) {
                 errorDialog("Fields cannot be empty.");
-            }
-            else {
+            } else {
                 int phone = 0;
                 Patient newPatient = null;
                 try {
                     phone = Integer.parseInt(phoneString);
 //                  newPatient = new Patient(forename, surname, dOBTimestamp.getTime(), phone, houseNo, postcode, plan);
-                }
-                catch (java.lang.NumberFormatException e) {
+                } catch (java.lang.NumberFormatException e) {
                     errorDialog("Invalid phone number.");
                     return;
                 }
@@ -87,7 +86,16 @@ public class AddPatient extends JFrame {
         }
     }
 
-    public AddPatient() {
+    public AddPatient(PatientManager patientManager) {
+        this.patientManager = patientManager;
+
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                patientManager.setEnabled(true);
+            }
+        });
+
         calendar = new GregorianCalendar();
         setTitle("Add patient");
         Container contentPane = getContentPane();
@@ -118,27 +126,25 @@ public class AddPatient extends JFrame {
 //        dOBDayEntry = new JSpinner(dOBDayEntryModel);
 
 
-
         int currentYear = calendar.get(Calendar.YEAR);
         ArrayList<Integer> days = new ArrayList<>();
         ArrayList<Integer> months = new ArrayList<>();
         ArrayList<Integer> years = new ArrayList<>();
 
 
-
         dOBDayEntry = new JComboBox<>();
         dOBMonthEntry = new JComboBox<>();
         dOBYearEntry = new JComboBox<>();
 
-        for (int i=0; i<31; i++) {
-            dOBDayEntry.addItem(new Integer(i+1));
+        for (int i = 0; i < 31; i++) {
+            dOBDayEntry.addItem(new Integer(i + 1));
         }
-        for (int i=0; i<12; i++) {
-            dOBMonthEntry.addItem(new Integer(i+1));
+        for (int i = 0; i < 12; i++) {
+            dOBMonthEntry.addItem(new Integer(i + 1));
         }
 
-        for (int i=0; i<120; i++) {
-            dOBYearEntry.addItem(new Integer(currentYear-i));
+        for (int i = 0; i < 120; i++) {
+            dOBYearEntry.addItem(new Integer(currentYear - i));
         }
 
         dOBContainer.add(dOBDayEntry);
@@ -164,24 +170,24 @@ public class AddPatient extends JFrame {
         contentPane.add(phoneEntry);
 
         contentPane.add(new JLabel("Plan:"));
-        
+
         ArrayList<HealthcarePlan> healthcarePlans = null;
-        
+
         try {
             healthcarePlans = new Query().getHealthcarePlans();
-            
+
         } catch (SQLException e) {
             System.out.println("Couldn't get treatment list\n" + e);
         }
-        
+
         String[] planStrings = new String[healthcarePlans.size()];
-        
+
         int i = 0;
         for (HealthcarePlan t : healthcarePlans) {
             planStrings[i] = t.getName();
             i++;
         }
-        
+
         planEntry = new JComboBox<>(planStrings);
         contentPane.add(planEntry);
 
@@ -191,12 +197,9 @@ public class AddPatient extends JFrame {
         contentPane.add(addPatientButton);
 
         pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
     }
 
-    public static void main(String[] args) {
-        AddPatient ap = new AddPatient();
-    }
 }
