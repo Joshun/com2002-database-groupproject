@@ -38,8 +38,8 @@ public class AddPatient extends JFrame {
 
     private class AddPatientButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
-            String forename = forenameEntry.getText();
-            String surname = surnameEntry.getText();
+            String forename = forenameEntry.getText().trim();
+            String surname = surnameEntry.getText().trim();
             int dOBDay = (Integer) dOBDayEntry.getSelectedItem();
             int dOBMonth = (Integer) dOBMonthEntry.getSelectedItem() - 1;
             int dOBYear = (Integer) dOBYearEntry.getSelectedItem();
@@ -52,10 +52,10 @@ public class AddPatient extends JFrame {
             Date dOBTimestamp = dOBCal.getTime();
             System.out.println(dOBCal);
 
-            String houseNo = houseNoEntry.getText();
-            String postcode = postcodeEntry.getText();
+            String houseNo = houseNoEntry.getText().trim();
+            String postcode = postcodeEntry.getText().trim();
 //            String phone = phoneEntry.getText();
-            String phoneString = phoneEntry.getText();
+            String phoneString = phoneEntry.getText().trim();
 
             String plan = (String) planEntry.getSelectedItem();
 
