@@ -33,7 +33,7 @@ public class AddPatient extends JFrame {
     private Calendar calendar;
 
     private void errorDialog(String message) {
-        JOptionPane.showMessageDialog(this, message, "Fields cannot be empty.", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private class AddPatientButtonHandler implements ActionListener {
@@ -71,15 +71,15 @@ public class AddPatient extends JFrame {
                 Patient newPatient = null;
                 try {
                     phone = Integer.parseInt(phoneString);
-//                    newPatient = new Patient(forename, surname, dOBTimestamp.getTime(), phone, houseNo, postcode, plan);
+//                  newPatient = new Patient(forename, surname, dOBTimestamp.getTime(), phone, houseNo, postcode, plan);
                 }
                 catch (java.lang.NumberFormatException e) {
                     errorDialog("Invalid phone number.");
                     return;
                 }
-                catch (SQLException e) {
-                    System.out.println("Coudln\'t create patient.\n" + e);
-                }
+//                catch (SQLException e) {
+//                    System.out.println("Coudln\'t create patient.\n" + e);
+//                }
 
                 System.out.println("Created new patient " + newPatient);
             }
