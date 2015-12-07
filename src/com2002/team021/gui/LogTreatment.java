@@ -16,7 +16,7 @@ public class LogTreatment extends JFrame {
         public void actionPerformed(ActionEvent actionEvent) {
             appointmentListingPane.add(new JLabel("New treatment!"));
             validate();
-            System.out.println("added");
+            System.out.println("Added");
         }
     }
 

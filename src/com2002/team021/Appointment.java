@@ -9,41 +9,19 @@ public class Appointment {
 	private Date endTime;
 	private Patient patient;
 	private Practitioner practitioner;
-	private Treatment treatment;
+	private ArrayList<Treatment> treatments;
 
-	public Appointment () throws SQLException {
-		int startTime = 1448974665;
-		int endTime = 1448975665;
-		Date start = new Date((long)startTime*1000);
-		Date end = new Date((long)endTime);
-
-		try {
-			Patient patient = new Patient(1);
-			Practitioner practitioner = new Practitioner("Dentist");
-			Treatment treatment = new Treatment("CheckUp");
-		} catch (SQLException e) {
-			throw new SQLException(e);
-		}
-
-		this.startTime = start;
-		this.endTime = end;
-		this.patient = patient;
-		this.practitioner = practitioner;
-		this.treatment = treatment;
-
-	}
-
-	public Appointment (Date startTime, Date endTime, Patient patient, Practitioner practitioner, Treatment treatment) {
+	public Appointment (Date startTime, Date endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.patient = patient;
 		this.practitioner = practitioner;
-		this.treatment = treatment;
+		this.treatments = treatments;
 
 	}
 
-	public Appointment (int startTime, int endTime, Patient patient, Practitioner practitioner, Treatment treatment) {
-		this(new Date((long)startTime*1000), new Date((long)endTime), patient, practitioner, treatment);
+	public Appointment (int startTime, int endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
+		this(new Date((long)startTime*1000), new Date((long)endTime), patient, practitioner, treatments);
 
 	}
 
@@ -67,8 +45,8 @@ public class Appointment {
 		return this.practitioner;
 	}
 
-	public Treatment getTreatment () {
-		return this.treatment;
+	public Treatment getTreatments () {
+		return this.treatments;
 	}
 
 	public String toString () {
@@ -77,7 +55,7 @@ public class Appointment {
 		str += this.endTime + " - ";
 		str += this.patient + " - ";
 		str += this.practitioner + " - ";
-		str += this.treatment;
+		str += this.treatments;
 
 		return str;
 
