@@ -2,6 +2,7 @@ package com2002.team021;
 
 import java.util.Date;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Appointment {
 
@@ -11,7 +12,7 @@ public class Appointment {
 	private Practitioner practitioner;
 	private ArrayList<Treatment> treatments;
 
-	public Appointment (Date startTime, Date endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
+	public Appointment (Date date, Date startTime, Date endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.patient = patient;
@@ -20,8 +21,8 @@ public class Appointment {
 
 	}
 
-	public Appointment (int startTime, int endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
-		this(new Date((long)startTime*1000), new Date((long)endTime), patient, practitioner, treatments);
+	public Appointment (long date, long startTime, long endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
+		this(new Date(0), new Date(startTime*1000), new Date(endTime), patient, practitioner, treatments);
 
 	}
 
@@ -45,7 +46,7 @@ public class Appointment {
 		return this.practitioner;
 	}
 
-	public Treatment getTreatments () {
+	public ArrayList<Treatment> getTreatments() {
 		return this.treatments;
 	}
 
@@ -63,11 +64,11 @@ public class Appointment {
 
 	public static void main (String args[]) {
 
-		try {
+		/* try {
 			System.out.println(new Appointment());
 		} catch (Exception e){
 
-		}
+		} */
 
 	}
 

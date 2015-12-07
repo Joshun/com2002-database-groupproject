@@ -99,6 +99,33 @@ public class Query {
 
 	}// getAddress()
 
+	public Appointment getAppointment(long date, long startTime, String practitioner) throws SQLException {
+		String query = "SELECT * FROM appointments WHERE date = ? AND startTime = ? AND practitioner = ? LIMIT 1";
+
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setLong(1, date);
+			stmt.setLong(2, startTime);
+			stmt.setString(3, practitioner);
+			rs = stmt.executeQuery();
+			rs.first();
+
+			return new Appointment(
+				rs.getLong("date"),
+				rs.getLong("startTime"),
+				rs.getLong("endTime"),
+				new Patient(rs.getInt("patient")),
+				new Practitioner(rs.getString("practitioner")),
+				new ArrayList<Treatment>()
+			);
+
+		} catch (SQLException e) {
+			throw new SQLException(e);
+
+		}// trycat
+
+	}// getAppointment()
+
 	public Practitioner getPractitioner(String practitionerRole) throws SQLException {
 		String query = "SELECT * FROM practitioners WHERE role = ? LIMIT 1;";
 
@@ -140,7 +167,7 @@ public class Query {
 		}// trycat
 
 	}
-	
+
 	public HealthcarePlan getHealthcarePlan (String planName) throws SQLException {
 		String query = "SELECT * FROM healthcarePlans WHERE name = ? LIMIT 1;";
 
@@ -162,17 +189,17 @@ public class Query {
 			throw new SQLException(e);
 
 		}// trycat
-		
+
 	}
-	
+
 	public ArrayList<HealthcarePlan> getHealthcarePlans () throws SQLException {
 		String query = "SELECT * FROM healthcarePlans ORDER BY cost ASC;";
 		ArrayList<HealthcarePlan> plans = new ArrayList<HealthcarePlan>();
-		
+
 		try {
 			stmt = con.prepareStatement(query);
 			rs = stmt.executeQuery();
-			
+
 			while (rs.next()) {
 				plans.add(new HealthcarePlan(
 					rs.getString("name"),
@@ -181,18 +208,18 @@ public class Query {
 					rs.getInt("hygieneVisits"),
 					rs.getInt("repairs")
 				));
-				
+
 			}
 
 		} catch (SQLException e) {
 			throw new SQLException(e);
 
 		}// trycat
-		
+
 		return plans;
-		
+
 	}
-	
+
 	public static void main (String args[]) {
 
 		try {
