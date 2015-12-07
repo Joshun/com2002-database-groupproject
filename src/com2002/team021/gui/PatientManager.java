@@ -14,6 +14,10 @@ import java.util.*;
  */
 public class PatientManager extends JFrame {
 
+
+    private DefaultTableModel patientTableModel;
+    private Patient[] patients;
+
     public class PatientManagerButtonHandler implements ActionListener {
         private PatientManager patientManager;
         public PatientManagerButtonHandler(PatientManager superclass) {
@@ -26,8 +30,20 @@ public class PatientManager extends JFrame {
         }
     }
 
+    public String[] patientToRow(Patient p) {
+        String patientString[] = { String.valueOf(p.getId()), p.getForename(), p.getSurname() };
+        return patientString;
+    }
 
-    public PatientManager() {
+    public void reload() {
+        for (Patient p: patients) {
+            patientTableModel.addRow(patientToRow(p));
+        }
+    }
+
+
+    public PatientManager(Patient[] patients) {
+        this.patients = patients;
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
@@ -35,7 +51,12 @@ public class PatientManager extends JFrame {
         addPatientButton.addActionListener(new PatientManagerButtonHandler(this));
         contentPane.add(addPatientButton);
 
-        DefaultTableModel patientTableModel = new DefaultTableModel();
+        patientTableModel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int i, int i1) {
+                return false;
+            }
+        };
         String[] headings = { "ID", "Forename", "Surname" };
         for (String s: headings) {
             patientTableModel.addColumn(s);
@@ -44,12 +65,15 @@ public class PatientManager extends JFrame {
         JScrollPane tableContainer = new JScrollPane(patientTable);
         contentPane.add(tableContainer);
 
+        reload();
+
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        PatientManager pm = new PatientManager();
+    public static void main(String[] args) throws java.sql.SQLException {
+        Patient[] patients = { new Patient("", "b", 1, 1, "14", "st74hr", null), new Patient("", "c", 1, 1, "14", "st74hr", null) };
+        PatientManager pm = new PatientManager(patients);
     }
 }
