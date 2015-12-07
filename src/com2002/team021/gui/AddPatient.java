@@ -32,6 +32,10 @@ public class AddPatient extends JFrame {
     private JButton addPatientButton;
     private Calendar calendar;
 
+    private void errorDialog(String message) {
+        JOptionPane.showMessageDialog(this, message, "Fields cannot be empty.", JOptionPane.ERROR_MESSAGE);
+    }
+
     private class AddPatientButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
             String forename = forenameEntry.getText();
@@ -51,22 +55,35 @@ public class AddPatient extends JFrame {
             String houseNo = houseNoEntry.getText();
             String postcode = postcodeEntry.getText();
 //            String phone = phoneEntry.getText();
-            int phone = Integer.valueOf(phoneEntry.getText());
+            String phoneString = phoneEntry.getText();
+
             String plan = (String) planEntry.getSelectedItem();
 
-            Patient newPatient = null;
-
-            System.out.println(dOBDay + "/" + dOBMonth + "/" + dOBYear);
-            
-            // TODO: need to generate patient ID, need to have a String for phone, need to have an object for DoB
-            try {
-                newPatient = new Patient(forename, surname, 1, 1, houseNo, postcode, plan);
-                
-            } catch (SQLException e) {
-                System.out.println("Coudlnt create patient.\n" + e);
+            if ( forename.length() == 0
+                    || surname.length() == 0
+                    || houseNo.length() == 0
+                    || postcode.length() == 0
+                    || phoneString.length() == 0) {
+                errorDialog("Fields cannot be empty.");
             }
-            
-            System.out.println("Created new patient " + newPatient);
+            else {
+                int phone = 0;
+                Patient newPatient = null;
+                try {
+                    phone = Integer.parseInt(phoneString);
+                    newPatient = new Patient(forename, surname, 1, 1, houseNo, postcode, plan);
+                }
+                catch (java.lang.NumberFormatException e) {
+                    errorDialog("Invalid phone number.");
+                    return;
+                }
+                catch (SQLException e) {
+                    System.out.println("Coudln\'t create patient.\n" + e);
+                }
+
+                System.out.println("Created new patient " + newPatient);
+            }
+
         }
     }
 
