@@ -214,15 +214,23 @@ public class AddPatient extends JFrame {
         int yearIndex = currentYear - dOBYear;
 
         dOBDayEntry.setSelectedIndex(dOBDay - 1);
-        dOBMonthEntry.setSelectedIndex(dOBMonth - 1);
+        dOBMonthEntry.setSelectedIndex(dOBMonth);
         dOBYearEntry.setSelectedIndex(yearIndex);
 
         houseNoEntry.setText(patientToModify.getHouseNumber());
+        postcodeEntry.setText(patientToModify.getPostcode());
         phoneEntry.setText(String.valueOf(patientToModify.getPhone()));
 
         // TODO: need to figure out how to get this index
         planEntry.setSelectedIndex(0);
 
+    }
+
+    public static void main(String[] args) throws java.sql.SQLException {
+        Patient[] patients = { new Patient("A", "b", 1, 1, "14", "st74hr", null), new Patient("", "c", 1, 1, "14", "st74hr", null) };
+        Patient patient = new Patient("A", "b", 1, 1, "14", "st74hr", null);
+        PatientManager pm = new PatientManager(patients);
+        AddPatient ap = new AddPatient(pm, patient);
     }
 
 }
