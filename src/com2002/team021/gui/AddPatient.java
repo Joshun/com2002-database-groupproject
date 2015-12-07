@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.ArrayList;
 import java.sql.SQLException;
@@ -36,12 +37,21 @@ public class AddPatient extends JFrame {
             String forename = forenameEntry.getText();
             String surname = surnameEntry.getText();
             int dOBDay = (Integer) dOBDayEntry.getSelectedItem();
-            int dOBMonth = (Integer) dOBMonthEntry.getSelectedItem();
+            int dOBMonth = (Integer) dOBMonthEntry.getSelectedItem() - 1;
             int dOBYear = (Integer) dOBYearEntry.getSelectedItem();
+
+            GregorianCalendar dOBCal = new GregorianCalendar();
+            dOBCal.clear();
+            dOBCal.set(Calendar.DAY_OF_MONTH, dOBDay);
+            dOBCal.set(Calendar.MONTH, dOBMonth);
+            dOBCal.set(Calendar.YEAR, dOBYear);
+            Date dOBTimestamp = dOBCal.getTime();
+            System.out.println(dOBCal);
 
             String houseNo = houseNoEntry.getText();
             String postcode = postcodeEntry.getText();
-            String phone = phoneEntry.getText();
+//            String phone = phoneEntry.getText();
+            int phone = Integer.valueOf(phoneEntry.getText());
             String plan = (String) planEntry.getSelectedItem();
 
             Patient newPatient = null;
