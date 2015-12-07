@@ -124,15 +124,7 @@ public class AddPatient extends JFrame {
         dOBContainer.add(new JLabel("Month"));
         dOBContainer.add(new JLabel("Year"));
 
-//        dOBDayEntryModel = new SpinnerNumberModel(1, 1, 31, 1);
-//        dOBDayEntry = new JSpinner(dOBDayEntryModel);
-
-
         int currentYear = calendar.get(Calendar.YEAR);
-        ArrayList<Integer> days = new ArrayList<>();
-        ArrayList<Integer> months = new ArrayList<>();
-        ArrayList<Integer> years = new ArrayList<>();
-
 
         dOBDayEntry = new JComboBox<>();
         dOBMonthEntry = new JComboBox<>();
