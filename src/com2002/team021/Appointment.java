@@ -2,6 +2,7 @@ package com2002.team021;
 
 import java.util.Date;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Appointment {
 
