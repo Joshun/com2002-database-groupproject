@@ -32,6 +32,7 @@ public class AddPatient extends JFrame {
     private JButton addPatientButton;
     private Calendar calendar;
     private PatientManager patientManager;
+    private Patient patientToModify;
 
     private void errorDialog(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -87,6 +88,7 @@ public class AddPatient extends JFrame {
     }
 
     public AddPatient(PatientManager patientManager) {
+        patientToModify = null;
         this.patientManager = patientManager;
 
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -199,6 +201,35 @@ public class AddPatient extends JFrame {
         pack();
 //        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+
+    }
+
+    public AddPatient(PatientManager patientManager, Patient patientToModify) {
+        this(patientManager);
+        this.patientToModify = patientToModify;
+        forenameEntry.setText(patientToModify.getForename());
+        surnameEntry.setText(patientToModify.getSurname());
+
+        int currentYear = calendar.get(Calendar.YEAR);
+
+        long dob = patientToModify.getDob();
+        Date dobDate = new Date(dob);
+        GregorianCalendar dobCal = new GregorianCalendar();
+        dobCal.setTime(dobDate);
+        int dOBDay = dobCal.get(Calendar.DAY_OF_MONTH);
+        int dOBMonth = dobCal.get(Calendar.MONTH);
+        int dOBYear = dobCal.get(Calendar.YEAR);
+        int yearIndex = currentYear - dOBYear;
+
+        dOBDayEntry.setSelectedIndex(dOBDay - 1);
+        dOBMonthEntry.setSelectedIndex(dOBMonth - 1);
+        dOBYearEntry.setSelectedIndex(yearIndex);
+
+        houseNoEntry.setText(patientToModify.getHouseNumber());
+        phoneEntry.setText(String.valueOf(patientToModify.getPhone()));
+
+        // TODO: need to figure out how to get this index
+        planEntry.setSelectedIndex(0);
 
     }
 
