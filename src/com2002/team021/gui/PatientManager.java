@@ -17,6 +17,7 @@ public class PatientManager extends JFrame {
 
     private DefaultTableModel patientTableModel;
     private Patient[] patients;
+    private int selectedRow, selectedCol;
 
     public class PatientManagerButtonHandler implements ActionListener {
         private PatientManager patientManager;
@@ -48,8 +49,10 @@ public class PatientManager extends JFrame {
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
         JButton addPatientButton = new JButton("Add patient");
+        JButton modifyPatientButton = new JButton("More Information / Modify patient");
         addPatientButton.addActionListener(new PatientManagerButtonHandler(this));
         contentPane.add(addPatientButton);
+        contentPane.add(modifyPatientButton);
 
         patientTableModel = new DefaultTableModel() {
             @Override
@@ -62,6 +65,19 @@ public class PatientManager extends JFrame {
             patientTableModel.addColumn(s);
         }
         JTable patientTable = new JTable(patientTableModel);
+        patientTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent event) {
+                Point rowPoint = event.getPoint();
+                int row = patientTable.rowAtPoint(rowPoint);
+                if (row >= 0) {
+                    selectedRow = row;
+                    System.out.println("Selected: " + selectedRow);
+                }
+            }
+        });
+
+
         JScrollPane tableContainer = new JScrollPane(patientTable);
         contentPane.add(tableContainer);
 
