@@ -99,32 +99,6 @@ public class Query {
 
 	}// getAddress()
 
-	public ArrayList<Address> getAddresses() throws SQLException {
-		String query = "SELECT * FROM addresses ORDER BY postcode ASC";
-		ArrayList<Address> addresses = new ArrayList<Address>();
-
-		try {
-			stmt = con.prepareStatement(query);
-			rs = stmt.executeQuery();
-
-			while (rs.next()) {
-				addresses.add(new Address(
-					rs.getString("houseNumber"),
-					rs.getString("streetName"),
-					rs.getString("district"),
-					rs.getString("city"),
-					rs.getString("postcode")
-				));
-
-			}
-
-		} catch (SQLException e) {
-			throw new SQLException(e);
-
-		}// trycat
-		return addresses;
-	}// getAddresses()
-
 	public Appointment getAppointment(long date, long startTime, String practitioner) throws SQLException {
 		String query = "SELECT * FROM appointments WHERE date = ? AND startTime = ? AND practitioner = ? LIMIT 1";
 
@@ -245,40 +219,40 @@ public class Query {
 		return plans;
 
 	}
-
+	
 	public ArrayList<Treatment> getTreatments () throws SQLException {
 		String query = "SELECT * FROM treatments ORDER BY name ASC;";
 		ArrayList<Treatment> treatments = new ArrayList<Treatment>();
-
+		
 		try {
 			stmt = con.prepareStatement(query);
 			rs = stmt.executeQuery();
-
+			
 			while (rs.next()) {
 				treatments.add(new Treatment(
 					rs.getString("name"),
 					rs.getInt("cost")
 				));
-
+				
 			}
-
+			
 		} catch (SQLException e) {
 			throw new SQLException("couldnt get treatments", e);
-
+			
 		}// trycat
-
+		
 		return treatments;
-
+		
 	}
-
+	
 	public ArrayList<Appointment> getAppointments () throws SQLException {
 		String query = "SELECT * FROM appointments ORDER BY date ASC, startTime ASC;";
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
-
+		
 		try {
 			stmt = con.prepareStatement(query);
 			rs = stmt.executeQuery();
-
+			
 			while (rs.next()) {
 				appointments.add(new Appointment(
 					rs.getLong("date"),
@@ -286,55 +260,84 @@ public class Query {
 					rs.getLong("endTime"),
 					new Patient(rs.getInt("patient")),
 					new Practitioner(rs.getString("practitioner")),
-					null
+					new ArrayList<Treatment>()
 				));
-
+				
 			}
-
+			
 		} catch (SQLException e) {
-			throw new SQLException("couldnt get appointments", e);
-
+			throw new SQLException("couldnt get appointments\n" + e);
+			
 		}// trycat
-
+		
 		return appointments;
-
+		
 	}
-
+	
+	public ArrayList<Patient> getPatients () throws SQLException {
+		String query = "SELECT * FROM patient ORDER BY id DESC;";
+		ArrayList<Patient> patients = new ArrayList<Patient>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				patients.add(new Patient(
+					rs.getInt("id"),
+					rs.getString("forename"),
+					rs.getString("surname"),
+					rs.getLong("dob"),
+					rs.getInt("phone"),
+					rs.getString("houseNumber"),
+					rs.getString("postcode"),
+					rs.getString("subscription")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get patients\n" + e);
+			
+		}// trycat
+		
+		return patients;
+		
+	}
+	
 	public ArrayList<Treatment> getAppointmentTreatments (Appointment appointment) throws SQLException {
 		String query = "SELECT * FROM sessions WHERE date = ? AND startTime = ? AND practitioner = ?";
 		ArrayList<Treatment> treatments = new ArrayList<Treatment>();
-
+		
 		try {
 			stmt = con.prepareStatement(query);
 			stmt.setLong(1, appointment.getDate().getTime());
 			stmt.setLong(2, appointment.getStartTime().getTime());
 			stmt.setString(3, appointment.getPractitioner().getRole());
 			rs = stmt.executeQuery();
-
+			
 			while (rs.next()) {
 				treatments.add(new Treatment(
 					rs.getString("treatmentName")
 				));
-
+				
 			}
-
+			
 		} catch (SQLException e) {
 			System.out.println(appointment);
 			throw new SQLException("Could not find treatments for appointment: " + "\n" + e);
-
+			
 		}// trycat
-
+		
 		return treatments;
-
+		
 	}
-
-
+	
+	
 	public static void main (String args[]) {
 
 		try {
-			System.out.println("");
-			System.out.println(new Query().getAddresses());
-
+			System.out.println(new Query().getPatients());
 
 		} catch (Exception e) {
 			e.printStackTrace();

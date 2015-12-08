@@ -8,7 +8,7 @@ public class Patient {
 	private int id;
 	private String forename;
 	private String surname;
-	private int dob;
+	private long dob;
 	private int phone;
 	private Address address;
 	private HealthcarePlan subscription;
@@ -33,7 +33,7 @@ public class Patient {
 		
 	}
 
-	public Patient (String forename, String surname, int dob, int phone, String houseNumber, String postcode, String subscription) throws SQLException {
+	public Patient (String forename, String surname, long dob, int phone, String houseNumber, String postcode, String subscription) throws SQLException {
 		this.forename = forename;
 		this.surname = surname;
 		this.dob = dob;
@@ -60,7 +60,7 @@ public class Patient {
 		
 	}
 	
-	public Patient (int id, String forename, String surname, int dob, int phone, String houseNumber, String postcode, String subscription) throws SQLException {
+	public Patient (int id, String forename, String surname, long dob, int phone, String houseNumber, String postcode, String subscription) throws SQLException {
 		this.id = id;
 		this.forename = forename;
 		this.surname = surname;
@@ -70,7 +70,13 @@ public class Patient {
 		
 		try {
 			this.address = new Address(houseNumber, postcode);
-			if (subscription != null) this.subscription = new HealthcarePlan(subscription);
+			
+		} catch (SQLException e) {
+			throw new SQLException(e);
+		}
+		
+		try {
+			this.subscription = new HealthcarePlan(subscription);
 			
 		} catch (SQLException e) {
 			throw new SQLException(e);
@@ -81,7 +87,7 @@ public class Patient {
 	public int getId () { return this.id; }
 	public String getForename () { return this.forename; }
 	public String getSurname () { return this.surname; }
-	public int getDob () { return this.dob; }
+	public long getDob () { return this.dob; }
 	public int getPhone () { return this.phone; }
 	public HealthcarePlan getSubscription () { return this.subscription; }
 	public boolean getInDB () { return this.inDB; }
