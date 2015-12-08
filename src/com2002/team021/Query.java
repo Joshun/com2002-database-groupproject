@@ -116,11 +116,11 @@ public class Query {
 				rs.getLong("endTime"),
 				new Patient(rs.getInt("patient")),
 				new Practitioner(rs.getString("practitioner")),
-				new ArrayList<Treatment>()
+				null
 			);
 
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("Couldn't find appointment in database: " + date + " " + startTime + " " + practitioner, e);
 
 		}// trycat
 
@@ -141,7 +141,7 @@ public class Query {
 			);
 
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("couldnt find practitioner", e);
 
 		}// trycat
 
@@ -162,7 +162,7 @@ public class Query {
 			);
 
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("couldnt find treatment: " + treatmentName, e);
 
 		}// trycat
 
@@ -219,14 +219,97 @@ public class Query {
 		return plans;
 
 	}
-
+	
+	public ArrayList<Treatment> getTreatments () throws SQLException {
+		String query = "SELECT * FROM treatments ORDER BY name ASC;";
+		ArrayList<Treatment> treatments = new ArrayList<Treatment>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				treatments.add(new Treatment(
+					rs.getString("name"),
+					rs.getInt("cost")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get treatments", e);
+			
+		}// trycat
+		
+		return treatments;
+		
+	}
+	
+	public ArrayList<Appointment> getAppointments () throws SQLException {
+		String query = "SELECT * FROM appointments ORDER BY date ASC, startTime ASC;";
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				appointments.add(new Appointment(
+					rs.getLong("date"),
+					rs.getLong("startTime"),
+					rs.getLong("endTime"),
+					new Patient(rs.getInt("patient")),
+					new Practitioner(rs.getString("practitioner")),
+					null
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get appointments", e);
+			
+		}// trycat
+		
+		return appointments;
+		
+	}
+	
+	public ArrayList<Treatment> getAppointmentTreatments (Appointment appointment) throws SQLException {
+		String query = "SELECT * FROM sessions WHERE date = ? AND startTime = ? AND practitioner = ?";
+		ArrayList<Treatment> treatments = new ArrayList<Treatment>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setLong(1, appointment.getDate().getTime());
+			stmt.setLong(2, appointment.getStartTime().getTime());
+			stmt.setString(3, appointment.getPractitioner().getRole());
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				treatments.add(new Treatment(
+					rs.getString("treatmentName")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			System.out.println(appointment);
+			throw new SQLException("Could not find treatments for appointment: " + "\n" + e);
+			
+		}// trycat
+		
+		return treatments;
+		
+	}
+	
+	
 	public static void main (String args[]) {
 
 		try {
-			System.out.println(new Query().getPatient(1));
+			System.out.println("");
 
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 
 		}
 

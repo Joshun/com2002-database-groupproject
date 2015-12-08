@@ -17,7 +17,7 @@ public class Practitioner {
 			this.name = dbPractitioner.getName();
 
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("Couldn't find practitioner in database", e);
 
 		}
 
