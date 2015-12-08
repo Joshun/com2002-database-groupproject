@@ -50,7 +50,7 @@ public class AppointmentDayView extends JFrame {
         public void actionPerformed(ActionEvent e) {
             Query query = new Query();
             try {
-                AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), new Date());
+                AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), day);
             }
             catch (java.sql.SQLException ex) {
                 System.out.println("Couldn't add appointment " + ex);
