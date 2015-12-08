@@ -27,7 +27,7 @@ public class Patient {
 			this.inDB = true;
 			
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("couldnt get patient: " + patientID + "\n" + e);
 			
 		}
 		
@@ -44,7 +44,7 @@ public class Patient {
 			this.address = new Address(houseNumber, postcode);
 			
 		} catch (SQLException e) {
-			throw new SQLException("Address not in database.", e);
+			throw new SQLException("Address not in database." + houseNumber + "" + postcode, e);
 		}
 		
 		try {
@@ -55,7 +55,7 @@ public class Patient {
 			}
 			
 		} catch (SQLException e) {
-			throw new SQLException("Subscription not in database.", e);
+			throw new SQLException("Subscription not in database: " + subscription, e);
 		}
 		
 	}
@@ -72,14 +72,14 @@ public class Patient {
 			this.address = new Address(houseNumber, postcode);
 			
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("couldnt get address: " + houseNumber + ", " + postcode + "\n" + e);
 		}
 		
 		try {
-			this.subscription = new HealthcarePlan(subscription);
+			if (subscription != null) this.subscription = new HealthcarePlan(subscription);
 			
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("Subscription not in database: " + subscription, e);
 		}
 	}
 	
