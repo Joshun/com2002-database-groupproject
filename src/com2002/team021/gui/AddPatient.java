@@ -80,6 +80,7 @@ public class AddPatient extends JFrame {
                         patientManager.updatePatient(patientToModify, newPatient);
                     }
                     setVisible(false);
+                    patientManager.setEnabled(true);
                 } catch (java.lang.NumberFormatException e) {
                     errorDialog("Invalid phone number.");
                 }
