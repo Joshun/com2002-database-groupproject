@@ -1,5 +1,7 @@
 package com2002.team021.gui.gui2;
 
+import com2002.team021.gui.PatientManager;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -43,7 +45,7 @@ public class ChoiceScreenTwo extends JFrame {
             ptnMan = new JButton("Patient Management");
 
             editCal.addActionListener(new btnEditCal_Action());
-            //ptnMan.addActionListener(new btnPtnMan_Action());
+            ptnMan.addActionListener(new btnPtnMan_Action());
 
             contentPane.add(editCal);
             contentPane.add(ptnMan);
@@ -79,6 +81,18 @@ public class ChoiceScreenTwo extends JFrame {
         public void actionPerformed(ActionEvent e) {
             choiceScreen.dispose();
             new CalendarView();
+        }
+    }
+
+    static class btnPtnMan_Action implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            choiceScreen.dispose();
+            try {
+                new PatientManager();
+            }
+            catch (java.sql.SQLException ex) {
+                System.out.println("Error: couldn\'t initialise patient manager " + ex);
+            }
         }
     }
 
