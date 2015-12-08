@@ -73,7 +73,12 @@ public class AddPatient extends JFrame {
                 try {
                     phone = Integer.parseInt(phoneString);
                     newPatient = new Patient(forename, surname, (int)dOBTimestamp.getTime(), phone, houseNo, postcode, plan);
-                    patientManager.addPatient(newPatient);
+                    if (patientToModify == null) {
+                        patientManager.addPatient(newPatient);
+                    }
+                    else {
+                        patientManager.updatePatient(patientToModify, newPatient);
+                    }
                     setVisible(false);
                 } catch (java.lang.NumberFormatException e) {
                     errorDialog("Invalid phone number.");

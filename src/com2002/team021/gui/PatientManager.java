@@ -38,6 +38,8 @@ public class PatientManager extends JFrame {
             else {
                 ap = new AddPatient(patientManager);
 
+
+
             }
             ap.setVisible(true);
             setEnabled(false);
@@ -116,6 +118,19 @@ public class PatientManager extends JFrame {
     public void addPatient(Patient p) {
         patients.add(p);
         patientTableModel.addRow(patientToRow(p));
+    }
+
+//    public int getPatientIndex(Patient p) {
+//        return patients.indexOf(p);
+//    }
+
+    public void updatePatient(Patient oldPatient, Patient newPatient) {
+        int indexOfOld = patients.indexOf(oldPatient);
+        System.out.println(indexOfOld);
+        patients.set(indexOfOld, newPatient);
+        patientTableModel.setValueAt(newPatient.getId(), indexOfOld, 0);
+        patientTableModel.setValueAt(newPatient.getForename(), indexOfOld, 1);
+        patientTableModel.setValueAt(newPatient.getSurname(), indexOfOld, 2);
     }
 
     public static void main(String[] args) throws java.sql.SQLException {
