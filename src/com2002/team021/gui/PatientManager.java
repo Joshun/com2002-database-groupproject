@@ -19,13 +19,25 @@ public class PatientManager extends JFrame {
     private Patient[] patients;
     private int selectedRow, selectedCol;
 
-    public class PatientManagerButtonHandler implements ActionListener {
+    private class PatientManagerButtonHandler implements ActionListener {
+        private boolean modifyCurrent;
         private PatientManager patientManager;
-        public PatientManagerButtonHandler(PatientManager superclass) {
+        public PatientManagerButtonHandler(PatientManager superclass, Boolean modifyCurrent) {
             this.patientManager = superclass;
+            this.modifyCurrent = modifyCurrent;
         }
+
         public void actionPerformed(ActionEvent actionEvent) {
-            AddPatient ap = new AddPatient(patientManager);
+
+            AddPatient ap;
+            if (modifyCurrent) {
+                System.out.println("Trying to modify existing patient at index, " + patientManager.selectedRow);
+                ap = new AddPatient(patientManager, patientManager.patients[patientManager.selectedRow]);
+            }
+            else {
+                ap = new AddPatient(patientManager);
+
+            }
             ap.setVisible(true);
             setEnabled(false);
         }
@@ -50,7 +62,8 @@ public class PatientManager extends JFrame {
 
         JButton addPatientButton = new JButton("Add patient");
         JButton modifyPatientButton = new JButton("More Information / Modify patient");
-        addPatientButton.addActionListener(new PatientManagerButtonHandler(this));
+        addPatientButton.addActionListener(new PatientManagerButtonHandler(this, false));
+        modifyPatientButton.addActionListener(new PatientManagerButtonHandler(this, true));
         contentPane.add(addPatientButton);
         contentPane.add(modifyPatientButton);
 
