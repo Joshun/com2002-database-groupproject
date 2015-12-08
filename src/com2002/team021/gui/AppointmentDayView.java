@@ -3,6 +3,7 @@ package com2002.team021.gui;
 import com2002.team021.Appointment;
 import com2002.team021.Patient;
 import com2002.team021.Practitioner;
+import com2002.team021.Query;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -43,6 +44,14 @@ public class AppointmentDayView extends JFrame {
         }
     }
 
+    public class addAppHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Query query = new Query();
+            AddAppointment ap = new AddAppointment(query.getPatient(), query.getP)
+        }
+    }
+
     public AppointmentDayView() {
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
@@ -66,6 +75,19 @@ public class AppointmentDayView extends JFrame {
         }
 
         JTable table = new JTable(tableModel);
+
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent event) {
+                Point rowPoint = event.getPoint();
+                int row = table.rowAtPoint(rowPoint);
+                if (row >= 0) {
+                    selectedRow = row;
+                    System.out.println("Selected: " + selectedRow);
+                }
+            }
+        });
+
         JScrollPane tableContainer = new JScrollPane(table);
         contentPane.add(tableContainer);
 
@@ -98,6 +120,10 @@ public class AppointmentDayView extends JFrame {
         tableModel.setValueAt(dateFormat.format(newAppointment.getStartTime()), indexOfOld, 4);
         tableModel.setValueAt(dateFormat.format(newAppointment.getEndTime()), indexOfOld, 5);
         tableModel.setValueAt("role", indexOfOld, 6);
+    }
+
+    public int getSelectedRow() {
+        return selectedRow;
     }
 
     public static void main(String[] args) {
