@@ -20,13 +20,14 @@ public class AppointmentDayView extends JFrame {
     private DefaultTableModel tableModel;
     private ArrayList<Appointment> appointments;
     private int selectedRow;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+
 
     public String[] appointmentToRow(Appointment a) {
         Patient patient = a.getPatient();
         Practitioner practitioner = a.getPractitioner();
         Date startTime = a.getStartTime();
         Date endTime = a.getEndTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
 //        GregorianCalendar startCal = new GregorianCalendar();
 //        GregorianCalendar endCal = new GregorianCalendar();
 //        startCal.setTime(startTime);
@@ -43,7 +44,6 @@ public class AppointmentDayView extends JFrame {
     }
 
     public AppointmentDayView() {
-        this.appointments = appointments;
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         JButton addAppButt = new JButton("Add");
@@ -69,9 +69,35 @@ public class AppointmentDayView extends JFrame {
         JScrollPane tableContainer = new JScrollPane(table);
         contentPane.add(tableContainer);
 
+//        reload();
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
+    }
+
+    public void addAppointment(Appointment a) {
+        appointments.add(a);
+        tableModel.addRow(appointmentToRow(a));
+    }
+
+    public void removeAppointment(Appointment a) {
+        tableModel.removeRow(appointments.indexOf(a));
+        appointments.remove(a);
+    }
+
+    public void updateAppointment(Appointment oldPatient, Appointment newAppointment) {
+        int indexOfOld = appointments.indexOf(oldPatient);
+        appointments.set(indexOfOld, newAppointment);
+        Patient p = newAppointment.getPatient();
+        Practitioner practitioner = newAppointment.getPractitioner();
+        tableModel.setValueAt(p.getSurname(), indexOfOld, 0);
+        tableModel.setValueAt(p.getForename(), indexOfOld, 1);
+        tableModel.setValueAt(practitioner.getRole(), indexOfOld, 2);
+        tableModel.setValueAt(practitioner.getName(), indexOfOld, 3);
+        tableModel.setValueAt(dateFormat.format(newAppointment.getStartTime()), indexOfOld, 4);
+        tableModel.setValueAt(dateFormat.format(newAppointment.getEndTime()), indexOfOld, 5);
+        tableModel.setValueAt("role", indexOfOld, 6);
     }
 
     public static void main(String[] args) {
