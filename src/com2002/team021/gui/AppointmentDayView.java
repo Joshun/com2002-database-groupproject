@@ -34,8 +34,10 @@ public class AppointmentDayView extends JFrame {
 //        GregorianCalendar endCal = new GregorianCalendar();
 //        startCal.setTime(startTime);
 //        endCal.setTime(endTime);
+        System.out.println(practitioner);
+        System.out.println(patient);
 
-        String[] appString = { patient.getSurname(), patient.getForename(), practitioner.getRole(), practitioner.getName(), dateFormat.format(startTime), dateFormat.format(endTime), "type"};
+        String[] appString = { patient.getSurname(), patient.getForename(), practitioner.getRole(), practitioner.getName(), dateFormat.format(startTime), dateFormat.format(endTime)};
         return appString;
     }
 
@@ -60,6 +62,7 @@ public class AppointmentDayView extends JFrame {
 
     public AppointmentDayView(Date day) {
         this.day = day;
+
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         JButton addAppButt = new JButton("Add");
@@ -77,7 +80,7 @@ public class AppointmentDayView extends JFrame {
             }
         };
 
-        String tableHeadings[] = { "PatientSurname", "PatientForename", "PractitionerRole", "PractitionerName", "Start", "End", "Type" };
+        String tableHeadings[] = { "PatientSurname", "PatientForename", "PractitionerRole", "PractitionerName", "Start", "End" };
         for (String heading: tableHeadings) {
             tableModel.addColumn(heading);
         }
@@ -99,7 +102,15 @@ public class AppointmentDayView extends JFrame {
         JScrollPane tableContainer = new JScrollPane(table);
         contentPane.add(tableContainer);
 
-//        reload();
+        try {
+            Query query = new Query();
+            this.appointments = query.getAppointments();
+            System.out.println(appointments.size());
+            reload();
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Couldn\'t connect to db " + e);
+        }
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
