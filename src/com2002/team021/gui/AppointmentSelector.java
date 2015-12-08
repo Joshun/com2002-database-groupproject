@@ -52,9 +52,9 @@ public class AppointmentSelector extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public static void main(String[] args) throws java.sql.SQLException {
-        Appointment[] appointments = { new Appointment(), new Appointment() };
-        AppointmentSelector appSel = new AppointmentSelector(appointments, true);
-        appSel.setVisible(true);
-    }
+//    public static void main(String[] args) throws java.sql.SQLException {
+//        Appointment[] appointments = { new Appointment(), new Appointment() };
+//        AppointmentSelector appSel = new AppointmentSelector(appointments, true);
+//        appSel.setVisible(true);
+//    }
 }

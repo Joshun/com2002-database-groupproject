@@ -31,9 +31,11 @@ public class AddPatient extends JFrame {
     private JComboBox<String> planEntry;
     private JButton addPatientButton;
     private Calendar calendar;
+    private PatientManager patientManager;
+    private Patient patientToModify;
 
     private void errorDialog(String message) {
-        JOptionPane.showMessageDialog(this, message, "Fields cannot be empty.", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private class AddPatientButtonHandler implements ActionListener {
@@ -59,26 +61,33 @@ public class AddPatient extends JFrame {
 
             String plan = (String) planEntry.getSelectedItem();
 
-            if ( forename.length() == 0
+            if (forename.length() == 0
                     || surname.length() == 0
                     || houseNo.length() == 0
                     || postcode.length() == 0
                     || phoneString.length() == 0) {
                 errorDialog("Fields cannot be empty.");
-            }
-            else {
+            } else {
                 int phone = 0;
                 Patient newPatient = null;
                 try {
                     phone = Integer.parseInt(phoneString);
-                    newPatient = new Patient(forename, surname, 1, 1, houseNo, postcode, plan);
-                }
-                catch (java.lang.NumberFormatException e) {
+                    newPatient = new Patient(forename, surname, (int)dOBTimestamp.getTime(), phone, houseNo, postcode, plan);
+                    if (patientToModify == null) {
+                        patientManager.addPatient(newPatient);
+                    }
+                    else {
+                        patientManager.updatePatient(patientToModify, newPatient);
+                    }
+                    setVisible(false);
+                    patientManager.setEnabled(true);
+                } catch (java.lang.NumberFormatException e) {
                     errorDialog("Invalid phone number.");
-                    return;
                 }
-                catch (SQLException e) {
-                    System.out.println("Coudln\'t create patient.\n" + e);
+                catch (java.sql.SQLException e) {
+                    String error = "Coudln\'t create patient.\n" + e;
+                    System.out.println(error);
+                    errorDialog(error);
                 }
 
                 System.out.println("Created new patient " + newPatient);
@@ -87,7 +96,17 @@ public class AddPatient extends JFrame {
         }
     }
 
-    public AddPatient() {
+    public AddPatient(PatientManager patientManager) {
+        patientToModify = null;
+        this.patientManager = patientManager;
+
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                patientManager.setEnabled(true);
+            }
+        });
+
         calendar = new GregorianCalendar();
         setTitle("Add patient");
         Container contentPane = getContentPane();
@@ -114,31 +133,21 @@ public class AddPatient extends JFrame {
         dOBContainer.add(new JLabel("Month"));
         dOBContainer.add(new JLabel("Year"));
 
-//        dOBDayEntryModel = new SpinnerNumberModel(1, 1, 31, 1);
-//        dOBDayEntry = new JSpinner(dOBDayEntryModel);
-
-
-
         int currentYear = calendar.get(Calendar.YEAR);
-        ArrayList<Integer> days = new ArrayList<>();
-        ArrayList<Integer> months = new ArrayList<>();
-        ArrayList<Integer> years = new ArrayList<>();
-
-
 
         dOBDayEntry = new JComboBox<>();
         dOBMonthEntry = new JComboBox<>();
         dOBYearEntry = new JComboBox<>();
 
-        for (int i=0; i<31; i++) {
-            dOBDayEntry.addItem(new Integer(i+1));
+        for (int i = 0; i < 31; i++) {
+            dOBDayEntry.addItem(new Integer(i + 1));
         }
-        for (int i=0; i<12; i++) {
-            dOBMonthEntry.addItem(new Integer(i+1));
+        for (int i = 0; i < 12; i++) {
+            dOBMonthEntry.addItem(new Integer(i + 1));
         }
 
-        for (int i=0; i<120; i++) {
-            dOBYearEntry.addItem(new Integer(currentYear-i));
+        for (int i = 0; i < 120; i++) {
+            dOBYearEntry.addItem(new Integer(currentYear - i));
         }
 
         dOBContainer.add(dOBDayEntry);
@@ -164,24 +173,24 @@ public class AddPatient extends JFrame {
         contentPane.add(phoneEntry);
 
         contentPane.add(new JLabel("Plan:"));
-        
+
         ArrayList<HealthcarePlan> healthcarePlans = null;
-        
+
         try {
             healthcarePlans = new Query().getHealthcarePlans();
-            
+
         } catch (SQLException e) {
             System.out.println("Couldn't get treatment list\n" + e);
         }
-        
+
         String[] planStrings = new String[healthcarePlans.size()];
-        
+
         int i = 0;
         for (HealthcarePlan t : healthcarePlans) {
             planStrings[i] = t.getName();
             i++;
         }
-        
+
         planEntry = new JComboBox<>(planStrings);
         contentPane.add(planEntry);
 
@@ -191,12 +200,46 @@ public class AddPatient extends JFrame {
         contentPane.add(addPatientButton);
 
         pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
     }
 
-    public static void main(String[] args) {
-        AddPatient ap = new AddPatient();
+    public AddPatient(PatientManager patientManager, Patient patientToModify) {
+        this(patientManager);
+        this.patientToModify = patientToModify;
+        forenameEntry.setText(patientToModify.getForename());
+        surnameEntry.setText(patientToModify.getSurname());
+
+        int currentYear = calendar.get(Calendar.YEAR);
+
+        long dob = patientToModify.getDob();
+        Date dobDate = new Date(dob);
+        GregorianCalendar dobCal = new GregorianCalendar();
+        dobCal.setTime(dobDate);
+        int dOBDay = dobCal.get(Calendar.DAY_OF_MONTH);
+        int dOBMonth = dobCal.get(Calendar.MONTH);
+        int dOBYear = dobCal.get(Calendar.YEAR);
+        int yearIndex = currentYear - dOBYear;
+
+        dOBDayEntry.setSelectedIndex(dOBDay - 1);
+        dOBMonthEntry.setSelectedIndex(dOBMonth);
+        dOBYearEntry.setSelectedIndex(yearIndex);
+
+        houseNoEntry.setText(patientToModify.getHouseNumber());
+        postcodeEntry.setText(patientToModify.getPostcode());
+        phoneEntry.setText(String.valueOf(patientToModify.getPhone()));
+
+        // TODO: need to figure out how to get this index
+        planEntry.setSelectedIndex(0);
+
     }
+
+    public static void main(String[] args) throws java.sql.SQLException {
+        Patient[] patients = { new Patient("A", "b", 1, 1, "14", "st74hr", null), new Patient("", "c", 1, 1, "14", "st74hr", null) };
+        Patient patient = new Patient("A", "b", 1, 1, "14", "st74hr", null);
+        PatientManager pm = new PatientManager();
+        AddPatient ap = new AddPatient(pm, patient);
+    }
+
 }
