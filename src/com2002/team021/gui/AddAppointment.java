@@ -4,6 +4,8 @@ import com2002.team021.Patient;
 import com2002.team021.Practitioner;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +20,9 @@ import java.text.SimpleDateFormat;
 
 
 public class AddAppointment extends JFrame {
+    private Date day;
+    private Date startTimeStamp;
+    private Date endTimeStamp;
     private JComboBox<Patient> patientJComboBox;
     private JComboBox<Practitioner> practitionerJComboBox;
     private JComboBox<String> appointmentJComboBox;
@@ -39,7 +44,10 @@ public class AddAppointment extends JFrame {
         }
     }
 
-    public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners) {
+    public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, Date day) {
+        this.day = day;
+        this.startTimeStamp = day;
+        this.endTimeStamp = computeEndTime(startTimeStamp, "Checkup");
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(6, 2));
 
@@ -60,6 +68,7 @@ public class AddAppointment extends JFrame {
 
         contentPane.add(new JLabel("Type"));
         appointmentJComboBox = new JComboBox<>(appointmentTypes);
+        appointmentJComboBox.addActionListener(new ComboChangeListener());
         contentPane.add(appointmentJComboBox);
 
         JPanel timeContainer = new JPanel(new GridLayout(2, 2));
@@ -69,6 +78,11 @@ public class AddAppointment extends JFrame {
         startMinuteEntryModel = new SpinnerNumberModel(0, 0, 59, 1);
         JSpinner startHourEntry = new JSpinner(startHourEntryModel);
         JSpinner startMinuteEntry = new JSpinner(startMinuteEntryModel);
+
+        SpinnerChangeListener scl = new SpinnerChangeListener();
+        startHourEntry.addChangeListener(scl);
+        startMinuteEntry.addChangeListener(scl);
+
         timeContainer.add(startHourEntry);
         timeContainer.add(startMinuteEntry);
         contentPane.add(new JLabel("Start time"));
@@ -77,6 +91,7 @@ public class AddAppointment extends JFrame {
         contentPane.add(new JLabel("End time"));
         endTimeLabel = new JLabel("-");
         contentPane.add(endTimeLabel);
+        updateEndTimeLabel(endTimeStamp);
 
         contentPane.add(new JLabel());
         JButton addAppointmentButton = new JButton("Add appointment");
@@ -86,6 +101,32 @@ public class AddAppointment extends JFrame {
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    private class SpinnerChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent changeEvent) {
+            timeChanged();
+        }
+    }
+
+    private class ComboChangeListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            timeChanged();
+        }
+    }
+
+    private void timeChanged() {
+        String appointmentType = (String) appointmentJComboBox.getSelectedItem();
+        int hour = startHourEntryModel.getNumber().intValue();
+        int minute = startMinuteEntryModel.getNumber().intValue();
+        Calendar startTimeCal = Calendar.getInstance();
+        startTimeCal.set(Calendar.HOUR_OF_DAY, hour);
+        startTimeCal.set(Calendar.MINUTE, minute);
+        startTimeStamp = startTimeCal.getTime();
+        endTimeStamp = computeEndTime(startTimeStamp, appointmentType);
+        updateEndTimeLabel(endTimeStamp);
     }
 
     private void updateEndTimeLabel(Date endTime) {
@@ -98,7 +139,7 @@ public class AddAppointment extends JFrame {
         switch (appointmentType) {
             case "Checkup":
             case "Hygienist":
-                cal.add(Calendar.MINUTE, 20);
+                cal.add(Calendar.MINUTE, 19);
                 break;
             case "Treatment":
                 cal.add(Calendar.MINUTE, 59);
