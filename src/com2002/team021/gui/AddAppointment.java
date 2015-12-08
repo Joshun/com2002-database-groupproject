@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by joshua on 07/12/15.
@@ -29,16 +30,23 @@ public class AddAppointment extends JFrame {
         }
     }
 
-    public AddAppointment(Patient[] allPatients, Practitioner[] allPractitioners) {
+    public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners) {
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(4, 2));
 
         contentPane.add(new JLabel("Patient"));
-        patientJComboBox = new JComboBox<>(allPatients);
+        patientJComboBox = new JComboBox<>();
+        for (Patient p: allPatients) {
+            patientJComboBox.addItem(p);
+        }
+
         contentPane.add(patientJComboBox);
 
         contentPane.add(new JLabel("Practitioner"));
-        practitionerJComboBox = new JComboBox<>(allPractitioners);
+        practitionerJComboBox = new JComboBox<>();
+        for (Practitioner p: allPractitioners) {
+            practitionerJComboBox.addItem(p);
+        }
         contentPane.add(practitionerJComboBox);
 
         contentPane.add(new JLabel("Type"));
@@ -58,6 +66,6 @@ public class AddAppointment extends JFrame {
     public static void main(String[] args) throws java.sql.SQLException {
         Patient[] patients = { new Patient("", "b", 1, 1, "14", "st74hr", null), new Patient("", "c", 1, 1, "14", "st74hr", null) };
         Practitioner[] practitioners = { new Practitioner("Mr a", "Dentist") };
-        AddAppointment ap = new AddAppointment(patients, practitioners);
+//        AddAppointment ap = new AddAppointment(patients, practitioners);
     }
 }
