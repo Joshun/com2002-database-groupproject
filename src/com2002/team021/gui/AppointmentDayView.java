@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
  * Created by joshua on 08/12/15.
  */
 public class AppointmentDayView extends JFrame {
+    Date day;
     private DefaultTableModel tableModel;
     private ArrayList<Appointment> appointments;
     private int selectedRow;
@@ -57,7 +58,8 @@ public class AppointmentDayView extends JFrame {
         }
     }
 
-    public AppointmentDayView() {
+    public AppointmentDayView(Date day) {
+        this.day = day;
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         JButton addAppButt = new JButton("Add");
@@ -133,6 +135,6 @@ public class AppointmentDayView extends JFrame {
     }
 
     public static void main(String[] args) {
-        AppointmentDayView adv = new AppointmentDayView();
+        AppointmentDayView adv = new AppointmentDayView(new Date());
     }
 }
