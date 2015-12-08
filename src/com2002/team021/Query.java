@@ -98,7 +98,33 @@ public class Query {
 		}// trycat
 
 	}// getAddress()
-
+	
+	public ArrayList<Address> getAddresses() throws SQLException {
+		String query = "SELECT * FROM addresses ORDER BY postcode ASC";
+		ArrayList<Address> addresses = new ArrayList<Address>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				addresses.add(new Address(
+					rs.getString("houseNumber"),
+					rs.getString("streetName"),
+					rs.getString("district"),
+					rs.getString("city"),
+					rs.getString("postcode")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException(e);
+			
+		}// trycat
+		return addresses;
+	}// getAddresses()
+	
 	public Appointment getAppointment(long date, long startTime, String practitioner) throws SQLException {
 		String query = "SELECT * FROM appointments WHERE date = ? AND startTime = ? AND practitioner = ? LIMIT 1";
 
@@ -274,8 +300,9 @@ public class Query {
 		
 	}
 	
+	
 	public ArrayList<Patient> getPatients () throws SQLException {
-		String query = "SELECT * FROM patient ORDER BY id DESC;";
+		String query = "SELECT * FROM patients ORDER BY id DESC;";
 		ArrayList<Patient> patients = new ArrayList<Patient>();
 		
 		try {
@@ -337,7 +364,7 @@ public class Query {
 	public static void main (String args[]) {
 
 		try {
-			System.out.println(new Query().getPatients());
+			System.out.println(new Query().getAddresses());
 
 		} catch (Exception e) {
 			e.printStackTrace();
