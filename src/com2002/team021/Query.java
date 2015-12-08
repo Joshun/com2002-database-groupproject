@@ -44,7 +44,7 @@ public class Query {
 			);
 
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("couldnt get patient: " + patientID + "\n" + e);
 
 		}// trycat
 
@@ -68,7 +68,7 @@ public class Query {
 			);
 
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("couldnt get patient address: " + patientID + "\n" + e);
 
 		}// trycat
 
@@ -93,12 +93,38 @@ public class Query {
 			);
 
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("couldnt get address: " + houseNumber + " " + postcode + "\n" + e);
 
 		}// trycat
 
 	}// getAddress()
-
+	
+	public ArrayList<Address> getAddresses() throws SQLException {
+		String query = "SELECT * FROM addresses ORDER BY postcode ASC";
+		ArrayList<Address> addresses = new ArrayList<Address>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				addresses.add(new Address(
+					rs.getString("houseNumber"),
+					rs.getString("streetName"),
+					rs.getString("district"),
+					rs.getString("city"),
+					rs.getString("postcode")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get addresses: \n" + e);
+			
+		}// trycat
+		return addresses;
+	}// getAddresses()
+	
 	public Appointment getAppointment(long date, long startTime, String practitioner) throws SQLException {
 		String query = "SELECT * FROM appointments WHERE date = ? AND startTime = ? AND practitioner = ? LIMIT 1";
 
@@ -186,7 +212,7 @@ public class Query {
 			);
 
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("Couldnt get healthcare plan: " + planName + "\n" + e);
 
 		}// trycat
 
@@ -212,7 +238,7 @@ public class Query {
 			}
 
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("couldnt get healthcare plans: \n" + e);
 
 		}// trycat
 
@@ -260,17 +286,48 @@ public class Query {
 					rs.getLong("endTime"),
 					new Patient(rs.getInt("patient")),
 					new Practitioner(rs.getString("practitioner")),
-					null
+					new ArrayList<Treatment>()
 				));
 				
 			}
 			
 		} catch (SQLException e) {
-			throw new SQLException("couldnt get appointments", e);
+			throw new SQLException("couldnt get appointments\n" + e);
 			
 		}// trycat
 		
 		return appointments;
+		
+	}
+	
+	public ArrayList<Patient> getPatients () throws SQLException {
+		String query = "SELECT * FROM patients ORDER BY id DESC;";
+		ArrayList<Patient> patients = new ArrayList<Patient>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				patients.add(new Patient(
+					rs.getInt("id"),
+					rs.getString("forename"),
+					rs.getString("surname"),
+					rs.getLong("dob"),
+					rs.getInt("phone"),
+					rs.getString("houseNumber"),
+					rs.getString("postcode"),
+					rs.getString("subscription")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get patients\n" + e);
+			
+		}// trycat
+		
+		return patients;
 		
 	}
 	
@@ -306,7 +363,7 @@ public class Query {
 	public static void main (String args[]) {
 
 		try {
-			System.out.println("");
+			System.out.println(new Query().getAppointments());
 
 		} catch (Exception e) {
 			e.printStackTrace();
