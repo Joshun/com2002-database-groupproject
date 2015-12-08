@@ -100,7 +100,11 @@ public class Query {
 	}// getAddress()
 
 	public ArrayList<Address> getAddresses() throws SQLException {
+<<<<<<< Updated upstream
+		String query = "SELECT * FROM addresses ORDER BY postcode ASC;";
+=======
 		String query = "SELECT * FROM addresses ORDER BY postcode ASC";
+>>>>>>> Stashed changes
 		ArrayList<Address> addresses = new ArrayList<Address>();
 
 		try {
@@ -152,6 +156,35 @@ public class Query {
 
 	}// getAppointment()
 
+	public ArrayList<Appointment> getAppointments() throws SQLException {
+		String query = "SELECT * FROM appointments ORDER BY date ASC, startTime ASC;";
+		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
+
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				appointments.add(new Appointment(
+				rs.getLong("date"),
+				rs.getLong("startTime"),
+				rs.getLong("endTime"),
+				new Patient(rs.getInt("patient")),
+				new Practitioner(rs.getString("practitioner")),
+				new ArrayList<Treatment>()
+				));
+
+			}
+
+		} catch (SQLException e) {
+			throw new SQLException(e);
+
+		}// trycat
+
+		return appointments;
+
+	}// getAppointments
+
 	public Practitioner getPractitioner(String practitionerRole) throws SQLException {
 		String query = "SELECT * FROM practitioners WHERE role = ? LIMIT 1;";
 
@@ -173,6 +206,31 @@ public class Query {
 
 	}// getPractitioner()
 
+	public ArrayList<Practitioner> getPractitioners() throws SQLException {
+		String query = "SELECT * FROM practitioners ORDER BY name ASC;";
+		ArrayList<Practitioner> practitioners = new ArrayList<Practitioner>();
+
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				practitioners.add(new Practitioner(
+					rs.getString("name"),
+					rs.getString("role")
+				));
+
+			}
+
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get appointments", e);
+
+		}// trycat
+
+		return practitioners;
+
+	}//getAppointments
+
 	public Treatment getTreatment(String treatmentName) throws SQLException {
 		String query = "SELECT * FROM treatments WHERE name = ? LIMIT 1;";
 
@@ -192,7 +250,7 @@ public class Query {
 
 		}// trycat
 
-	}
+	} // getTreatment
 
 	public HealthcarePlan getHealthcarePlan (String planName) throws SQLException {
 		String query = "SELECT * FROM healthcarePlans WHERE name = ? LIMIT 1;";
@@ -216,9 +274,9 @@ public class Query {
 
 		}// trycat
 
-	}
+	}// get HealthcarePlan
 
-	public ArrayList<HealthcarePlan> getHealthcarePlans () throws SQLException {
+	public ArrayList<HealthcarePlan> getHealthcarePlans() throws SQLException {
 		String query = "SELECT * FROM healthcarePlans ORDER BY cost ASC;";
 		ArrayList<HealthcarePlan> plans = new ArrayList<HealthcarePlan>();
 
@@ -244,16 +302,16 @@ public class Query {
 
 		return plans;
 
-	}
+	}// getHleathCarePlans
 
-	public ArrayList<Treatment> getTreatments () throws SQLException {
+	public ArrayList<Treatment> getTreatments() throws SQLException {
 		String query = "SELECT * FROM treatments ORDER BY name ASC;";
 		ArrayList<Treatment> treatments = new ArrayList<Treatment>();
 
 		try {
 			stmt = con.prepareStatement(query);
 			rs = stmt.executeQuery();
-			
+
 			while (rs.next()) {
 				treatments.add(new Treatment(
 					rs.getString("name"),
@@ -269,36 +327,7 @@ public class Query {
 
 		return treatments;
 
-	}
-
-	public ArrayList<Appointment> getAppointments () throws SQLException {
-		String query = "SELECT * FROM appointments ORDER BY date ASC, startTime ASC;";
-		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
-
-		try {
-			stmt = con.prepareStatement(query);
-			rs = stmt.executeQuery();
-
-			while (rs.next()) {
-				appointments.add(new Appointment(
-					rs.getLong("date"),
-					rs.getLong("startTime"),
-					rs.getLong("endTime"),
-					new Patient(rs.getInt("patient")),
-					new Practitioner(rs.getString("practitioner")),
-					null
-				));
-
-			}
-
-		} catch (SQLException e) {
-			throw new SQLException("couldnt get appointments", e);
-
-		}// trycat
-
-		return appointments;
-
-	}
+	}// getTreatments
 
 	public ArrayList<Treatment> getAppointmentTreatments (Appointment appointment) throws SQLException {
 		String query = "SELECT * FROM sessions WHERE date = ? AND startTime = ? AND practitioner = ?";
@@ -326,15 +355,13 @@ public class Query {
 
 		return treatments;
 
-	}
+	}// getAppointmentTreatments
 
 
 	public static void main (String args[]) {
 
 		try {
-			System.out.println("");
 			System.out.println(new Query().getAddresses());
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
