@@ -1,5 +1,6 @@
 package com2002.team021.gui;
 
+import com2002.team021.Query;
 import com2002.team021.Treatment;
 
 import javax.swing.*;
@@ -18,6 +19,7 @@ public class LogTreatmentEntry extends JFrame {
     private JComboBox<Treatment> treatmentSelector;
     private JSpinner treatmentCounter;
     private SpinnerNumberModel spinnerModel;
+    private ArrayList<Treatment> treatments;
 
     class TreatmentEntryHandler implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
@@ -27,7 +29,7 @@ public class LogTreatmentEntry extends JFrame {
         }
     }
 
-    public LogTreatmentEntry(Treatment[] treatments) {
+    public LogTreatmentEntry() {
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(3, 2));
         contentPane.add(new JLabel("Treatment"));
@@ -39,8 +41,17 @@ public class LogTreatmentEntry extends JFrame {
 //            String treatmentString = t.getName() + " (" + t.getCost() + ")";
 //            treatmentList.add(treatmentString);
 //        }
+        try {
+            treatments = new Query().getTreatments();
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Could not connect");
+        }
 
-        treatmentSelector = new JComboBox<>(treatments);
+        treatmentSelector = new JComboBox<>();
+        for (Treatment t: treatments) {
+            treatmentSelector.addItem(t);
+        }
         contentPane.add(treatmentSelector);
 
         spinnerModel = new SpinnerNumberModel(1, 1, null, 1);
@@ -59,11 +70,11 @@ public class LogTreatmentEntry extends JFrame {
     }
 
     public static void main(String[] args) {
-        Treatment treatments[] = {
-                new Treatment("Silver amalgam filling", 90),
-                new Treatment("Composite resin filling", 150),
-                new Treatment("Gold crown", 500)
-        };
-        LogTreatmentEntry lt = new LogTreatmentEntry(treatments);
+//        Treatment treatments[] = {
+//                new Treatment("Silver amalgam filling", 90),
+//                new Treatment("Composite resin filling", 150),
+//                new Treatment("Gold crown", 500)
+//        };
+        LogTreatmentEntry lt = new LogTreatmentEntry();
     }
 }
