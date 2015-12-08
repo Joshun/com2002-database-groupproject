@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by joshua on 07/12/15.
@@ -23,6 +24,7 @@ public class AddAppointment extends JFrame {
     private SpinnerNumberModel startHourEntryModel;
     private SpinnerNumberModel startMinuteEntryModel;
     private JLabel endTimeLabel;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
 
     private String[] appointmentTypes = { "Checkup", "Hygienist", "Treatment" };
     private int[] appointmentDurations = { 20, 20, 60 };
@@ -84,6 +86,10 @@ public class AddAppointment extends JFrame {
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    private void updateEndTimeLabel(Date endTime) {
+        endTimeLabel.setText(dateFormat.format(endTime));
     }
 
     private Date computeEndTime(Date startTime, String appointmentType) {
