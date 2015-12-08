@@ -49,7 +49,38 @@ public class Query {
 		}// trycat
 
 	}// getPatient()
-
+	
+	public ArrayList<Patient> getPatients () throws SQLException {
+		String query = "SELECT * FROM patients ORDER BY id DESC;";
+		ArrayList<Patient> patients = new ArrayList<Patient>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				patients.add(new Patient(
+					rs.getInt("id"),
+					rs.getString("forename"),
+					rs.getString("surname"),
+					rs.getLong("dob"),
+					rs.getInt("phone"),
+					rs.getString("houseNumber"),
+					rs.getString("postcode"),
+					rs.getString("subscription")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get patients\n" + e);
+			
+		}// trycat
+		
+		return patients;
+		
+	}
+	
 	public Address getPatientAddress (int patientID) throws SQLException {
 		String query = "SELECT * FROM addresses WHERE (houseNumber, postcode) IN (SELECT houseNumber, postcode FROM patients WHERE id = ?) LIMIT 1;";
 
