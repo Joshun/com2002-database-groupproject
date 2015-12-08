@@ -72,14 +72,17 @@ public class AddPatient extends JFrame {
                 Patient newPatient = null;
                 try {
                     phone = Integer.parseInt(phoneString);
-//                  newPatient = new Patient(forename, surname, dOBTimestamp.getTime(), phone, houseNo, postcode, plan);
+                    newPatient = new Patient(forename, surname, (int)dOBTimestamp.getTime(), phone, houseNo, postcode, plan);
+                    patientManager.addPatient(newPatient);
+                    setVisible(false);
                 } catch (java.lang.NumberFormatException e) {
                     errorDialog("Invalid phone number.");
-                    return;
                 }
-//                catch (SQLException e) {
-//                    System.out.println("Coudln\'t create patient.\n" + e);
-//                }
+                catch (java.sql.SQLException e) {
+                    String error = "Coudln\'t create patient.\n" + e;
+                    System.out.println(error);
+                    errorDialog(error);
+                }
 
                 System.out.println("Created new patient " + newPatient);
             }
@@ -229,7 +232,7 @@ public class AddPatient extends JFrame {
     public static void main(String[] args) throws java.sql.SQLException {
         Patient[] patients = { new Patient("A", "b", 1, 1, "14", "st74hr", null), new Patient("", "c", 1, 1, "14", "st74hr", null) };
         Patient patient = new Patient("A", "b", 1, 1, "14", "st74hr", null);
-        PatientManager pm = new PatientManager(patients);
+        PatientManager pm = new PatientManager();
         AddPatient ap = new AddPatient(pm, patient);
     }
 

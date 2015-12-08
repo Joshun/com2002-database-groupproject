@@ -16,8 +16,8 @@ public class PatientManager extends JFrame {
 
 
     private DefaultTableModel patientTableModel;
-    private Patient[] patients;
-    private int selectedRow, selectedCol;
+    private ArrayList<Patient> patients;
+    private int selectedRow;
 
     private class PatientManagerButtonHandler implements ActionListener {
         private boolean modifyCurrent;
@@ -31,8 +31,9 @@ public class PatientManager extends JFrame {
 
             AddPatient ap;
             if (modifyCurrent) {
-                System.out.println("Trying to modify existing patient at index, " + patientManager.selectedRow);
-                ap = new AddPatient(patientManager, patientManager.patients[patientManager.selectedRow]);
+                int index = patientManager.getSelectedRow();
+                System.out.println("Trying to modify existing patient at index, " + selectedRow);
+                ap = new AddPatient(patientManager, patientManager.patients.get(selectedRow));
             }
             else {
                 ap = new AddPatient(patientManager);
@@ -55,8 +56,11 @@ public class PatientManager extends JFrame {
     }
 
 
-    public PatientManager(Patient[] patients) {
-        this.patients = patients;
+    public PatientManager() throws java.sql.SQLException {
+        patients = new ArrayList<>();
+        patients.add(new Patient("", "b", 1, 1, "14", "st74hr", null));
+        patients.add(new Patient("", "c", 1, 1, "14", "st74hr", null));
+
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
@@ -101,8 +105,20 @@ public class PatientManager extends JFrame {
         setVisible(true);
     }
 
+    public ArrayList<Patient> getPatients() {
+        return this.patients;
+    }
+
+    public int getSelectedRow() {
+        return selectedRow;
+    }
+
+    public void addPatient(Patient p) {
+        patients.add(p);
+        patientTableModel.addRow(patientToRow(p));
+    }
+
     public static void main(String[] args) throws java.sql.SQLException {
-        Patient[] patients = { new Patient("", "b", 1, 1, "14", "st74hr", null), new Patient("", "c", 1, 1, "14", "st74hr", null) };
-        PatientManager pm = new PatientManager(patients);
+        PatientManager pm = new PatientManager();
     }
 }
