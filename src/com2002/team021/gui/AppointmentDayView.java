@@ -44,11 +44,16 @@ public class AppointmentDayView extends JFrame {
         }
     }
 
-    public class addAppHandler implements ActionListener {
+    public class AddAppHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             Query query = new Query();
-            AddAppointment ap = new AddAppointment(query.getPatient(), query.getP)
+            try {
+                AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners());
+            }
+            catch (java.sql.SQLException ex) {
+                System.out.println("Couldn't add appointment " + ex);
+            }
         }
     }
 
@@ -56,6 +61,7 @@ public class AppointmentDayView extends JFrame {
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         JButton addAppButt = new JButton("Add");
+        addAppButt.addActionListener(new AddAppHandler());
         JButton delAppButt = new JButton("Delete");
         JButton changeAppButt = new JButton("Change");
         contentPane.add(addAppButt);
