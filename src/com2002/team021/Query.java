@@ -100,11 +100,7 @@ public class Query {
 	}// getAddress()
 
 	public ArrayList<Address> getAddresses() throws SQLException {
-<<<<<<< Updated upstream
 		String query = "SELECT * FROM addresses ORDER BY postcode ASC;";
-=======
-		String query = "SELECT * FROM addresses ORDER BY postcode ASC";
->>>>>>> Stashed changes
 		ArrayList<Address> addresses = new ArrayList<Address>();
 
 		try {
