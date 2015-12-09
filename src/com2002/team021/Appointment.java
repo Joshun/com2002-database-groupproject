@@ -24,7 +24,8 @@ public class Appointment {
 	}
 
 	public Appointment (long date, long startTime, long endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
-		this(new Date(date), new Date(startTime*1000), new Date(endTime), patient, practitioner, treatments);
+//		this(new Date(date), new Date(startTime*1000), new Date(endTime), patient, practitioner, treatments);
+		this(new Date(date), new Date(startTime), new Date(endTime), patient, practitioner, treatments);
 
 	}
 	
