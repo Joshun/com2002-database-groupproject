@@ -21,7 +21,8 @@ public class AppointmentDayView extends JFrame {
     Date day;
     private DefaultTableModel tableModel;
     private ArrayList<Appointment> appointments;
-    private int selectedRow;
+    // Stores the currently selected row, set to -1 when none are selected
+    private int selectedRow = -1;
     SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
 
 
@@ -65,6 +66,17 @@ public class AppointmentDayView extends JFrame {
         }
     }
 
+    public class DelAppHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            if (selectedRow >= 0) {
+                appointments.remove(selectedRow);
+                tableModel.removeRow(selectedRow);
+                selectedRow = -1;
+            }
+        }
+    }
+
     public AppointmentDayView(Date day) {
         this.day = day;
 
@@ -73,6 +85,7 @@ public class AppointmentDayView extends JFrame {
         JButton addAppButt = new JButton("Add");
         addAppButt.addActionListener(new AddAppHandler(this));
         JButton delAppButt = new JButton("Delete");
+        delAppButt.addActionListener(new DelAppHandler());
         JButton changeAppButt = new JButton("Change");
         contentPane.add(addAppButt);
         contentPane.add(delAppButt);
