@@ -50,14 +50,27 @@ public class AppointmentDayView extends JFrame {
 
     public class AddAppHandler implements ActionListener {
         private AppointmentDayView dayView;
-        public AddAppHandler(AppointmentDayView dv) {
+        private boolean modify;
+
+        public AddAppHandler(AppointmentDayView dv, Boolean modify) {
             this.dayView = dv;
+            this.modify = modify;
         }
+        public AddAppHandler(AppointmentDayView dv) {
+            this(dv,false);
+        }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             Query query = new Query();
             try {
-                AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView);
+                if (modify) {
+                    AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView);
+                }
+                else if (selectedRow >= 0){
+                    AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView, appointments.get(selectedRow));
+
+                }
                 setEnabled(false);
             }
             catch (java.sql.SQLException ex) {
@@ -87,6 +100,7 @@ public class AppointmentDayView extends JFrame {
         JButton delAppButt = new JButton("Delete");
         delAppButt.addActionListener(new DelAppHandler());
         JButton changeAppButt = new JButton("Change");
+        changeAppButt.addActionListener(new AddAppHandler(this, true));
         contentPane.add(addAppButt);
         contentPane.add(delAppButt);
         contentPane.add(changeAppButt);
@@ -145,8 +159,8 @@ public class AppointmentDayView extends JFrame {
         appointments.remove(a);
     }
 
-    public void updateAppointment(Appointment oldPatient, Appointment newAppointment) {
-        int indexOfOld = appointments.indexOf(oldPatient);
+    public void updateAppointment(Appointment oldAppointment, Appointment newAppointment) {
+        int indexOfOld = appointments.indexOf(oldAppointment);
         appointments.set(indexOfOld, newAppointment);
         Patient p = newAppointment.getPatient();
         Practitioner practitioner = newAppointment.getPractitioner();

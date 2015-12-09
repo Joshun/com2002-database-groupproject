@@ -32,7 +32,9 @@ public class AddAppointment extends JFrame {
     private SpinnerNumberModel startHourEntryModel;
     private SpinnerNumberModel startMinuteEntryModel;
     private JLabel endTimeLabel;
+    private JButton addAppointmentButton;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+    private Appointment appointmentToModify = null;
 
     private String[] appointmentTypes = { "Checkup", "Hygienist", "Treatment" };
     private int[] appointmentDurations = { 20, 20, 60 };
@@ -47,11 +49,24 @@ public class AddAppointment extends JFrame {
             System.out.println("Start: " + startTimeStamp);
             System.out.println("End: " + endTimeStamp);
             Appointment newAppointment = new Appointment(startTimeStamp.getTime(), startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
-            dayView.addAppointment(newAppointment);
+
+            if (appointmentToModify == null) {
+                dayView.addAppointment(newAppointment);
+            }
+            else {
+                dayView.updateAppointment(appointmentToModify, newAppointment);
+            }
             setVisible(false);
             dayView.setEnabled(true);
 
             System.out.println(patient.toString() + practitioner.toString() + appointmentType);
+        }
+    }
+
+    private class SpinnerChangeListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent changeEvent) {
+            timeChanged();
         }
     }
 
@@ -106,7 +121,7 @@ public class AddAppointment extends JFrame {
         updateEndTimeLabel(endTimeStamp);
 
         contentPane.add(new JLabel());
-        JButton addAppointmentButton = new JButton("Add appointment");
+        addAppointmentButton = new JButton("Add appointment");
         addAppointmentButton.addActionListener(new AddAppointmentButtonListener());
         contentPane.add(addAppointmentButton);
 
@@ -117,12 +132,13 @@ public class AddAppointment extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
-
-    private class SpinnerChangeListener implements ChangeListener {
-        @Override
-        public void stateChanged(ChangeEvent changeEvent) {
-            timeChanged();
-        }
+    public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, AppointmentDayView dayView, Appointment appointmentToModify) {
+        this(allPatients, allPractitioners, dayView);
+        addAppointmentButton.setText("Change appointment");
+        startTimeStamp = appointmentToModify.getStartTime();
+        endTimeStamp = appointmentToModify.getEndTime();
+//        appointmentJComboBox.setSelectedIndex();
+        timeChanged();
     }
 
     private class ComboChangeListener implements ActionListener {
