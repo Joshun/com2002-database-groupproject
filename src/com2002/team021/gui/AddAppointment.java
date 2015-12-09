@@ -32,7 +32,7 @@ public class AddAppointment extends JFrame {
     private SpinnerNumberModel startHourEntryModel;
     private SpinnerNumberModel startMinuteEntryModel;
     private JLabel endTimeLabel;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
     private String[] appointmentTypes = { "Checkup", "Hygienist", "Treatment" };
     private int[] appointmentDurations = { 20, 20, 60 };
