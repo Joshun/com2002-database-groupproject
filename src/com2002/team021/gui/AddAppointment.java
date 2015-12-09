@@ -129,6 +129,17 @@ public class AddAppointment extends JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             timeChanged();
+            System.out.println("changed");
+            if ( ((String) appointmentJComboBox.getSelectedItem()).equals("Treatment") ) {
+                System.out.println("treatment");
+                startMinuteEntryModel.setMaximum(0);
+                if ( startHourEntryModel.getNumber().intValue() == 16 && startHourEntryModel.getNumber().intValue() > 0) {
+                    startMinuteEntryModel.setValue(0);
+                }
+            }
+            else {
+                startMinuteEntryModel.setMaximum(40);
+            }
         }
     }
 
