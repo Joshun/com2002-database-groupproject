@@ -43,6 +43,9 @@ public class AddAppointment extends JFrame {
             Practitioner practitioner = (Practitioner) practitionerJComboBox.getSelectedItem();
             String appointmentType = (String) appointmentJComboBox.getSelectedItem();
             ArrayList<Treatment> emptyArrLis = new ArrayList<>();
+            System.out.println("Date: " + day);
+            System.out.println("Start: " + startTimeStamp);
+            System.out.println("End: " + endTimeStamp);
             Appointment newAppointment = new Appointment(day.getTime(), startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
             dayView.addAppointment(newAppointment);
             setVisible(false);
@@ -55,8 +58,8 @@ public class AddAppointment extends JFrame {
     public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, AppointmentDayView dayView) {
         this.day = dayView.getDay();
         this.dayView = dayView;
-        this.startTimeStamp = day;
-        this.endTimeStamp = computeEndTime(startTimeStamp, "Checkup");
+        this.startTimeStamp = new Date();
+        this.endTimeStamp = new Date();
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(6, 2));
 
@@ -106,6 +109,9 @@ public class AddAppointment extends JFrame {
         JButton addAppointmentButton = new JButton("Add appointment");
         addAppointmentButton.addActionListener(new AddAppointmentButtonListener());
         contentPane.add(addAppointmentButton);
+
+        timeChanged();
+
 
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
