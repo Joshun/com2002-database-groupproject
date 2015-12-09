@@ -1,7 +1,9 @@
 package com2002.team021.gui;
 
+import com2002.team021.Appointment;
 import com2002.team021.Patient;
 import com2002.team021.Practitioner;
+import com2002.team021.Treatment;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -21,6 +23,7 @@ import java.text.SimpleDateFormat;
 
 public class AddAppointment extends JFrame {
     private Date day;
+    private AppointmentDayView dayView;
     private Date startTimeStamp;
     private Date endTimeStamp;
     private JComboBox<Patient> patientJComboBox;
@@ -39,13 +42,19 @@ public class AddAppointment extends JFrame {
             Patient patient = (Patient) patientJComboBox.getSelectedItem();
             Practitioner practitioner = (Practitioner) practitionerJComboBox.getSelectedItem();
             String appointmentType = (String) appointmentJComboBox.getSelectedItem();
+            ArrayList<Treatment> emptyArrLis = new ArrayList<>();
+            Appointment newAppointment = new Appointment(day.getTime(), startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
+            dayView.addAppointment(newAppointment);
+            setVisible(false);
+            dayView.setEnabled(true);
 
             System.out.println(patient.toString() + practitioner.toString() + appointmentType);
         }
     }
 
-    public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, Date day) {
-        this.day = day;
+    public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, AppointmentDayView dayView) {
+        this.day = dayView.getDay();
+        this.dayView = dayView;
         this.startTimeStamp = day;
         this.endTimeStamp = computeEndTime(startTimeStamp, "Checkup");
         Container contentPane = getContentPane();
