@@ -64,12 +64,13 @@ public class AppointmentDayView extends JFrame {
         public void actionPerformed(ActionEvent e) {
             Query query = new Query();
             try {
-                if (modify) {
-                    AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView);
-                }
-                else if (selectedRow >= 0){
+
+                if (modify && selectedRow >= 0){
                     AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView, appointments.get(selectedRow));
 
+                }
+                else  {
+                    AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView);
                 }
                 setEnabled(false);
             }
@@ -170,7 +171,7 @@ public class AppointmentDayView extends JFrame {
         tableModel.setValueAt(practitioner.getName(), indexOfOld, 3);
         tableModel.setValueAt(dateFormat.format(newAppointment.getStartTime()), indexOfOld, 4);
         tableModel.setValueAt(dateFormat.format(newAppointment.getEndTime()), indexOfOld, 5);
-        tableModel.setValueAt("role", indexOfOld, 6);
+//        tableModel.setValueAt("role", indexOfOld, 6);
     }
 
     public Date getDay() {

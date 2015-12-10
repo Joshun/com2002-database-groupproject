@@ -71,6 +71,13 @@ public class AddAppointment extends JFrame {
     }
 
     public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, AppointmentDayView dayView) {
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                dayView.setEnabled(true);
+            }
+        });
+
         this.day = dayView.getDay();
         this.dayView = dayView;
         this.startTimeStamp = new Date();
@@ -129,7 +136,7 @@ public class AddAppointment extends JFrame {
 
 
         pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
     public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, AppointmentDayView dayView, Appointment appointmentToModify) {
