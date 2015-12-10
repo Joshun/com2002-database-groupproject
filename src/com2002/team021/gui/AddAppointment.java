@@ -1,9 +1,6 @@
 package com2002.team021.gui;
 
-import com2002.team021.Appointment;
-import com2002.team021.Patient;
-import com2002.team021.Practitioner;
-import com2002.team021.Treatment;
+import com2002.team021.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -52,6 +49,13 @@ public class AddAppointment extends JFrame {
 
             if (appointmentToModify == null) {
                 dayView.addAppointment(newAppointment);
+                try {
+                    Query query = new Query();
+                    query.addAppointment(newAppointment);
+                }
+                catch (java.sql.SQLException ex) {
+                    System.out.println("Failed to update appointment " + ex);
+                }
             }
             else {
                 dayView.updateAppointment(appointmentToModify, newAppointment);
@@ -71,6 +75,13 @@ public class AddAppointment extends JFrame {
     }
 
     public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, AppointmentDayView dayView) {
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                dayView.setEnabled(true);
+            }
+        });
+
         this.day = dayView.getDay();
         this.dayView = dayView;
         this.startTimeStamp = new Date();
@@ -129,7 +140,7 @@ public class AddAppointment extends JFrame {
 
 
         pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
     public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, AppointmentDayView dayView, Appointment appointmentToModify) {
