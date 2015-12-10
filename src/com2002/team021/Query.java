@@ -19,7 +19,7 @@ public class Query {
 		} catch (Exception e) {
 			System.out.println(e);
 			
-		}// trycat
+		}
 		
 	}// constructor
 	
@@ -36,21 +36,17 @@ public class Query {
 			rs.first();
 			
 			if (rs.getInt("count") > 0) {
-				System.out.println("update");
-				updateExistingAppointment(appointment, old);
-				return true;
+				return updateExistingAppointment(appointment, old);
 				
 			} else {
-				System.out.println("add");
-				addAppointment(appointment);
-				return true;
+				return addAppointment(appointment);
 				
 			}
 			
 		} catch (SQLException e) {
 			throw new SQLException("couldnt update appointment " + appointment + "\n" + e);
 			
-		}// trycat
+		}
 		
 	}
 	
@@ -73,9 +69,14 @@ public class Query {
 			success = stmt.executeUpdate();
 			
 		} catch (SQLException e) {
-			// e.printStackTrace();
 			throw new SQLException("couldnt update existing appointment " + appointment + "\n" + e);
 			
+		}
+		
+		try {
+			updateSessionTreatments(appointment);
+		} catch (SQLException e) {
+			throw new SQLException("couldnt existing appointment session\n" + e);
 		}
 		
 		return success > 0;
@@ -84,7 +85,7 @@ public class Query {
 	
 	public boolean addAppointment (Appointment appointment) throws SQLException {
 		String query = "INSERT INTO appointments VALUES (?, ?, ?, ?, ?);";
-		boolean success;
+		int success;
 		
 		try {
 			stmt = con.prepareStatement(query);
@@ -93,16 +94,56 @@ public class Query {
 			stmt.setLong(3, appointment.getEndTime().getTime());
 			stmt.setInt(4, appointment.getPatient().getId());
 			stmt.setString(5, appointment.getPractitioner().getRole());
-			success = stmt.execute();
-			
+			success = stmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			throw new SQLException("couldnt add appointment" + appointment + "\n" + e);
 			
-		}// trycat
+		}
 		
-		return success;
+		try {
+			updateSessionTreatments(appointment);
+		} catch (SQLException e) {
+			throw new SQLException("Couldnt add appointment session\n" + e);
+		}
 		
+		return success > 0;
+		
+	}
+	
+	public boolean updateSessionTreatments (Appointment appointment) throws SQLException {
+		
+		try {
+			String query = "DELETE FROM sessions WHERE date = ? AND startTime = ? AND practitioner = ?;";
+			
+			stmt = con.prepareStatement(query);
+			stmt.setLong(1, appointment.getDate().getTime());
+			stmt.setLong(2, appointment.getStartTime().getTime());
+			stmt.setString(3, appointment.getPractitioner().getRole());
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt delete existing treatments from " + appointment + "\n" + e);
+			
+		}
+		System.out.println(appointment);
+		for (Treatment t : appointment.getTreatments()) {
+			String query = "INSERT INTO sessions VALUES (?, ?, ?, ?);";
+			try {
+				stmt = con.prepareStatement(query);
+				stmt.setLong(1, appointment.getDate().getTime());
+				stmt.setLong(2, appointment.getStartTime().getTime());
+				stmt.setString(3, appointment.getPractitioner().getRole());
+				stmt.setString(4, t.getName());
+				stmt.executeUpdate();
+				
+			} catch (SQLException e) {
+				throw new SQLException("couldnt insert treatment " + t + "\n" + e);
+			}
+			
+		}
+		
+		return true;
 	}
 	
 	public ArrayList<Appointment> getAppointmentsOnDay (Date day) throws SQLException {
@@ -115,7 +156,7 @@ public class Query {
 			
 		} catch (SQLException e) {
 			throw new SQLException("couldnt get appointments on day" + day + "\n" + e);
-		}// trycat
+		}
 		
 		return filtered;
 		
@@ -144,7 +185,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("Couldn't find patient: " + patientID + "\n" + e);
 			
-		}// trycat
+		}
 		
 	}// getPatient()
 	
@@ -173,7 +214,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("couldnt get patients\n" + e);
 			
-		}// trycat
+		}
 		
 		return patients;
 		
@@ -199,7 +240,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("Couldn't find patient address: " + patientID + "\n" + e);
 			
-		}// trycat
+		}
 		
 	}// getPatientAddress()
 	
@@ -224,7 +265,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("Couldn't find address: " + houseNumber + " " + postcode + "\n" + e);
 			
-		}// trycat
+		}
 		
 	}// getAddress()
 	
@@ -250,7 +291,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("Couldn't find addresses: \n" + e);
 			
-		}// trycat
+		}
 		return addresses;
 		
 	}// getAddresses()
@@ -278,7 +319,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("Couldn't find appointment in database: " + date + " " + startTime + " " + practitioner, e);
 			
-		}// trycat
+		}
 		
 	}// getAppointment()
 	
@@ -305,7 +346,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("Couldn't find appointments: \n" + e);
 			
-		}// trycat
+		}
 		
 		return appointments;
 		
@@ -328,7 +369,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("couldnt find practitioner", e);
 			
-		}// trycat
+		}
 		
 	}// getPractitioner()
 	
@@ -351,7 +392,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("couldnt get practitioners", e);
 			
-		}// trycat
+		}
 		
 		return practitioners;
 		
@@ -374,7 +415,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("couldnt find treatment: " + treatmentName, e);
 			
-		}// trycat
+		}
 		
 	} // getTreatment
 	
@@ -398,7 +439,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("Couldn't find HealthcarePlan: " + planName + "\n" + e);
 			
-		}// trycat
+		}
 		
 	}// get HealthcarePlan
 	
@@ -424,7 +465,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("Couldn't find healthcarePlans: \n" + e);
 			
-		}// trycat
+		}
 		
 		return plans;
 		
@@ -449,7 +490,7 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("couldnt get treatments", e);
 			
-		}// trycat
+		}
 		
 		return treatments;
 		
@@ -477,7 +518,7 @@ public class Query {
 			System.out.println(appointment);
 			throw new SQLException("Could not find treatments for appointment: " + "\n" + e);
 			
-		}// trycat
+		}
 		
 		return treatments;
 		
@@ -488,10 +529,15 @@ public class Query {
 		try {
 			Patient pa = new Patient(1);
 			Practitioner pr = new Practitioner("Dentist");
+			Treatment tr1 = new Treatment("Cleaning");
+			Treatment tr2 = new Treatment("Checkup");
+			ArrayList<Treatment> trs = new ArrayList<Treatment>();
+			trs.add(tr1);
+			trs.add(tr2);
+			Appointment a = new Appointment(new Date(0), new Date(250), new Date(350), pa, pr, trs);
 			
-			Appointment a = new Appointment(new Date(0), new Date(250), new Date(350), pa, pr, null);
-			
-			System.out.println(new Query().updateAppointment(a, new Query().getAppointments().get(0)));
+			System.out.println(new Query().updateAppointment(a, a));
+			// System.out.println(new Query().upda());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
