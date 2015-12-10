@@ -162,6 +162,33 @@ public class Query {
 		
 	}
 	
+	public boolean addPatient(Patient patient) throws SQLException {
+		String query = "INSERT INTO patients (forename, surname, dob, phone, houseNumber, postcode, subscription)  VALUES (?, ?, ?, ?, ?, ?, ?);";
+		int success;
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, patient.getForename());
+			stmt.setString(2, patient.getSurname());
+			stmt.setLong(3, patient.getDob());
+			stmt.setInt(4, patient.getPhone());
+			stmt.setString(5, patient.getHouseNumber());
+			stmt.setString(6, patient.getPostcode());
+			if (patient.getSubscription() == null)
+				stmt.setNull(7, java.sql.Types.VARCHAR);
+				else {
+					stmt.setString(7, patient.getSubscription().getName());
+				}
+				
+			success = stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new SQLException(e);
+		
+		}
+		
+		return success > 0;
+	}
+	
 	public Patient getPatient (int patientID) throws SQLException {
 		String query = "SELECT * FROM patients WHERE id = ? LIMIT 1;";
 		
@@ -537,6 +564,10 @@ public class Query {
 			Appointment a = new Appointment(new Date(0), new Date(250), new Date(350), pa, pr, trs);
 			
 			System.out.println(new Query().updateAppointment(a, a));
+			
+			Patient rob = new Patient("Rob", "Ede", 213, 74961309, "14", "st74hr", null);
+			
+			new Query().addPatient(rob);
 			// System.out.println(new Query().upda());
 			
 		} catch (Exception e) {
