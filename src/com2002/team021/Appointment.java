@@ -24,7 +24,6 @@ public class Appointment {
 	}
 
 	public Appointment (long date, long startTime, long endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
-//		this(new Date(date), new Date(startTime*1000), new Date(endTime), patient, practitioner, treatments);
 		this(new Date(date), new Date(startTime), new Date(endTime), patient, practitioner, treatments);
 
 	}
@@ -46,25 +45,11 @@ public class Appointment {
 		
 	}
 
-	public Date getDate () {
-		return this.date;
-	}
-
-	public Date getStartTime () {
-		return this.startTime;
-	}
-
-	public Date getEndTime () {
-		return this.endTime;
-	}
-
-	public Patient getPatient () {
-		return this.patient;
-	}
-
-	public Practitioner getPractitioner () {
-		return this.practitioner;
-	}
+	public Date getDate () { return this.date; }
+	public Date getStartTime () { return this.startTime; }
+	public Date getEndTime () { return this.endTime; }
+	public Patient getPatient () { return this.patient; }
+	public Practitioner getPractitioner () { return this.practitioner; }
 
 	public ArrayList<Treatment> getTreatments() throws SQLException {
 		if (this.treatments == null) {
