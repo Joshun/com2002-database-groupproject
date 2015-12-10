@@ -23,7 +23,7 @@ public class AppointmentDayView extends JFrame {
     private ArrayList<Appointment> appointments;
     // Stores the currently selected row, set to -1 when none are selected
     private int selectedRow = -1;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
 
     public String[] appointmentToRow(Appointment a) {
