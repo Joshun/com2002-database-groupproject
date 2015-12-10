@@ -28,9 +28,9 @@ public class Query {
 		
 		try {
 			stmt = con.prepareStatement(query);
-			stmt.setLong(1, appointment.getDate().getTime());
-			stmt.setLong(2, appointment.getStartTime().getTime());
-			stmt.setString(3, appointment.getPractitioner().getRole());
+			stmt.setLong(1, old.getDate().getTime());
+			stmt.setLong(2, old.getStartTime().getTime());
+			stmt.setString(3, old.getPractitioner().getRole());
 			rs = stmt.executeQuery();
 			
 			rs.first();
