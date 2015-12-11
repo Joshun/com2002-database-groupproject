@@ -96,7 +96,7 @@ public class Patient {
 	public String getPostcode () { return this.address.getPostcode(); }
 	
 	public String getName () {
-		return this.getForename() + this.getSurname();
+		return this.getForename() + " " + this.getSurname();
 	}
 	
 	public Address getAddress () throws SQLException {

@@ -23,6 +23,12 @@ public class Query {
 		
 	}// constructor
 	
+	public boolean updatePatient (Patient patient) throws SQLException {
+		
+		return false;
+		
+	}
+	
 	public boolean updateAppointment (Appointment appointment, Appointment old) throws SQLException {
 		String query = "SELECT COUNT(*) as count FROM appointments WHERE date = ? AND startTime = ? AND practitioner = ?";
 		
@@ -34,6 +40,7 @@ public class Query {
 			rs = stmt.executeQuery();
 			
 			rs.first();
+			this.con.close();
 			
 			if (rs.getInt("count") > 0) {
 				return updateExistingAppointment(appointment, old);
