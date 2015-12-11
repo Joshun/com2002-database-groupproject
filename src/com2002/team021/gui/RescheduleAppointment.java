@@ -37,20 +37,11 @@ public class RescheduleAppointment extends JFrame {
         private JSpinner minuteEntry;
         private JPanel timeContainer;
 
-//        private class SpinnerChangeListener implements ChangeListener {
-//            @Override
-//            public void stateChanged(ChangeEvent changeEvent) {
-//                timeChanged();
-//            }
-//        }
-
         public TimeEntry() {
             hourEntryModel = new SpinnerNumberModel(9, 9, 16, 1);
             minuteEntryModel = new SpinnerNumberModel(0, 0, 59, 1);
             hourEntry = new JSpinner(hourEntryModel);
             minuteEntry = new JSpinner(minuteEntryModel);
-//            hourEntry.addChangeListener(new SpinnerChangeListener());
-//            minuteEntry.addChangeListener(new SpinnerChangeListener());
 
             timeContainer = new JPanel(new GridLayout(2, 2));
             timeContainer.add(new JLabel("HH"));
@@ -164,7 +155,6 @@ public class RescheduleAppointment extends JFrame {
         endEntry.getMinuteEntryModel().setValue(endMinute);
 
         pack();
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
