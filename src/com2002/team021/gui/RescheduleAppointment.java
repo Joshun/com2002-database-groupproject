@@ -8,6 +8,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.channels.CancelledKeyException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -122,7 +123,22 @@ public class RescheduleAppointment extends JFrame {
         rescheduleButton.addActionListener(new RescheduleButtonHandler());
         contentPane.add(rescheduleButton);
 
-        timeChanged();
+        // Get current time values of appointment
+        startTimestamp = appointmentToModify.getStartTime();
+        endTimestamp = appointmentToModify.getEndTime();
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(startTimestamp);
+        int startHour = startCal.get(Calendar.HOUR_OF_DAY);
+        int startMinute = startCal.get(Calendar.MINUTE);
+        startEntry.getHourEntryModel().setValue(startHour);
+        startEntry.getMinuteEntryModel().setValue(startMinute);
+
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(endTimestamp);
+        int endHour = endCal.get(Calendar.HOUR_OF_DAY);
+        int endMinute = endCal.get(Calendar.MINUTE);
+        endEntry.getHourEntryModel().setValue(endHour);
+        endEntry.getMinuteEntryModel().setValue(endMinute);
 
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
