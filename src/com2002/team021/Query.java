@@ -5,6 +5,7 @@ import static com2002.team021.config.SQL.*;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.sql.*;
+import java.util.Date;
 
 public class Query {
 	
@@ -34,7 +35,28 @@ public class Query {
 	}
 	
 	public boolean updateExistingPatient (Patient patient) throws SQLException {
-		return false;
+		String query = "UPDATE patients SET forename = ?, surname = ?, dob = ?, phone = ?, phone = ?, houseNumber = ?, postcode = ?, WHERE;";
+		int success;
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, patient.getForename());
+			stmt.setString(2, patient.getSurname());
+			stmt.setLong(3, patient.getDob().getTime());
+			stmt.setInt(4, patient.getPhone());
+			stmt.setString(5, patient.getHouseNumber());
+			stmt.setString(6, patient.getPostcode());
+			success = stmt.executeUpdate();
+			
+			return success > 0;
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt update existing Healthcare plan " + patient + "\n" + e);
+			
+		} finally {
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
+		}
 	}
 	
 	public boolean addAddress (Address address) throws SQLException {
@@ -136,7 +158,7 @@ public class Query {
 	}
 	
 	public boolean updateExistingHealthcarePlan (HealthcarePlan hcp) throws SQLException {
-		String query = "UPDATE healthcarePlans SET cost = ?, checkUps = ?, hygieneVisits = ?, repairs = ? WHERE;";
+		String query = "UPDATE healthcarePlans SET cost = ?, checkUps = ?, hygieneVisits = ?, repairs = ? WHERE name = ?;";
 		int success;
 		
 		try {
@@ -333,7 +355,7 @@ public class Query {
 			stmt = con.prepareStatement(query);
 			stmt.setString(1, patient.getForename());
 			stmt.setString(2, patient.getSurname());
-			stmt.setLong(3, patient.getDob());
+			stmt.setLong(3, patient.getDob().getTime());
 			stmt.setInt(4, patient.getPhone());
 			stmt.setString(5, patient.getHouseNumber());
 			stmt.setString(6, patient.getPostcode());
@@ -369,7 +391,7 @@ public class Query {
 				rs.getInt("id"),
 				rs.getString("forename"),
 				rs.getString("surname"),
-				rs.getLong("dob"),
+				new Date(rs.getLong("dob")),
 				rs.getInt("phone"),
 				rs.getString("houseNumber"),
 				rs.getString("postcode"),
@@ -400,7 +422,7 @@ public class Query {
 					rs.getInt("id"),
 					rs.getString("forename"),
 					rs.getString("surname"),
-					rs.getLong("dob"),
+					new Date(rs.getLong("dob")),
 					rs.getInt("phone"),
 					rs.getString("houseNumber"),
 					rs.getString("postcode"),
@@ -786,7 +808,7 @@ public class Query {
 			// new Query().updateAppointment(a, a);
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy");
-			Patient rob = new Patient("Rob", "Ede", sdf.parse("18/9/1995").getTime(), 554342, "14", "st74hr", null);
+			Patient rob = new Patient("Rob", "Ede", sdf.parse("18/9/1995"), 554342, "14", "st74hr", null);
 			
 			HealthcarePlan hcp = new HealthcarePlan("New One", 456, 2, 3, 4);
 			

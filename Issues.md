@@ -4,6 +4,6 @@
 - LogTreatment needs redoing and there needs to be a way of adding and removing different types of treatment
 - Obsolete GUI code needs removing and code from gui2 incorporated into the main gui package
 
-- All the connections in Query.java need closing
-- Date needs removing from everything (start and end only)
-- DOB needs to have Date constuctor
+- ~~All the connections in Query.java need closing~~
+- ~~Date needs removing from everything (start and end only)~~
+- ~~DOB needs to have Date constuctor~~
