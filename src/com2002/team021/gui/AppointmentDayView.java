@@ -66,7 +66,7 @@ public class AppointmentDayView extends JFrame {
             try {
 
                 if (modify && selectedRow >= 0){
-                    AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView, appointments.get(selectedRow));
+                    RescheduleAppointment ra = new RescheduleAppointment(appointments.get(selectedRow), dayView);
 
                 }
                 else  {
@@ -94,13 +94,20 @@ public class AppointmentDayView extends JFrame {
     public AppointmentDayView(Date day) {
         this.day = day;
 
+        if (day != null) {
+            setTitle("Appointment listing for " + day.toString());
+        }
+        else {
+            setTitle("Appointment listing");
+        }
+
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         JButton addAppButt = new JButton("Add");
         addAppButt.addActionListener(new AddAppHandler(this));
         JButton delAppButt = new JButton("Delete");
         delAppButt.addActionListener(new DelAppHandler());
-        JButton changeAppButt = new JButton("Change");
+        JButton changeAppButt = new JButton("Reschedule");
         changeAppButt.addActionListener(new AddAppHandler(this, true));
         contentPane.add(addAppButt);
         contentPane.add(delAppButt);
@@ -137,7 +144,14 @@ public class AppointmentDayView extends JFrame {
 
         try {
             Query query = new Query();
-            this.appointments = query.getAppointments();
+
+            if (day != null) {
+                java.sql.Date sqlDate = new java.sql.Date(day.getTime());
+                this.appointments = query.getAppointmentsOnDay(sqlDate);
+            }
+            else {
+                this.appointments = query.getAppointments();
+            }
             System.out.println(appointments.size());
             reload();
         }
@@ -145,9 +159,13 @@ public class AppointmentDayView extends JFrame {
             System.out.println("Couldn\'t connect to db " + e);
         }
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
+    }
+
+    public AppointmentDayView() {
+        this(null);
     }
 
     public void addAppointment(Appointment a) {
@@ -183,6 +201,6 @@ public class AppointmentDayView extends JFrame {
     }
 
     public static void main(String[] args) {
-        AppointmentDayView adv = new AppointmentDayView(new Date());
+        AppointmentDayView adv = new AppointmentDayView(null);
     }
 }

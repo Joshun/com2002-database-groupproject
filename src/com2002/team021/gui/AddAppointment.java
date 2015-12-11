@@ -31,7 +31,6 @@ public class AddAppointment extends JFrame {
     private JLabel endTimeLabel;
     private JButton addAppointmentButton;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
-    private Appointment appointmentToModify = null;
 
     private String[] appointmentTypes = { "Checkup", "Hygienist", "Treatment" };
     private int[] appointmentDurations = { 20, 20, 60 };
@@ -45,9 +44,8 @@ public class AddAppointment extends JFrame {
             System.out.println("Date: " + day);
             System.out.println("Start: " + startTimeStamp);
             System.out.println("End: " + endTimeStamp);
-            Appointment newAppointment = new Appointment(startTimeStamp.getTime(), startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
+            Appointment newAppointment = new Appointment(day.getTime(), startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
 
-            if (appointmentToModify == null) {
                 dayView.addAppointment(newAppointment);
                 try {
                     Query query = new Query();
@@ -56,10 +54,8 @@ public class AddAppointment extends JFrame {
                 catch (java.sql.SQLException ex) {
                     System.out.println("Failed to update appointment " + ex);
                 }
-            }
-            else {
-                dayView.updateAppointment(appointmentToModify, newAppointment);
-            }
+
+
             setVisible(false);
             dayView.setEnabled(true);
 
@@ -140,16 +136,7 @@ public class AddAppointment extends JFrame {
 
 
         pack();
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-    }
-    public AddAppointment(ArrayList<Patient> allPatients, ArrayList<Practitioner> allPractitioners, AppointmentDayView dayView, Appointment appointmentToModify) {
-        this(allPatients, allPractitioners, dayView);
-        addAppointmentButton.setText("Change appointment");
-        startTimeStamp = appointmentToModify.getStartTime();
-        endTimeStamp = appointmentToModify.getEndTime();
-//        appointmentJComboBox.setSelectedIndex();
-        timeChanged();
     }
 
     private class ComboChangeListener implements ActionListener {
