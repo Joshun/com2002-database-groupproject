@@ -66,7 +66,7 @@ public class AppointmentDayView extends JFrame {
             try {
 
                 if (modify && selectedRow >= 0){
-                    AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView, appointments.get(selectedRow));
+                    RescheduleAppointment ra = new RescheduleAppointment(appointments.get(selectedRow), dayView);
 
                 }
                 else  {

@@ -1,9 +1,6 @@
 package com2002.team021.gui;
 
-import com2002.team021.Appointment;
-import com2002.team021.Patient;
-import com2002.team021.Practitioner;
-import com2002.team021.Query;
+import com2002.team021.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -23,9 +20,13 @@ import java.text.SimpleDateFormat;
  */
 public class RescheduleAppointment extends JFrame {
 
+    private AppointmentDayView dayView;
+    private Appointment appointmentToModify;
     private TimeEntry startEntry;
     private TimeEntry endEntry;
     private JButton rescheduleButton;
+    private Date startTimestamp;
+    private Date endTimestamp;
 
 
     private class TimeEntry {
@@ -60,11 +61,43 @@ public class RescheduleAppointment extends JFrame {
             return minuteEntryModel;
         }
 
-
-
     }
 
-    public RescheduleAppointment(Appointment appointmentToModify) {
+    private class RescheduleButtonHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            Patient patient = appointmentToModify.getPatient();
+            Practitioner practitioner = appointmentToModify.getPractitioner();
+
+            ArrayList<Treatment> emptyTreatment = new ArrayList<>();
+
+            Appointment newAppointment = new Appointment(startTimestamp, startTimestamp, endTimestamp, patient, practitioner, emptyTreatment);
+            System.out.println("Old appointment: " + appointmentToModify);
+            System.out.println("Updated to: " + newAppointment);
+            dayView.updateAppointment(appointmentToModify, newAppointment);
+            setVisible(false);
+            dayView.setEnabled(true);
+        }
+    }
+
+    private void timeChanged() {
+        int startHour = startEntry.getHourEntryModel().getNumber().intValue();
+        int startMinute = startEntry.getMinuteEntryModel().getNumber().intValue();
+        int endHour = endEntry.getHourEntryModel().getNumber().intValue();
+        int endMinute = endEntry.getMinuteEntryModel().getNumber().intValue();
+        Calendar startTimeCal = Calendar.getInstance();
+        startTimeCal.set(Calendar.HOUR_OF_DAY, startHour);
+        startTimeCal.set(Calendar.MINUTE, startMinute);
+        Calendar endTimeCal = Calendar.getInstance();
+        endTimeCal.set(Calendar.HOUR_OF_DAY, endHour);
+        endTimeCal.set(Calendar.MINUTE, endMinute);
+        startTimestamp = startTimeCal.getTime();
+        endTimestamp = endTimeCal.getTime();
+    }
+
+    public RescheduleAppointment(Appointment appointmentToModify, AppointmentDayView dayView) {
+        this.dayView = dayView;
+        this.appointmentToModify = appointmentToModify;
         setTitle("Reschedule Appointment");
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(5, 2));
@@ -86,7 +119,10 @@ public class RescheduleAppointment extends JFrame {
 
         contentPane.add(new JLabel());
         rescheduleButton = new JButton("Reschedule");
+        rescheduleButton.addActionListener(new RescheduleButtonHandler());
         contentPane.add(rescheduleButton);
+
+        timeChanged();
 
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -99,7 +135,7 @@ public class RescheduleAppointment extends JFrame {
             Query query = new Query();
             ArrayList<Appointment> appointments = query.getAppointments();
             Appointment anAppointment = appointments.get(0);
-            new RescheduleAppointment(anAppointment);
+            new RescheduleAppointment(anAppointment, new AppointmentDayView(new Date()));
 
 
         }
