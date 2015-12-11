@@ -37,11 +37,20 @@ public class RescheduleAppointment extends JFrame {
         private JSpinner minuteEntry;
         private JPanel timeContainer;
 
+//        private class SpinnerChangeListener implements ChangeListener {
+//            @Override
+//            public void stateChanged(ChangeEvent changeEvent) {
+//                timeChanged();
+//            }
+//        }
+
         public TimeEntry() {
             hourEntryModel = new SpinnerNumberModel(9, 9, 16, 1);
             minuteEntryModel = new SpinnerNumberModel(0, 0, 59, 1);
             hourEntry = new JSpinner(hourEntryModel);
             minuteEntry = new JSpinner(minuteEntryModel);
+//            hourEntry.addChangeListener(new SpinnerChangeListener());
+//            minuteEntry.addChangeListener(new SpinnerChangeListener());
 
             timeContainer = new JPanel(new GridLayout(2, 2));
             timeContainer.add(new JLabel("HH"));
@@ -67,6 +76,7 @@ public class RescheduleAppointment extends JFrame {
     private class RescheduleButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            computeTimestamps();
             Patient patient = appointmentToModify.getPatient();
             Practitioner practitioner = appointmentToModify.getPractitioner();
 
@@ -81,7 +91,8 @@ public class RescheduleAppointment extends JFrame {
         }
     }
 
-    private void timeChanged() {
+
+    private void computeTimestamps() {
         int startHour = startEntry.getHourEntryModel().getNumber().intValue();
         int startMinute = startEntry.getMinuteEntryModel().getNumber().intValue();
         int endHour = endEntry.getHourEntryModel().getNumber().intValue();
@@ -97,6 +108,13 @@ public class RescheduleAppointment extends JFrame {
     }
 
     public RescheduleAppointment(Appointment appointmentToModify, AppointmentDayView dayView) {
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                dayView.setEnabled(true);
+            }
+        });
+
         this.dayView = dayView;
         this.appointmentToModify = appointmentToModify;
         setTitle("Reschedule Appointment");
@@ -126,22 +144,27 @@ public class RescheduleAppointment extends JFrame {
         // Get current time values of appointment
         startTimestamp = appointmentToModify.getStartTime();
         endTimestamp = appointmentToModify.getEndTime();
+        System.out.println("Start: " + startTimestamp + "End: " + endTimestamp);
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(startTimestamp);
         int startHour = startCal.get(Calendar.HOUR_OF_DAY);
         int startMinute = startCal.get(Calendar.MINUTE);
         startEntry.getHourEntryModel().setValue(startHour);
         startEntry.getMinuteEntryModel().setValue(startMinute);
+        System.out.println("end " + endTimestamp);
 
         Calendar endCal = Calendar.getInstance();
+        System.out.println(endTimestamp);
         endCal.setTime(endTimestamp);
+        System.out.println(endCal);
         int endHour = endCal.get(Calendar.HOUR_OF_DAY);
         int endMinute = endCal.get(Calendar.MINUTE);
+        System.out.println(endHour + ":" + endMinute);
         endEntry.getHourEntryModel().setValue(endHour);
         endEntry.getMinuteEntryModel().setValue(endMinute);
 
         pack();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
