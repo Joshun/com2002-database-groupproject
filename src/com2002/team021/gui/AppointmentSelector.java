@@ -17,7 +17,7 @@ public class AppointmentSelector extends JFrame {
     public AppointmentSelector(Appointment[] appointments, Boolean userIsSecretary) {
 //        setSize(500, 500);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
-        String appointmentDate = dateFormat.format(appointments[0].getStartTime());
+        String appointmentDate = dateFormat.format(appointments[0].getStart());
         String practitioner = appointments[0].getPractitioner().toString();
         setTitle("Choose " + practitioner + " appointment (" + appointmentDate + ")");
         Container contentPane = getContentPane();
@@ -37,7 +37,7 @@ public class AppointmentSelector extends JFrame {
         SimpleDateFormat endTimeFormat = new SimpleDateFormat("hh:mm");
 
         for (Appointment a: appointments) {
-            String buttonText = startTimeFormat.format(a.getStartTime()) + " - " + endTimeFormat.format(a.getEndTime()) + " : " + a.getPatient();
+            String buttonText = startTimeFormat.format(a.getStart()) + " - " + endTimeFormat.format(a.getEnd()) + " : " + a.getPatient();
             JButton appointmentButton = new JButton(buttonText);
             appointmentListPane.add(appointmentButton);
         }

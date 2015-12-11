@@ -73,7 +73,7 @@ public class RescheduleAppointment extends JFrame {
 
             ArrayList<Treatment> emptyTreatment = new ArrayList<>();
 
-            Appointment newAppointment = new Appointment(startTimestamp, startTimestamp, endTimestamp, patient, practitioner, emptyTreatment);
+            Appointment newAppointment = new Appointment(startTimestamp, endTimestamp, patient, practitioner, emptyTreatment);
             System.out.println("Old appointment: " + appointmentToModify);
             System.out.println("Updated to: " + newAppointment);
             dayView.updateAppointment(appointmentToModify, newAppointment);
@@ -133,8 +133,8 @@ public class RescheduleAppointment extends JFrame {
         contentPane.add(rescheduleButton);
 
         // Get current time values of appointment
-        startTimestamp = appointmentToModify.getStartTime();
-        endTimestamp = appointmentToModify.getEndTime();
+        startTimestamp = appointmentToModify.getStart();
+        endTimestamp = appointmentToModify.getEnd();
         System.out.println("Start: " + startTimestamp + "End: " + endTimestamp);
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(startTimestamp);

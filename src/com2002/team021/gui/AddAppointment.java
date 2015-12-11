@@ -44,7 +44,7 @@ public class AddAppointment extends JFrame {
             System.out.println("Date: " + day);
             System.out.println("Start: " + startTimeStamp);
             System.out.println("End: " + endTimeStamp);
-            Appointment newAppointment = new Appointment(day.getTime(), startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
+            Appointment newAppointment = new Appointment(startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
 
                 dayView.addAppointment(newAppointment);
                 try {

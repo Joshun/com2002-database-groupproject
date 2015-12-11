@@ -29,8 +29,8 @@ public class AppointmentDayView extends JFrame {
     public String[] appointmentToRow(Appointment a) {
         Patient patient = a.getPatient();
         Practitioner practitioner = a.getPractitioner();
-        Date startTime = a.getStartTime();
-        Date endTime = a.getEndTime();
+        Date startTime = a.getStart();
+        Date endTime = a.getEnd();
 //        GregorianCalendar startCal = new GregorianCalendar();
 //        GregorianCalendar endCal = new GregorianCalendar();
 //        startCal.setTime(startTime);
@@ -187,8 +187,8 @@ public class AppointmentDayView extends JFrame {
         tableModel.setValueAt(p.getForename(), indexOfOld, 1);
         tableModel.setValueAt(practitioner.getRole(), indexOfOld, 2);
         tableModel.setValueAt(practitioner.getName(), indexOfOld, 3);
-        tableModel.setValueAt(dateFormat.format(newAppointment.getStartTime()), indexOfOld, 4);
-        tableModel.setValueAt(dateFormat.format(newAppointment.getEndTime()), indexOfOld, 5);
+        tableModel.setValueAt(dateFormat.format(newAppointment.getStart()), indexOfOld, 4);
+        tableModel.setValueAt(dateFormat.format(newAppointment.getEnd()), indexOfOld, 5);
 //        tableModel.setValueAt("role", indexOfOld, 6);
     }
 
