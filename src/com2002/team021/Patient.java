@@ -5,7 +5,7 @@ import java.sql.SQLException;
 public class Patient {
 	
 	private boolean inDB = false;
-	private int id;
+	private int id = 0;
 	private String forename;
 	private String surname;
 	private long dob;

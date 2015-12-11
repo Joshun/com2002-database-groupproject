@@ -22,17 +22,146 @@ public class Query {
 			
 		}
 		
-	}// constructor
+	}
 	
 	public boolean updatePatient (Patient patient) throws SQLException {
+		if (patient.getId() == 0) {
+			return addPatient(patient);
+		} else {
+			return updateExistingPatient(patient);
+		}
 		
+	}
+	
+	public boolean updateExistingPatient (Patient patient) throws SQLException {
 		return false;
+	}
+	
+	public boolean addAddress (Address address) throws SQLException {
+		String query = "SELECT COUNT(*) as count FROM addresses WHERE houseNumber = ? AND postcode = ?;";
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, address.getHouseNumber());
+			stmt.setString(2, address.getPostcode());
+			rs = stmt.executeQuery();
+			
+			rs.first();
+			
+			if (rs.getInt("count") > 0) {
+				System.out.println("address already exists");
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt find address " + address + "\n" + e);
+			
+		} finally {
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+		}
+		
+		query = "INSERT INTO addresses VALUES (?, ?, ?, ?, ?);";
+		int success;
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, address.getHouseNumber());
+			stmt.setString(2, address.getStreetName());
+			stmt.setString(3, address.getDistrict());
+			stmt.setString(4, address.getCity());
+			stmt.setString(5, address.getPostcode());
+			success = stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt add address " + address + "\n" + e);
+			
+		} finally {
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+		}
+		
+		return success > 0;
+		
+	}
+	
+	public boolean updateHealthcarePlan (HealthcarePlan hcp) throws SQLException {
+		String query = "SELECT COUNT(*) as count FROM healthcarePlans WHERE name = ?;";
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, hcp.getName());
+			rs = stmt.executeQuery();
+			
+			rs.first();
+			
+			if (rs.getInt("count") > 0) {
+				return updateExistingHealthcarePlan(hcp);
+			} else {
+				return addHealthcarePlan(hcp);
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt update appointment " + hcp + "\n" + e);
+			
+		} finally {
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+		}
+		
+	}
+	
+	public boolean addHealthcarePlan (HealthcarePlan hcp) throws SQLException {
+		String query = "INSERT INTO healthcarePlans VALUES (?, ?, ?, ?, ?);";
+		int success;
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, hcp.getName());
+			stmt.setInt(2, hcp.getCost());
+			stmt.setInt(3, hcp.getCheckUps());
+			stmt.setInt(4, hcp.getHygieneVisits());
+			stmt.setInt(5, hcp.getRepairs());
+			success = stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt add HealthcarePlan" + hcp + "\n" + e);
+			
+		} finally {
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+		}
+		
+		return success > 0;
+	}
+	
+	public boolean updateExistingHealthcarePlan (HealthcarePlan hcp) throws SQLException {
+		String query = "UPDATE healthcarePlans SET cost = ?, checkUps = ?, hygieneVisits = ?, repairs = ? WHERE;";
+		int success;
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setInt(1, hcp.getCost());
+			stmt.setInt(2, hcp.getCheckUps());
+			stmt.setInt(3, hcp.getHygieneVisits());
+			stmt.setInt(4, hcp.getRepairs());
+			stmt.setString(5, hcp.getName());
+			success = stmt.executeUpdate();
+			
+			return success > 0;
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt update existing Healthcare plan " + hcp + "\n" + e);
+			
+		} finally {
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
+		}
 		
 	}
 	
 	public boolean updateAppointment (Appointment appointment, Appointment old) throws SQLException {
-		String query = "SELECT COUNT(*) as count FROM appointments WHERE start = ? AND practitioner = ?";
-		boolean indb;
+		String query = "SELECT COUNT(*) as count FROM appointments WHERE start = ? AND practitioner = ?;";
 		
 		try {
 			stmt = con.prepareStatement(query);
@@ -42,17 +171,18 @@ public class Query {
 			
 			rs.first();
 			
-			indb = rs.getInt("count") > 0;
+			if (rs.getInt("count") > 0) {
+				return updateExistingAppointment(appointment, old);
+			} else {
+				return addAppointment(appointment);
+			}
 			
 		} catch (SQLException e) {
 			throw new SQLException("couldnt update appointment " + appointment + "\n" + e);
 			
-		}
-		
-		if (indb) {
-			return updateExistingAppointment(appointment, old);
-		} else {
-			return addAppointment(appointment);
+		} finally {
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 		}
 		
 	}
@@ -77,7 +207,7 @@ public class Query {
 			throw new SQLException("couldnt update existing appointment " + appointment + "\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 		}
 		
@@ -88,8 +218,6 @@ public class Query {
 			throw new SQLException("couldnt existing appointment session\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
-			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
@@ -113,17 +241,15 @@ public class Query {
 			throw new SQLException("couldnt add appointment" + appointment + "\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 		}
 		
 		try {
 			updateSessionTreatments(appointment);
+			
 		} catch (SQLException e) {
 			throw new SQLException("Couldnt add appointment session\n" + e);
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
-			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
@@ -145,7 +271,6 @@ public class Query {
 			throw new SQLException("couldnt delete existing treatments from " + appointment + "\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 		}
 		
@@ -159,8 +284,6 @@ public class Query {
 				stmt.setString(3, t.getName());
 				stmt.executeUpdate();
 				
-				try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
-				try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			}
 			
 		
@@ -168,6 +291,7 @@ public class Query {
 			throw new SQLException("Could insert one of the treatments\n" + e);
 			
 		} finally {
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
@@ -213,18 +337,18 @@ public class Query {
 			stmt.setInt(4, patient.getPhone());
 			stmt.setString(5, patient.getHouseNumber());
 			stmt.setString(6, patient.getPostcode());
-			if (patient.getSubscription() == null)
+			if (patient.getSubscription() == null) {
 				stmt.setNull(7, java.sql.Types.VARCHAR);
-				else {
-					stmt.setString(7, patient.getSubscription().getName());
-				}
+			} else {
+				stmt.setString(7, patient.getSubscription().getName());
+			}
 				
 			success = stmt.executeUpdate();
+			
 		} catch (SQLException e) {
 			throw new SQLException(e);
 		
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
@@ -256,12 +380,12 @@ public class Query {
 			throw new SQLException("Couldn't find patient: " + patientID + "\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
-	}// getPatient()
+	}
 	
 	public ArrayList<Patient> getPatients () throws SQLException {
 		String query = "SELECT * FROM patients ORDER BY id DESC;";
@@ -289,7 +413,7 @@ public class Query {
 			throw new SQLException("couldnt get patients\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
@@ -319,12 +443,12 @@ public class Query {
 			throw new SQLException("Couldn't find patient address: " + patientID + "\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
-	}// getPatientAddress()
+	}
 	
 	public Address getAddress (String houseNumber, String postcode) throws SQLException {
 		String query = "SELECT * FROM addresses WHERE houseNumber = ? AND postcode = ? LIMIT 1";
@@ -348,12 +472,12 @@ public class Query {
 			throw new SQLException("Couldn't find address: " + houseNumber + " " + postcode + "\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
-	}// getAddress()
+	}
 	
 	public ArrayList<Address> getAddresses() throws SQLException {
 		String query = "SELECT * FROM addresses ORDER BY postcode ASC;";
@@ -378,14 +502,14 @@ public class Query {
 			throw new SQLException("Couldn't find addresses: \n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
 		return addresses;
 		
-	}// getAddresses()
+	}
 	
 	public Appointment getAppointment(long start, String practitioner) throws SQLException {
 		String query = "SELECT * FROM appointments WHERE start = ? AND practitioner = ? LIMIT 1";
@@ -409,12 +533,12 @@ public class Query {
 			throw new SQLException("Couldn't find appointment in database: " + start + " " + practitioner, e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
-	}// getAppointment()
+	}
 	
 	public ArrayList<Appointment> getAppointments() throws SQLException {
 		String query = "SELECT * FROM appointments ORDER BY start ASC;";
@@ -439,14 +563,14 @@ public class Query {
 			throw new SQLException("Couldn't find appointments: \n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
 		return appointments;
 		
-	}// getAppointments
+	}
 	
 	public Practitioner getPractitioner(String practitionerRole) throws SQLException {
 		String query = "SELECT * FROM practitioners WHERE role = ? LIMIT 1;";
@@ -466,12 +590,12 @@ public class Query {
 			throw new SQLException("couldnt find practitioner", e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
-	}// getPractitioner()
+	}
 	
 	public ArrayList<Practitioner> getPractitioners() throws SQLException {
 		String query = "SELECT * FROM practitioners ORDER BY name ASC;";
@@ -493,14 +617,14 @@ public class Query {
 			throw new SQLException("couldnt get practitioners", e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
 		return practitioners;
 		
-	}//getAppointments
+	}
 	
 	public Treatment getTreatment(String treatmentName) throws SQLException {
 		String query = "SELECT * FROM treatments WHERE name = ? LIMIT 1;";
@@ -520,12 +644,12 @@ public class Query {
 			throw new SQLException("couldnt find treatment: " + treatmentName, e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
-	} // getTreatment
+	}
 	
 	public HealthcarePlan getHealthcarePlan (String planName) throws SQLException {
 		String query = "SELECT * FROM healthcarePlans WHERE name = ? LIMIT 1;";
@@ -548,12 +672,12 @@ public class Query {
 			throw new SQLException("Couldn't find HealthcarePlan: " + planName + "\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
-	}// get HealthcarePlan
+	}
 	
 	public ArrayList<HealthcarePlan> getHealthcarePlans() throws SQLException {
 		String query = "SELECT * FROM healthcarePlans ORDER BY cost ASC;";
@@ -578,14 +702,14 @@ public class Query {
 			throw new SQLException("Couldn't find healthcarePlans: \n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
 		return plans;
 		
-	}// getHleathCarePlans
+	}
 	
 	public ArrayList<Treatment> getTreatments() throws SQLException {
 		String query = "SELECT * FROM treatments ORDER BY name ASC;";
@@ -607,17 +731,17 @@ public class Query {
 			throw new SQLException("couldnt get treatments", e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
 		return treatments;
 		
-	}// getTreatments
+	}
 	
 	public ArrayList<Treatment> getAppointmentTreatments (Appointment appointment) throws SQLException {
-		String query = "SELECT * FROM sessions WHERE start = ? AND practitioner = ?";
+		String query = "SELECT * FROM sessions WHERE start = ? AND practitioner = ?;";
 		ArrayList<Treatment> treatments = new ArrayList<Treatment>();
 		
 		try {
@@ -638,14 +762,14 @@ public class Query {
 			throw new SQLException("Could not find treatments for appointment: " + "\n" + e);
 			
 		} finally {
-			try { if (!rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
 		
 		return treatments;
 		
-	}// getAppointmentTreatments
+	}
 	
 	public static void main (String args[]) {
 		
@@ -659,14 +783,19 @@ public class Query {
 			trs.add(tr2);
 			Appointment a = new Appointment(new Date(250), new Date(350), pa, pr, trs);
 			
-			new Query().updateAppointment(a, a);
+			// new Query().updateAppointment(a, a);
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy");
 			Patient rob = new Patient("Rob", "Ede", sdf.parse("18/9/1995").getTime(), 554342, "14", "st74hr", null);
 			
-			// new Query().addPatient(rob);
+			HealthcarePlan hcp = new HealthcarePlan("New One", 456, 2, 3, 4);
+			
+			Address add = new Address("13", "elm close", "kidsgrove", "stoke-on-trent", "st74hr");
+			
 			System.out.println(
-				new Query().getAppointmentsOnDay(new Date(500))
+				// new Query().updateHealthcarePlan(hcp)
+				// new Query().getPractitioners()
+				new Query().addAddress(add)
 			);
 			
 		} catch (Exception e) {
