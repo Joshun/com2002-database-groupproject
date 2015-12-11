@@ -154,7 +154,12 @@ public class Query {
 		
 		try {
 			for (Appointment a : new Query().getAppointments()) {
-				if (a.getStart().equals(day)) filtered.add(a);
+				if (a.getStart().getDate() == day.getDate() &&
+					a.getStart().getMonth() == day.getMonth() &&
+					a.getStart().getYear() == day.getYear()
+				) {
+					filtered.add(a);
+				}
 			}
 			
 		} catch (SQLException e) {
