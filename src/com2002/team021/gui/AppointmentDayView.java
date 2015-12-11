@@ -100,7 +100,7 @@ public class AppointmentDayView extends JFrame {
         addAppButt.addActionListener(new AddAppHandler(this));
         JButton delAppButt = new JButton("Delete");
         delAppButt.addActionListener(new DelAppHandler());
-        JButton changeAppButt = new JButton("Change");
+        JButton changeAppButt = new JButton("Reschedule");
         changeAppButt.addActionListener(new AddAppHandler(this, true));
         contentPane.add(addAppButt);
         contentPane.add(delAppButt);
