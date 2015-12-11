@@ -159,7 +159,7 @@ public class AppointmentDayView extends JFrame {
             System.out.println("Couldn\'t connect to db " + e);
         }
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
     }

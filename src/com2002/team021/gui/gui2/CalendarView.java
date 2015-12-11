@@ -4,6 +4,8 @@ package com2002.team021.gui.gui2;
  * Created by Afamezechukwu on 03/12/2015.
  */
 
+import com2002.team021.gui.AppointmentDayView;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -16,7 +18,7 @@ public class CalendarView {
     static Container contentPane;
     static DefaultTableModel tableModel;
     static int year, month, day, actualDay, actualYear, actualMonth;
-    static JButton prev, next, newApt, delApt;
+    static JButton prev, next, listing;
     static JComboBox comboBox;
     static JFrame mainFrame;
     static JLabel label;
@@ -50,8 +52,9 @@ public class CalendarView {
         comboBox = new JComboBox();
         prev = new JButton("<<");
         next = new JButton(">>");
-        newApt = new JButton("New Appointment");
-        delApt = new JButton("Delete Appointment");
+        listing = new JButton("Appointments List");
+//        newApt = new JButton("New Appointment");
+//        delApt = new JButton("Delete Appointment");
         tableModel = new DefaultTableModel() {public boolean isCellEditable(int r, int c) {return false;}};
         table = new JTable(tableModel);
         scrollPane = new JScrollPane(table);
@@ -61,8 +64,9 @@ public class CalendarView {
         //Register action listeners
         prev.addActionListener(new prev_Action());
         next.addActionListener(new next_Action());
-        newApt.addActionListener(new newApt_Action());
-        delApt.addActionListener(new delApt_Action());
+//        newApt.addActionListener(new newApt_Action());
+//        delApt.addActionListener(new delApt_Action());
+        listing.addActionListener(new AppointmentListing());
         comboBox.addActionListener(new comboBox_Action());
         table.addMouseListener(new table_Action());
 
@@ -72,15 +76,17 @@ public class CalendarView {
         panel.add(comboBox);
         panel.add(prev);
         panel.add(next);
-        panel.add(newApt);
-        panel.add(delApt);
+//        panel.add(newApt);
+//        panel.add(delApt);
+        panel.add(listing);
         panel.add(scrollPane);
 
         //Set bounds
         panel.setBounds(0, 0, 880, 465);
         comboBox.setBounds(795, 430, 80, 20);
-        newApt.setBounds(131, 432, 243, 25);
-        delApt.setBounds(494, 432, 244, 25);
+        listing.setBounds(131, 432, 243, 25);
+//        newApt.setBounds(131, 432, 243, 25);
+//        delApt.setBounds(494, 432, 244, 25);
         prev.setBounds(10, 25, 50, 25);
         next.setBounds(825, 25, 50, 25);
         scrollPane.setBounds(10, 50, 865, 380);
@@ -215,18 +221,33 @@ public class CalendarView {
         }
     }
 
-    static class newApt_Action implements ActionListener {
+//    static class newApt_Action implements ActionListener {
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//
+//            System.out.println(actualDay + "/" + actualMonth + "/" + actualYear);
+//
+//        }
+//    }
+//
+//    static class delApt_Action implements ActionListener {
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//
+//        }
+//    }
+
+    private class AppointmentListing implements  ActionListener {
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent actionEvent) {
+            Calendar cal = Calendar.getInstance();
+            cal.clear();
+            cal.set(Calendar.YEAR, actualYear);
+            cal.set(Calendar.MONTH, actualMonth);
+            cal.set(Calendar.DAY_OF_MONTH, actualDay);
+            System.out.println("Calendar: " + cal);
 
-            System.out.println(actualDay + "/" + actualMonth + "/" + actualYear);
-
-        }
-    }
-
-    static class delApt_Action implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
+            AppointmentDayView dv = new AppointmentDayView(cal.getTime());
 
         }
     }
