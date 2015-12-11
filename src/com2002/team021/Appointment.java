@@ -6,48 +6,44 @@ import java.util.ArrayList;
 
 public class Appointment {
 	
-	private Date date;
-	private Date startTime;
-	private Date endTime;
+	private Date start;
+	private Date end;
 	private Patient patient;
 	private Practitioner practitioner;
 	private ArrayList<Treatment> treatments;
 	
-	public Appointment (Date date, Date startTime, Date endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
-		this.date = date;
-		this.startTime = startTime;
-		this.endTime = endTime;
+	public Appointment (Date start, Date end, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
+		this.start = start;
+		this.end = end;
 		this.patient = patient;
 		this.practitioner = practitioner;
 		this.treatments = treatments;
 		
 	}
 	
-	public Appointment (long date, long startTime, long endTime, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
-		this(new Date(date), new Date(startTime), new Date(endTime), patient, practitioner, treatments);
+	public Appointment (long start, long end, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
+		this(new Date(start), new Date(end), patient, practitioner, treatments);
 		
 	}
 	
-	public Appointment (Date date, Date startTime, Practitioner practitioner) throws SQLException {
+	public Appointment (Date start, Practitioner practitioner) throws SQLException {
 		try {
-			Appointment dbAppointment = new Query().getAppointment(date.getTime(), startTime.getTime(), practitioner.getRole());
+			Appointment dbAppointment = new Query().getAppointment(start.getTime(), practitioner.getRole());
 			
-			this.date = dbAppointment.getDate();
-			this.startTime = dbAppointment.getStartTime();
-			this.endTime = dbAppointment.getEndTime();
+			this.start = dbAppointment.getStart();
+			this.end = dbAppointment.getEnd();
 			this.patient = dbAppointment.getPatient();
 			this.practitioner = dbAppointment.getPractitioner();
 			this.treatments = dbAppointment.getTreatments();
 			
 		} catch (SQLException e) {
-			throw new SQLException("Couldnt find treatment: " + date.getTime() + " " + startTime.getTime() + " " + practitioner.getRole() + "\n" + e);
+			throw new SQLException("Couldnt find treatment: " + start.getTime() + " " + practitioner.getRole() + "\n" + e);
 		}
 		
 	}
 	
-	public Date getDate () { return this.date; }
-	public Date getStartTime () { return this.startTime; }
-	public Date getEndTime () { return this.endTime; }
+	public Date getStart () { return this.start; }
+	public Date getEnd () { return this.end; }
 	public Patient getPatient () { return this.patient; }
 	public Practitioner getPractitioner () { return this.practitioner; }
 	
@@ -71,11 +67,8 @@ public class Appointment {
 	
 	public String toString () {
 		String str = "";
-		str += this.startTime + " - ";
-		str += this.endTime + " - ";
-		str += this.patient + " - ";
-		str += this.practitioner + " - ";
-		str += this.treatments;
+		str += this.start + " - ";
+		str += this.practitioner;
 		
 		return str;
 		
@@ -85,7 +78,7 @@ public class Appointment {
 		
 		try {
 			System.out.println(
-				new Appointment(new Date(0), new Date(0), new Practitioner("Dentist")).getTreatments()
+				new Appointment(new Date(0), new Practitioner("Dentist")).getTreatments()
 			);
 		} catch (Exception e){
 			System.out.println(e);

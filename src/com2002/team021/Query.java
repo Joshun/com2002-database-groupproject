@@ -3,6 +3,7 @@ package com2002.team021;
 import static com2002.team021.config.SQL.*;
 
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.sql.*;
 
 public class Query {
@@ -30,22 +31,22 @@ public class Query {
 	}
 	
 	public boolean updateAppointment (Appointment appointment, Appointment old) throws SQLException {
-		String query = "SELECT COUNT(*) as count FROM appointments WHERE date = ? AND startTime = ? AND practitioner = ?";
+		String query = "SELECT COUNT(*) as count FROM appointments WHERE start = ? AND practitioner = ?";
 		
 		try {
 			stmt = con.prepareStatement(query);
-			stmt.setLong(1, old.getDate().getTime());
-			stmt.setLong(2, old.getStartTime().getTime());
-			stmt.setString(3, old.getPractitioner().getRole());
+			stmt.setLong(1, old.getStart().getTime());
+			stmt.setString(2, old.getPractitioner().getRole());
 			rs = stmt.executeQuery();
 			
 			rs.first();
-			this.con.close();
 			
 			if (rs.getInt("count") > 0) {
+				// this.con.close();
 				return updateExistingAppointment(appointment, old);
 				
 			} else {
+				// this.con.close();
 				return addAppointment(appointment);
 				
 			}
@@ -59,20 +60,18 @@ public class Query {
 	
 	
 	public boolean updateExistingAppointment (Appointment appointment, Appointment old) throws SQLException {
-		String query = "UPDATE appointments SET date = ?, startTime = ?, endTime = ?, patient = ?, practitioner = ? WHERE date = ? AND startTime = ? AND practitioner = ?;";
+		String query = "UPDATE appointments SET start = ?, end = ?, patient = ?, practitioner = ? WHERE start = ? AND practitioner = ?;";
 		int success;
 		
 		try {
 			stmt = con.prepareStatement(query);
-			stmt.setLong(1, appointment.getDate().getTime());
-			stmt.setLong(2, appointment.getStartTime().getTime());
-			stmt.setLong(3, appointment.getEndTime().getTime());
-			stmt.setInt(4, appointment.getPatient().getId());
-			stmt.setString(5, appointment.getPractitioner().getRole());
+			stmt.setLong(1, appointment.getStart().getTime());
+			stmt.setLong(2, appointment.getEnd().getTime());
+			stmt.setInt(3, appointment.getPatient().getId());
+			stmt.setString(4, appointment.getPractitioner().getRole());
 			
-			stmt.setLong(6, old.getDate().getTime());
-			stmt.setLong(7, old.getStartTime().getTime());
-			stmt.setString(8, old.getPractitioner().getRole());
+			stmt.setLong(5, old.getStart().getTime());
+			stmt.setString(6, old.getPractitioner().getRole());
 			success = stmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -91,16 +90,15 @@ public class Query {
 	}
 	
 	public boolean addAppointment (Appointment appointment) throws SQLException {
-		String query = "INSERT INTO appointments VALUES (?, ?, ?, ?, ?);";
+		String query = "INSERT INTO appointments VALUES (?, ?, ?, ?);";
 		int success;
 		
 		try {
 			stmt = con.prepareStatement(query);
-			stmt.setLong(1, appointment.getDate().getTime());
-			stmt.setLong(2, appointment.getStartTime().getTime());
-			stmt.setLong(3, appointment.getEndTime().getTime());
-			stmt.setInt(4, appointment.getPatient().getId());
-			stmt.setString(5, appointment.getPractitioner().getRole());
+			stmt.setLong(1, appointment.getStart().getTime());
+			stmt.setLong(2, appointment.getEnd().getTime());
+			stmt.setInt(3, appointment.getPatient().getId());
+			stmt.setString(4, appointment.getPractitioner().getRole());
 			success = stmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -121,12 +119,11 @@ public class Query {
 	public boolean updateSessionTreatments (Appointment appointment) throws SQLException {
 		
 		try {
-			String query = "DELETE FROM sessions WHERE date = ? AND startTime = ? AND practitioner = ?;";
+			String query = "DELETE FROM sessions WHERE start = ? AND practitioner = ?;";
 			
 			stmt = con.prepareStatement(query);
-			stmt.setLong(1, appointment.getDate().getTime());
-			stmt.setLong(2, appointment.getStartTime().getTime());
-			stmt.setString(3, appointment.getPractitioner().getRole());
+			stmt.setLong(1, appointment.getStart().getTime());
+			stmt.setString(2, appointment.getPractitioner().getRole());
 			stmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -135,13 +132,12 @@ public class Query {
 		}
 		System.out.println(appointment);
 		for (Treatment t : appointment.getTreatments()) {
-			String query = "INSERT INTO sessions VALUES (?, ?, ?, ?);";
+			String query = "INSERT INTO sessions VALUES (?, ?, ?);";
 			try {
 				stmt = con.prepareStatement(query);
-				stmt.setLong(1, appointment.getDate().getTime());
-				stmt.setLong(2, appointment.getStartTime().getTime());
-				stmt.setString(3, appointment.getPractitioner().getRole());
-				stmt.setString(4, t.getName());
+				stmt.setLong(1, appointment.getStart().getTime());
+				stmt.setString(2, appointment.getPractitioner().getRole());
+				stmt.setString(3, t.getName());
 				stmt.executeUpdate();
 				
 			} catch (SQLException e) {
@@ -158,7 +154,7 @@ public class Query {
 		
 		try {
 			for (Appointment a : new Query().getAppointments()) {
-				if (a.getDate().equals(day)) filtered.add(a);
+				if (a.getStart().equals(day)) filtered.add(a);
 			}
 			
 		} catch (SQLException e) {
@@ -330,35 +326,33 @@ public class Query {
 		
 	}// getAddresses()
 	
-	public Appointment getAppointment(long date, long startTime, String practitioner) throws SQLException {
-		String query = "SELECT * FROM appointments WHERE date = ? AND startTime = ? AND practitioner = ? LIMIT 1";
+	public Appointment getAppointment(long start, String practitioner) throws SQLException {
+		String query = "SELECT * FROM appointments WHERE start = ? AND practitioner = ? LIMIT 1";
 		
 		try {
 			stmt = con.prepareStatement(query);
-			stmt.setLong(1, date);
-			stmt.setLong(2, startTime);
-			stmt.setString(3, practitioner);
+			stmt.setLong(1, start);
+			stmt.setString(2, practitioner);
 			rs = stmt.executeQuery();
 			rs.first();
 			
 			return new Appointment(
-				rs.getLong("date"),
-				rs.getLong("startTime"),
-				rs.getLong("endTime"),
+				rs.getLong("start"),
+				rs.getLong("end"),
 				new Patient(rs.getInt("patient")),
 				new Practitioner(rs.getString("practitioner")),
 				null
 			);
 			
 		} catch (SQLException e) {
-			throw new SQLException("Couldn't find appointment in database: " + date + " " + startTime + " " + practitioner, e);
+			throw new SQLException("Couldn't find appointment in database: " + start + " " + practitioner, e);
 			
 		}
 		
 	}// getAppointment()
 	
 	public ArrayList<Appointment> getAppointments() throws SQLException {
-		String query = "SELECT * FROM appointments ORDER BY date ASC, startTime ASC;";
+		String query = "SELECT * FROM appointments ORDER BY start ASC;";
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		
 		try {
@@ -367,9 +361,8 @@ public class Query {
 			
 			while (rs.next()) {
 				appointments.add(new Appointment(
-				rs.getLong("date"),
-				rs.getLong("startTime"),
-				rs.getLong("endTime"),
+				rs.getLong("start"),
+				rs.getLong("end"),
 				new Patient(rs.getInt("patient")),
 				new Practitioner(rs.getString("practitioner")),
 				new ArrayList<Treatment>()
@@ -531,14 +524,13 @@ public class Query {
 	}// getTreatments
 	
 	public ArrayList<Treatment> getAppointmentTreatments (Appointment appointment) throws SQLException {
-		String query = "SELECT * FROM sessions WHERE date = ? AND startTime = ? AND practitioner = ?";
+		String query = "SELECT * FROM sessions WHERE start = ? AND practitioner = ?";
 		ArrayList<Treatment> treatments = new ArrayList<Treatment>();
 		
 		try {
 			stmt = con.prepareStatement(query);
-			stmt.setLong(1, appointment.getDate().getTime());
-			stmt.setLong(2, appointment.getStartTime().getTime());
-			stmt.setString(3, appointment.getPractitioner().getRole());
+			stmt.setLong(1, appointment.getStart().getTime());
+			stmt.setString(2, appointment.getPractitioner().getRole());
 			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
@@ -568,14 +560,14 @@ public class Query {
 			ArrayList<Treatment> trs = new ArrayList<Treatment>();
 			trs.add(tr1);
 			trs.add(tr2);
-			Appointment a = new Appointment(new Date(0), new Date(250), new Date(350), pa, pr, trs);
+			Appointment a = new Appointment(new Date(250), new Date(350), pa, pr, trs);
 			
 			System.out.println(new Query().updateAppointment(a, a));
 			
-			Patient rob = new Patient("Rob", "Ede", 213, 74961309, "14", "st74hr", null);
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy");
+			Patient rob = new Patient("Rob", "Ede", sdf.parse("18/9/1995").getTime(), 554342, "14", "st74hr", null);
 			
 			new Query().addPatient(rob);
-			// System.out.println(new Query().upda());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
