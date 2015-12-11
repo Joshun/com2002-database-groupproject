@@ -247,6 +247,7 @@ public class CalendarView {
             cal.set(Calendar.DAY_OF_MONTH, actualDay);
             System.out.println("Calendar: " + cal);
 
+            System.out.println("===PLEASE STAND BY===");
             AppointmentDayView dv = new AppointmentDayView(cal.getTime());
 
         }
