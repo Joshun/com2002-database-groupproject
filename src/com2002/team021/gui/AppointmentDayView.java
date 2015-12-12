@@ -65,14 +65,17 @@ public class AppointmentDayView extends JFrame {
             Query query = new Query();
             try {
 
-                if (modify && selectedRow >= 0){
-                    RescheduleAppointment ra = new RescheduleAppointment(appointments.get(selectedRow), dayView);
+                if (modify){
+                    if (selectedRow >= 0) {
+                        RescheduleAppointment ra = new RescheduleAppointment(appointments.get(selectedRow), dayView);
+                        setEnabled(false);
+                    }
 
                 }
                 else  {
                     AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView);
+                    setEnabled(false);
                 }
-                setEnabled(false);
             }
             catch (java.sql.SQLException ex) {
                 System.out.println("Couldn't add appointment " + ex);
