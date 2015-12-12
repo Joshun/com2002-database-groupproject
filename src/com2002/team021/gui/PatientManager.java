@@ -151,12 +151,19 @@ public class PatientManager extends JFrame {
 //    }
 
     public void updatePatient(Patient oldPatient, Patient newPatient) {
+        HealthcarePlan subscription = newPatient.getSubscription();
         int indexOfOld = patients.indexOf(oldPatient);
         System.out.println(indexOfOld);
         patients.set(indexOfOld, newPatient);
         patientTableModel.setValueAt(newPatient.getId(), indexOfOld, 0);
         patientTableModel.setValueAt(newPatient.getForename(), indexOfOld, 1);
         patientTableModel.setValueAt(newPatient.getSurname(), indexOfOld, 2);
+        patientTableModel.setValueAt(
+                (subscription != null) ? subscription.getName() : "-",
+                indexOfOld,
+                3
+        );
+
         try {
             Query query = new Query();
             query.updatePatient(newPatient);
