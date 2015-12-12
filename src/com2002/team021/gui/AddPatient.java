@@ -34,6 +34,7 @@ public class AddPatient extends JFrame {
     private PatientManager patientManager;
     private Patient patientToModify;
     private ArrayList<String> healthcarePlans;
+    private String noPlan = "<No plan>";
 
 
     private void errorDialog(String message) {
@@ -76,7 +77,12 @@ public class AddPatient extends JFrame {
                 Patient newPatient = null;
                 try {
                     phone = Integer.parseInt(phoneString);
-                    newPatient = new Patient(forename, surname, dOBTimestamp, phone, houseNo, postcode, planString);
+                    if (planString.equals(noPlan)) {
+                        newPatient = new Patient(forename, surname, dOBTimestamp, phone, houseNo, postcode, null);
+                    }
+                    else {
+                        newPatient = new Patient(forename, surname, dOBTimestamp, phone, houseNo, postcode, planString);
+                    }
                     if (patientToModify == null) {
                         patientManager.addPatient(newPatient);
                     }
@@ -191,10 +197,15 @@ public class AddPatient extends JFrame {
         }
 
         planEntry = new JComboBox<>();
+
+        planEntry.addItem(noPlan);
+        healthcarePlans.add(noPlan);
+
         for (HealthcarePlan p: plans) {
             planEntry.addItem(p.getName());
             healthcarePlans.add(p.getName());
         }
+
         contentPane.add(planEntry);
 
         contentPane.add(new JLabel());
@@ -233,8 +244,14 @@ public class AddPatient extends JFrame {
         postcodeEntry.setText(patientToModify.getPostcode());
         phoneEntry.setText(String.valueOf(patientToModify.getPhone()));
 
-        String plan = patientToModify.getSubscription().getName();
-        planEntry.setSelectedIndex(healthcarePlans.indexOf(plan));
+        HealthcarePlan plan = patientToModify.getSubscription();
+        if (plan != null) {
+            String planString = patientToModify.getSubscription().getName();
+            planEntry.setSelectedIndex(healthcarePlans.indexOf(planString));
+        }
+        else {
+            planEntry.setSelectedIndex(healthcarePlans.indexOf(noPlan));
+        }
 
     }
 
