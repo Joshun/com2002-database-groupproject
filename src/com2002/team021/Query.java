@@ -62,10 +62,12 @@ public class Query {
 	public boolean addAddress (Address address) throws SQLException {
 		String query = "SELECT COUNT(*) as count FROM addresses WHERE houseNumber = ? AND postcode = ?;";
 		
+		String postcode = address.getPostcode().toLowerCase().replace(" ", "");
+		
 		try {
 			stmt = con.prepareStatement(query);
 			stmt.setString(1, address.getHouseNumber());
-			stmt.setString(2, address.getPostcode());
+			stmt.setString(2, postcode);
 			rs = stmt.executeQuery();
 			
 			rs.first();
@@ -817,7 +819,8 @@ public class Query {
 			System.out.println(
 				// new Query().updateHealthcarePlan(hcp)
 				// new Query().getPractitioners()
-				new Query().addAddress(add)
+				// new Query().addAddress(add)
+				"st7 4HR".toLowerCase().replace(" ", "")
 			);
 			
 		} catch (Exception e) {

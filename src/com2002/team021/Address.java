@@ -1,6 +1,10 @@
 package com2002.team021;
 
-import java.sql.*;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 
 public class Address {
 	
@@ -47,12 +51,17 @@ public class Address {
 		return this.houseNumber + ", " + this.streetName + ", " + this.district + ", " + this.city + ", " + this.postcode+ "\n";
 	}
 	
+	public static boolean isValidPostcode (String pc) {
+		String pattern = "([a-z]{1,2}\\d{1,2})\\w?(\\d{1,2}[a-z]{2})";
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(pc.trim().toLowerCase().replace(" ", ""));
+		return m.matches();
+	}
+	
 	public static void main (String args[]) {
 		
 		try {
-			Address address = new Address("14", "st74hr");
-			
-			System.out.println(address);
+			// Address address = new Address("14", "st74hr");
 			
 		} catch (Exception e) {
 			System.out.println("Couln't find address. " + e);
