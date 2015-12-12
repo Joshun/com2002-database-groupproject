@@ -1,6 +1,7 @@
 package com2002.team021.gui;
 
 import com2002.team021.Patient;
+import com2002.team021.Query;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -59,9 +60,19 @@ public class PatientManager extends JFrame {
 
 
     public PatientManager() throws java.sql.SQLException {
-        patients = new ArrayList<>();
-        patients.add(new Patient("", "b", new Date(), 1, "14", "st74hr", null));
-        patients.add(new Patient("", "c", new Date(), 1, "14", "st74hr", null));
+        patients = null;
+
+//        patients.add(new Patient("", "b", new Date(), 1, "14", "st74hr", null));
+//        patients.add(new Patient("", "c", new Date(), 1, "14", "st74hr", null));
+
+        try {
+            Query query = new Query();
+            patients = query.getPatients();
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Failed to get list of patients " + e);
+            System.exit(1);
+        }
 
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
@@ -118,6 +129,13 @@ public class PatientManager extends JFrame {
     public void addPatient(Patient p) {
         patients.add(p);
         patientTableModel.addRow(patientToRow(p));
+        try {
+            Query query = new Query();
+            query.addPatient(p);
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Failed to add patient " + e);
+        }
     }
 
 //    public int getPatientIndex(Patient p) {
@@ -131,6 +149,13 @@ public class PatientManager extends JFrame {
         patientTableModel.setValueAt(newPatient.getId(), indexOfOld, 0);
         patientTableModel.setValueAt(newPatient.getForename(), indexOfOld, 1);
         patientTableModel.setValueAt(newPatient.getSurname(), indexOfOld, 2);
+        try {
+            Query query = new Query();
+            query.updatePatient(newPatient);
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Failed to update patient " + e);
+        }
     }
 
     public static void main(String[] args) throws java.sql.SQLException {

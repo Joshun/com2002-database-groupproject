@@ -33,7 +33,7 @@ public class AddPatient extends JFrame {
     private Calendar calendar;
     private PatientManager patientManager;
     private Patient patientToModify;
-    private ArrayList<String> healthcarePlans = new ArrayList<>();
+    private ArrayList<String> healthcarePlans;
 
 
     private void errorDialog(String message) {
@@ -103,6 +103,7 @@ public class AddPatient extends JFrame {
     public AddPatient(PatientManager patientManager) {
         patientToModify = null;
         this.patientManager = patientManager;
+        healthcarePlans = new ArrayList<>();
 
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -185,16 +186,9 @@ public class AddPatient extends JFrame {
             plans = new Query().getHealthcarePlans();
 
         } catch (SQLException e) {
-            System.out.println("Couldn't get treatment list\n" + e);
+            System.out.println("Couldn't get plans list\n" + e);
+            System.exit(1);
         }
-
-//        String[] planStrings = new String[healthcarePlans.size()];
-//
-//        int i = 0;
-//        for (HealthcarePlan t : healthcarePlans) {
-//            planStrings[i] = t.getName();
-//            i++;
-//
 
         planEntry = new JComboBox<>();
         for (HealthcarePlan p: plans) {
@@ -209,21 +203,20 @@ public class AddPatient extends JFrame {
         contentPane.add(addPatientButton);
 
         pack();
-//        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 
     }
 
     public AddPatient(PatientManager patientManager, Patient patientToModify) {
         this(patientManager);
+        addPatientButton.setText("Modify patient");
+
         this.patientToModify = patientToModify;
         forenameEntry.setText(patientToModify.getForename());
         surnameEntry.setText(patientToModify.getSurname());
 
         int currentYear = calendar.get(Calendar.YEAR);
 
-//        long dob = patientToModify.getDob();
-//        Date dobDate = new Date(dob);
         Date dobDate = patientToModify.getDob();
         GregorianCalendar dobCal = new GregorianCalendar();
         dobCal.setTime(dobDate);
@@ -240,9 +233,7 @@ public class AddPatient extends JFrame {
         postcodeEntry.setText(patientToModify.getPostcode());
         phoneEntry.setText(String.valueOf(patientToModify.getPhone()));
 
-        // TODO: need to figure out how to get this index
         String plan = patientToModify.getSubscription().getName();
-        System.out.println(healthcarePlans);
         planEntry.setSelectedIndex(healthcarePlans.indexOf(plan));
 
     }
