@@ -1,5 +1,6 @@
 package com2002.team021.gui;
 
+import com2002.team021.HealthcarePlan;
 import com2002.team021.Patient;
 import com2002.team021.Query;
 
@@ -48,7 +49,13 @@ public class PatientManager extends JFrame {
     }
 
     public String[] patientToRow(Patient p) {
-        String patientString[] = { String.valueOf(p.getId()), p.getForename(), p.getSurname() };
+        HealthcarePlan plan = p.getSubscription();
+        String patientString[] = {
+                String.valueOf(p.getId()),
+                p.getForename(),
+                p.getSurname(),
+                (plan != null) ? plan.getName() : "-"
+        };
         return patientString;
     }
 
@@ -90,7 +97,7 @@ public class PatientManager extends JFrame {
                 return false;
             }
         };
-        String[] headings = { "ID", "Forename", "Surname" };
+        String[] headings = { "ID", "Forename", "Surname", "Plan" };
         for (String s: headings) {
             patientTableModel.addColumn(s);
         }
