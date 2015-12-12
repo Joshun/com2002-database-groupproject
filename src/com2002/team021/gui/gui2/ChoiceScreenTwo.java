@@ -87,12 +87,8 @@ public class ChoiceScreenTwo extends JFrame {
     static class btnPtnMan_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             choiceScreen.dispose();
-            try {
-                new PatientManager();
-            }
-            catch (java.sql.SQLException ex) {
-                System.out.println("Error: couldn\'t initialise patient manager " + ex);
-            }
+            new PatientManager();
+
         }
     }
 

@@ -66,7 +66,8 @@ public class PatientManager extends JFrame {
     }
 
 
-    public PatientManager() throws java.sql.SQLException {
+    public PatientManager() {
+        setTitle("Patient Manager");
         patients = null;
 
 //        patients.add(new Patient("", "b", new Date(), 1, "14", "st74hr", null));
