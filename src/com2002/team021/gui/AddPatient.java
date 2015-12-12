@@ -33,6 +33,8 @@ public class AddPatient extends JFrame {
     private Calendar calendar;
     private PatientManager patientManager;
     private Patient patientToModify;
+    private ArrayList<String> healthcarePlans = new ArrayList<>();
+
 
     private void errorDialog(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -59,7 +61,9 @@ public class AddPatient extends JFrame {
 //            String phone = phoneEntry.getText();
             String phoneString = phoneEntry.getText().trim();
 
-            String plan = (String) planEntry.getSelectedItem();
+//            HealthcarePlan plan = (HealthcarePlan) planEntry.getSelectedItem();
+//            String planString = plan.getName();
+            String planString = (String) planEntry.getSelectedItem();
 
             if (forename.length() == 0
                     || surname.length() == 0
@@ -72,7 +76,7 @@ public class AddPatient extends JFrame {
                 Patient newPatient = null;
                 try {
                     phone = Integer.parseInt(phoneString);
-                    newPatient = new Patient(forename, surname, dOBTimestamp, phone, houseNo, postcode, plan);
+                    newPatient = new Patient(forename, surname, dOBTimestamp, phone, houseNo, postcode, planString);
                     if (patientToModify == null) {
                         patientManager.addPatient(newPatient);
                     }
@@ -174,24 +178,29 @@ public class AddPatient extends JFrame {
 
         contentPane.add(new JLabel("Plan:"));
 
-        ArrayList<HealthcarePlan> healthcarePlans = null;
+
+        ArrayList<HealthcarePlan> plans = null;
 
         try {
-            healthcarePlans = new Query().getHealthcarePlans();
+            plans = new Query().getHealthcarePlans();
 
         } catch (SQLException e) {
             System.out.println("Couldn't get treatment list\n" + e);
         }
 
-        String[] planStrings = new String[healthcarePlans.size()];
+//        String[] planStrings = new String[healthcarePlans.size()];
+//
+//        int i = 0;
+//        for (HealthcarePlan t : healthcarePlans) {
+//            planStrings[i] = t.getName();
+//            i++;
+//
 
-        int i = 0;
-        for (HealthcarePlan t : healthcarePlans) {
-            planStrings[i] = t.getName();
-            i++;
+        planEntry = new JComboBox<>();
+        for (HealthcarePlan p: plans) {
+            planEntry.addItem(p.getName());
+            healthcarePlans.add(p.getName());
         }
-
-        planEntry = new JComboBox<>(planStrings);
         contentPane.add(planEntry);
 
         contentPane.add(new JLabel());
@@ -232,7 +241,9 @@ public class AddPatient extends JFrame {
         phoneEntry.setText(String.valueOf(patientToModify.getPhone()));
 
         // TODO: need to figure out how to get this index
-        planEntry.setSelectedIndex(0);
+        String plan = patientToModify.getSubscription().getName();
+        System.out.println(healthcarePlans);
+        planEntry.setSelectedIndex(healthcarePlans.indexOf(plan));
 
     }
 
