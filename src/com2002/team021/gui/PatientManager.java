@@ -60,8 +60,8 @@ public class PatientManager extends JFrame {
 
     public PatientManager() throws java.sql.SQLException {
         patients = new ArrayList<>();
-        patients.add(new Patient("", "b", 1, 1, "14", "st74hr", null));
-        patients.add(new Patient("", "c", 1, 1, "14", "st74hr", null));
+        patients.add(new Patient("", "b", new Date(), 1, "14", "st74hr", null));
+        patients.add(new Patient("", "c", new Date(), 1, "14", "st74hr", null));
 
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));

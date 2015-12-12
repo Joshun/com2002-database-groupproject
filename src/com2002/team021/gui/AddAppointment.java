@@ -189,7 +189,7 @@ public class AddAppointment extends JFrame {
     }
 
     public static void main(String[] args) throws java.sql.SQLException {
-        Patient[] patients = { new Patient("", "b", 1, 1, "14", "st74hr", null), new Patient("", "c", 1, 1, "14", "st74hr", null) };
+        Patient[] patients = { new Patient("", "b", new Date(), 1, "14", "st74hr", null), new Patient("", "c", new Date(), 1, "14", "st74hr", null) };
         Practitioner[] practitioners = { new Practitioner("Mr a", "Dentist") };
 //        AddAppointment ap = new AddAppointment(patients, practitioners);
     }

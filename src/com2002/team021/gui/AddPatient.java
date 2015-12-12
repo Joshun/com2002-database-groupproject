@@ -72,7 +72,7 @@ public class AddPatient extends JFrame {
                 Patient newPatient = null;
                 try {
                     phone = Integer.parseInt(phoneString);
-                    newPatient = new Patient(forename, surname, (int)dOBTimestamp.getTime(), phone, houseNo, postcode, plan);
+                    newPatient = new Patient(forename, surname, dOBTimestamp, phone, houseNo, postcode, plan);
                     if (patientToModify == null) {
                         patientManager.addPatient(newPatient);
                     }
@@ -213,8 +213,9 @@ public class AddPatient extends JFrame {
 
         int currentYear = calendar.get(Calendar.YEAR);
 
-        long dob = patientToModify.getDob();
-        Date dobDate = new Date(dob);
+//        long dob = patientToModify.getDob();
+//        Date dobDate = new Date(dob);
+        Date dobDate = patientToModify.getDob();
         GregorianCalendar dobCal = new GregorianCalendar();
         dobCal.setTime(dobDate);
         int dOBDay = dobCal.get(Calendar.DAY_OF_MONTH);
@@ -236,8 +237,8 @@ public class AddPatient extends JFrame {
     }
 
     public static void main(String[] args) throws java.sql.SQLException {
-        Patient[] patients = { new Patient("A", "b", 1, 1, "14", "st74hr", null), new Patient("", "c", 1, 1, "14", "st74hr", null) };
-        Patient patient = new Patient("A", "b", 1, 1, "14", "st74hr", null);
+        Patient[] patients = { new Patient("A", "b", new Date(), 1, "14", "st74hr", null), new Patient("", "c", new Date(), 1, "14", "st74hr", null) };
+        Patient patient = new Patient("A", "b", new Date(), 1, "14", "st74hr", null);
         PatientManager pm = new PatientManager();
         AddPatient ap = new AddPatient(pm, patient);
     }
