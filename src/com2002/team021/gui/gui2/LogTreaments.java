@@ -23,10 +23,12 @@ public class LogTreaments extends JFrame {
 
     private class TreatmentCheckbox extends JCheckBox {
         private Treatment associatedTreatment;
+
         public TreatmentCheckbox(Treatment associatedTreatment, boolean checked) {
             super(associatedTreatment.getName() + " " + "(£" + associatedTreatment.getCost() + ")", checked);
             this.associatedTreatment = associatedTreatment;
         }
+
         public Treatment getAssociatedTreatment() {
             return associatedTreatment;
         }
@@ -35,15 +37,14 @@ public class LogTreaments extends JFrame {
     private class TreatmentButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            for (TreatmentCheckbox tc: treatmentCheckboxes) {
+            for (TreatmentCheckbox tc : treatmentCheckboxes) {
                 Treatment associatedTreatment = tc.getAssociatedTreatment();
                 if (tc.isSelected()) {
-                    if (! appointmentTreatments.contains(associatedTreatment)) {
+                    if (!appointmentTreatments.contains(associatedTreatment)) {
                         System.out.println("Adding treatment " + associatedTreatment);
                         appointmentTreatments.add(associatedTreatment);
                     }
-                }
-                else {
+                } else {
                     if (appointmentTreatments.contains(associatedTreatment)) {
                         System.out.println("Removing treatment " + associatedTreatment);
                         appointmentTreatments.remove(associatedTreatment);
@@ -66,8 +67,7 @@ public class LogTreaments extends JFrame {
             possibleTreatments = query.getTreatments();
 //            appointmentTreatments = query.getTreatments();
             appointmentTreatments = query.getAppointmentTreatments(appointment);
-        }
-        catch (java.sql.SQLException e) {
+        } catch (java.sql.SQLException e) {
             System.out.println("Could not load list of possible treatments: " + e);
         }
 
@@ -76,16 +76,15 @@ public class LogTreaments extends JFrame {
         }
 
 
-         for (Treatment t: possibleTreatments) {
-             TreatmentCheckbox checkbox;
+        for (Treatment t : possibleTreatments) {
+            TreatmentCheckbox checkbox;
             if (appointmentTreatments.contains(t)) {
                 checkbox = new TreatmentCheckbox(t, true);
-            }
-            else {
+            } else {
                 checkbox = new TreatmentCheckbox(t, false);
             }
-             checkboxPanel.add(checkbox);
-             treatmentCheckboxes.add(checkbox);
+            checkboxPanel.add(checkbox);
+            treatmentCheckboxes.add(checkbox);
         }
 
         contentPane.add(checkboxPanel);
@@ -103,8 +102,7 @@ public class LogTreaments extends JFrame {
         try {
             Query query = new Query();
             appointments = query.getAppointments();
-        }
-        catch (java.sql.SQLException e) {
+        } catch (java.sql.SQLException e) {
             System.out.println("error");
         }
         new LogTreaments(appointments.get(0));
