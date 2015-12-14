@@ -63,7 +63,6 @@ public class ChoiceScreen extends JFrame {
             //logTreat.addActionListener(new btnLogTreat_Action());
 
             contentPane.add(viewCal);
-            contentPane.add(logTreat);
 
             viewCal.setBounds(100, 112, 300, 25);
             logTreat.setBounds(100, 163, 300, 25);
