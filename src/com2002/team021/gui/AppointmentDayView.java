@@ -100,6 +100,7 @@ public class AppointmentDayView extends JFrame {
     public AppointmentDayView(Date day, Practitioner practitioner) {
         this.day = day;
         this.practitioner = practitioner;
+        System.out.println(practitioner);
 
         if (day != null) {
             setTitle("Appointment listing for " + day.toString());
@@ -160,7 +161,13 @@ public class AppointmentDayView extends JFrame {
                 System.out.println(day.getTime());
 //                java.sql.Date sqlDate = new java.sql.Date(day.getTime());
 //                this.appointments = query.getAppointmentsOnDay(sqlDate);
-                this.appointments = query.getAppointmentsOnDay(day);
+//                this.appointments = query.getAppointmentsOnDay(day);
+                if (practitioner != null) {
+                    this.appointments = query.getPractitionerAppointmentsOnDay(day, practitioner);
+                }
+                else {
+                    this.appointments = query.getAppointmentsOnDay(day);
+                }
                 System.out.println(appointments);
             }
             else {

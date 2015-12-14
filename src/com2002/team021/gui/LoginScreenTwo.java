@@ -26,6 +26,7 @@ public class LoginScreenTwo {
         }
         else if (title.equals("Hygienist Log In")) {
             try {
+                System.out.println("Hygienist login");
                 Query query = new Query();
                 Practitioner hygienist = query.getPractitioner("Hygienist");
                 loginScreen.dispose();
@@ -38,6 +39,7 @@ public class LoginScreenTwo {
 
         else if (title.equals("Dentist Log In")) {
             try {
+                System.out.println("Dentist login");
                 Query query = new Query();
                 Practitioner dentist = query.getPractitioner("Dentist");
                 loginScreen.dispose();

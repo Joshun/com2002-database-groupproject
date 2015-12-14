@@ -60,7 +60,7 @@ public class ChoiceScreenTwo extends JFrame {
             viewCal = new JButton("View Calendar");
             logTreat = new JButton("Log Treatment");
 
-            //viewCal.addActionListener(new btnViewCal_Action());
+            viewCal.addActionListener(new btnEditCal_Action());
             //logTreat.addActionListener(new btnLogTreat_Action());
 
             contentPane.add(viewCal);
@@ -83,6 +83,7 @@ public class ChoiceScreenTwo extends JFrame {
         public void actionPerformed(ActionEvent e) {
             choiceScreen.dispose();
             if (practitioner != null) {
+                System.out.println("Practitioner " + practitioner);
                 new CalendarView(practitioner);
             }
             else {

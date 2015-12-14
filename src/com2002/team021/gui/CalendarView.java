@@ -254,7 +254,12 @@ public class CalendarView {
             System.out.println("Calendar: " + cal);
 
             System.out.println("===PLEASE STAND BY===");
-            AppointmentDayView dv = new AppointmentDayView(cal.getTime());
+            if (practitioner != null) {
+                new AppointmentDayView(cal.getTime(), practitioner);
+            }
+            else {
+                new AppointmentDayView(cal.getTime());
+            }
 
         }
     }
