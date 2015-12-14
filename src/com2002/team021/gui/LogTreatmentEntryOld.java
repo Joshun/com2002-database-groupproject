@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by joshua on 03/12/15.
  */
-public class LogTreatmentEntry extends JFrame {
+public class LogTreatmentEntryOld extends JFrame {
     private Treatment selectedTreatment;
     private Treatment selectedTreatmentQuantity;
 
@@ -29,7 +29,7 @@ public class LogTreatmentEntry extends JFrame {
         }
     }
 
-    public LogTreatmentEntry() {
+    public LogTreatmentEntryOld() {
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(3, 2));
         contentPane.add(new JLabel("Treatment"));
@@ -75,6 +75,6 @@ public class LogTreatmentEntry extends JFrame {
 //                new Treatment("Composite resin filling", 150),
 //                new Treatment("Gold crown", 500)
 //        };
-        LogTreatmentEntry lt = new LogTreatmentEntry();
+        LogTreatmentEntryOld lt = new LogTreatmentEntryOld();
     }
 }

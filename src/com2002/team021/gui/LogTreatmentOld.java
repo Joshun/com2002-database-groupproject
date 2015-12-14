@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 /**
  * LogTreatment.java
  */
-public class LogTreatment extends JFrame {
+public class LogTreatmentOld extends JFrame {
 
     private JPanel appointmentListingPane;
 
@@ -20,7 +20,7 @@ public class LogTreatment extends JFrame {
         }
     }
 
-    public LogTreatment() {
+    public LogTreatmentOld() {
         setTitle("Log treatment");
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(3, 1));
@@ -38,7 +38,7 @@ public class LogTreatment extends JFrame {
     }
 
     public static void main(String[] args) {
-        LogTreatment lt = new LogTreatment();
+        LogTreatmentOld lt = new LogTreatmentOld();
         lt.setVisible(true);
     }
 }
