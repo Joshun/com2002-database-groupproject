@@ -35,7 +35,7 @@ public class ChoiceScreenTwo extends JFrame {
         contentPane.setLayout(null);
 
         //Create buttons
-        if (title == "Secretary Choice"){
+        if (title.equals("Secretary Choice")){
             editCal = new JButton("View / Edit Calendar");
             ptnMan = new JButton("Patient Management");
 
@@ -48,7 +48,7 @@ public class ChoiceScreenTwo extends JFrame {
             editCal.setBounds(100, 112, 300, 25);
             ptnMan.setBounds(100, 163, 300, 25);
         }
-        else if (title == "Practitioner Choice") {
+        else if (title.equals("Practitioner Choice")) {
             viewCal = new JButton("View Calendar");
             logTreat = new JButton("Log Treatment");
 
