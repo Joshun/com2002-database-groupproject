@@ -156,8 +156,10 @@ public class AppointmentDayView extends JFrame {
             Query query = new Query();
 
             if (day != null) {
-                java.sql.Date sqlDate = new java.sql.Date(day.getTime());
-                this.appointments = query.getAppointmentsOnDay(sqlDate);
+//                java.sql.Date sqlDate = new java.sql.Date(day.getTime());
+//                this.appointments = query.getAppointmentsOnDay(sqlDate);
+                this.appointments = query.getAppointmentsOnDay(day);
+                System.out.println(appointments);
             }
             else {
                 this.appointments = query.getAppointments();
@@ -181,11 +183,24 @@ public class AppointmentDayView extends JFrame {
     public void addAppointment(Appointment a) {
         appointments.add(a);
         tableModel.addRow(appointmentToRow(a));
+        try {
+            Query query = new Query();
+            query.addAppointment(a);
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Failed to add appointment " + e);
+        }
     }
 
     public void removeAppointment(Appointment a) {
         tableModel.removeRow(appointments.indexOf(a));
         appointments.remove(a);
+//        try {
+//            Query query = new Query();
+//        }
+//        catch (java.sql.SQLException e) {
+//            System.out.println("Failed to remove appointment " + e);
+//        }
     }
 
     public void updateAppointment(Appointment oldAppointment, Appointment newAppointment) {
@@ -199,6 +214,13 @@ public class AppointmentDayView extends JFrame {
         tableModel.setValueAt(practitioner.getName(), indexOfOld, 3);
         tableModel.setValueAt(dateFormat.format(newAppointment.getStart()), indexOfOld, 4);
         tableModel.setValueAt(dateFormat.format(newAppointment.getEnd()), indexOfOld, 5);
+        try {
+            Query query = new Query();
+            query.updateAppointment(newAppointment, oldAppointment);
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Failed to update appointment " + e);
+        }
 //        tableModel.setValueAt("role", indexOfOld, 6);
     }
 
