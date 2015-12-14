@@ -23,7 +23,7 @@ public class LogTreaments extends JFrame {
     private class TreatmentCheckbox extends JCheckBox {
         private Treatment associatedTreatment;
         public TreatmentCheckbox(Treatment associatedTreatment, boolean checked) {
-            super(associatedTreatment.getName(), checked);
+            super(associatedTreatment.getName() + " " + "(£" + associatedTreatment.getCost() + ")", checked);
             this.associatedTreatment = associatedTreatment;
         }
     }
@@ -45,9 +45,8 @@ public class LogTreaments extends JFrame {
             System.out.println("Could not load list of possible treatments: " + e);
         }
 
-
-        for (Treatment t: possibleTreatments) {
-            if (appointmentTreatments.contains(t)) {
+         for (Treatment t: possibleTreatments) {
+            if (appointmentTreatments != null && appointmentTreatments.contains(t)) {
                 checkboxPanel.add(new TreatmentCheckbox(t, true));
             }
             else{
