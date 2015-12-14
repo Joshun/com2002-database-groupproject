@@ -16,51 +16,14 @@ public class LoginScreenTwo {
     static Container contentPane;
 
     public static void loginDialog(String title) {
-        name = new JTextField();
-        username = new JTextField();
-        JPasswordField password = new JPasswordField();
-        final JComponent[] fields = new JComponent[] {
-                new JLabel("Name"),
-                name,
-                new JLabel(" "),
-                new JLabel("Username"),
-                username,
-                new JLabel(" "),
-                new JLabel("Password"),
-                password
-        };
-        JOptionPane a = new JOptionPane();
-        a.showMessageDialog(loginScreen, fields, title, JOptionPane.PLAIN_MESSAGE);
 
-
-
-        System.out.println("You entered " +
-                name.getText() + ", " +
-                username.getText() + ", " +
-                password.getText());
-
-        if (name.getText().trim().length() == 0) {
-            a.showMessageDialog(loginScreen, "Must Fill in text field", "Empty Field", JOptionPane.ERROR_MESSAGE);
-            loginDialog(title);
-        }
-        else if (username.getText().trim().length() == 0) {
-            a.showMessageDialog(loginScreen, "Must Fill in text field", "Empty Field", JOptionPane.ERROR_MESSAGE);
-            loginDialog(title);
-        }
-        else if (password.getText().trim().length() == 0) {
-            a.showMessageDialog(loginScreen, "Must Fill in text field", "Empty Field", JOptionPane.ERROR_MESSAGE);
-            loginDialog(title);
-        }
-        else {
-            if (title == "Secretary Log In") {
+        if (title == "Secretary Log In") {
                 loginScreen.dispose();
                 new ChoiceScreenTwo("Secretary Choice");
-            }
-            else if ((title == "Hygienist Log In") || (title == "Dentist Log In")){
+        }
+        else if ((title == "Hygienist Log In") || (title == "Dentist Log In")){
                 loginScreen.dispose();
                 new ChoiceScreenTwo("Practitioner Choice");
-            }
-
         }
 
     }
