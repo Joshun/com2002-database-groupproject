@@ -1,8 +1,6 @@
 package com2002.team021.gui.gui2;
 
-import com2002.team021.Appointment;
-import com2002.team021.Query;
-import com2002.team021.Treatment;
+import com2002.team021.*;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -17,6 +15,7 @@ import java.util.*;
  * Created by joshua on 14/12/15.
  */
 public class LogTreaments extends JFrame {
+    private Appointment appointmentToModify;
     private ArrayList<Treatment> possibleTreatments;
     private ArrayList<Treatment> appointmentTreatments;
     private ArrayList<TreatmentCheckbox> treatmentCheckboxes;
@@ -51,10 +50,25 @@ public class LogTreaments extends JFrame {
                     }
                 }
             }
+            try {
+//                appointmentToModify.setTreatments(appointmentTreatments);
+                Date start = appointmentToModify.getStart();
+                Date end = appointmentToModify.getEnd();
+                Patient patient = appointmentToModify.getPatient();
+                Practitioner practitioner = appointmentToModify.getPractitioner();
+                Appointment newAppointment = new Appointment(start, end, patient, practitioner, appointmentTreatments);
+                Query query = new Query();
+//                query.updateSessionTreatments(appointmentToModify);
+                query.updateAppointment(newAppointment, appointmentToModify);
+            }
+            catch (java.sql.SQLException ex) {
+                System.out.println("Couldn\'t update treatments: " + ex);
+            }
         }
     }
 
     public LogTreaments(Appointment appointment) {
+        this.appointmentToModify = appointment;
         treatmentCheckboxes = new ArrayList<>();
         setTitle("Log Treatment");
         Container contentPane = getContentPane();
