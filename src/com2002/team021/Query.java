@@ -410,27 +410,55 @@ public class Query {
 	}
 	
 	public boolean addPatient(Patient patient) throws SQLException {
-		String query = "INSERT INTO patients (forename, surname, dob, phone, houseNumber, postcode, subscription)  VALUES (?, ?, ?, ?, ?, ?, ?);";
+		String query = "SELECT COUNT(*) as count FROM patients WHERE title = ? AND forename = ? AND surname = ? AND dob = ? AND phone = ? AND houseNumber = ? AND postcode = ?;";
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, patient.getTitle());
+			stmt.setString(2, patient.getForename());
+			stmt.setString(3, patient.getSurname());
+			stmt.setLong(4, patient.getDob().getTime());
+			stmt.setInt(5, patient.getPhone());
+			stmt.setString(6, patient.getHouseNumber());
+			stmt.setString(7, patient.getPostcode());
+			ResultSet rs = stmt.executeQuery();
+			rs.first();
+			
+			if (rs.getInt("count") > 0) {
+				System.out.println("patient already exists");
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt count patients: " + "\n" + e);
+		
+		} finally {
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+		}
+		
+		query = "INSERT INTO patients (title, forename, surname, dob, phone, houseNumber, postcode, subscription)  VALUES (?, ?, ?, ?, ?, ?, ?);";
 		int success;
 		
 		try {
 			stmt = con.prepareStatement(query);
-			stmt.setString(1, patient.getForename());
-			stmt.setString(2, patient.getSurname());
-			stmt.setLong(3, patient.getDob().getTime());
-			stmt.setInt(4, patient.getPhone());
-			stmt.setString(5, patient.getHouseNumber());
-			stmt.setString(6, patient.getPostcode());
+			stmt.setString(1, patient.getTitle());
+			stmt.setString(2, patient.getForename());
+			stmt.setString(3, patient.getSurname());
+			stmt.setLong(4, patient.getDob().getTime());
+			stmt.setInt(5, patient.getPhone());
+			stmt.setString(6, patient.getHouseNumber());
+			stmt.setString(7, patient.getPostcode());
 			if (patient.getSubscription() == null) {
-				stmt.setNull(7, java.sql.Types.VARCHAR);
+				stmt.setNull(8, java.sql.Types.VARCHAR);
 			} else {
-				stmt.setString(7, patient.getSubscription().getName());
+				stmt.setString(8, patient.getSubscription().getName());
 			}
 				
 			success = stmt.executeUpdate();
 			
 		} catch (SQLException e) {
-			throw new SQLException(e);
+			throw new SQLException("couldnt insert patient " + patient + "\n" + e);
 		
 		} finally {
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
@@ -885,10 +913,10 @@ public class Query {
 			System.out.println(
 				// new Query().updateHealthcarePlan(hcp)
 				// new Query().getPractitioners()
-				// new Query().addAddress(add)
+				new Query().addPatient(pa)
 				// new Query().getTreatments()
 				// new Query().getPractitioners()
-				new Query().getPractitionerAppointmentsOnDay(date, prac)
+				// new Query().getPractitionerAppointmentsOnDay(date, prac)
 			);
 			
 		} catch (Exception e) {
