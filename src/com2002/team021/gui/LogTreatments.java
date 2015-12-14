@@ -10,7 +10,7 @@ import java.util.*;
 /**
  * Created by joshua on 14/12/15.
  */
-public class LogTreaments extends JFrame {
+public class LogTreatments extends JFrame {
     private Appointment appointmentToModify;
     private ArrayList<Treatment> possibleTreatments;
     private ArrayList<Treatment> appointmentTreatments;
