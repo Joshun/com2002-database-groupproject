@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.sql.SQLException
+import java.sql.SQLException;
 
 /**
  * Created by joshua on 14/12/15.

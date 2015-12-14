@@ -156,6 +156,8 @@ public class AppointmentDayView extends JFrame {
             Query query = new Query();
 
             if (day != null) {
+                System.out.println(day);
+                System.out.println(day.getTime());
 //                java.sql.Date sqlDate = new java.sql.Date(day.getTime());
 //                this.appointments = query.getAppointmentsOnDay(sqlDate);
                 this.appointments = query.getAppointmentsOnDay(day);

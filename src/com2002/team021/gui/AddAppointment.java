@@ -80,8 +80,8 @@ public class AddAppointment extends JFrame {
 
         this.day = dayView.getDay();
         this.dayView = dayView;
-        this.startTimeStamp = new Date();
-        this.endTimeStamp = new Date();
+        this.startTimeStamp = new Date(this.day.getTime());
+        this.endTimeStamp = new Date(this.day.getTime());
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(6, 2));
 
@@ -162,6 +162,7 @@ public class AddAppointment extends JFrame {
         int hour = startHourEntryModel.getNumber().intValue();
         int minute = startMinuteEntryModel.getNumber().intValue();
         Calendar startTimeCal = Calendar.getInstance();
+        startTimeCal.setTime(day);
         startTimeCal.set(Calendar.HOUR_OF_DAY, hour);
         startTimeCal.set(Calendar.MINUTE, minute);
         startTimeStamp = startTimeCal.getTime();
