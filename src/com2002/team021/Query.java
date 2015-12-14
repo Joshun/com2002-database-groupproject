@@ -297,6 +297,7 @@ public class Query {
 		} finally {
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 		}
+		System.out.println("successfully deleted all treatments for appointment");
 		
 		try {
 		
@@ -326,12 +327,11 @@ public class Query {
 		ArrayList<Appointment> filtered = new ArrayList<Appointment>();
 		ArrayList<Appointment> all;
 		
-		
 		try {
 			all = new Query().getAppointments();
 			
 		} catch (SQLException e) {
-			throw new SQLException("couldnt get appointments on day" + day + "\n" + e);
+			throw new SQLException("couldnt get all appointments\n" + e);
 			
 		}
 		
@@ -344,6 +344,26 @@ public class Query {
 			}
 		}
 		
+		
+		return filtered;
+		
+	}
+	
+	public ArrayList<Appointment> getPractitionerAppointmentsOnDay (Date d, Practitioner p) throws SQLException {
+		ArrayList<Appointment> filtered = new ArrayList<Appointment>();
+		ArrayList<Appointment> all;
+		
+		try {
+			all = new Query().getAppointmentsOnDay(d);
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get appointments on d" + d + "\n" + e);
+			
+		}
+		
+		for (Appointment a : all) {
+			if (a.getPractitioner().getRole().equals(p.getRole())) filtered.add(a);
+		}
 		
 		return filtered;
 		
@@ -815,6 +835,9 @@ public class Query {
 			
 			HealthcarePlan hcp = new HealthcarePlan("New One", 456, 2, 3, 4);
 			
+			Practitioner prac = new Practitioner("Dentist");
+			Date date = new Date(1449763208559L);
+			
 			Address add = new Address("13", "elm close", "kidsgrove", "stoke-on-trent", "st74hr");
 			
 			System.out.println(
@@ -822,8 +845,8 @@ public class Query {
 				// new Query().getPractitioners()
 				// new Query().addAddress(add)
 				// new Query().getTreatments()
-				new Query().getPractitioners()
-				
+				// new Query().getPractitioners()
+				new Query().getPractitionerAppointmentsOnDay(date, prac)
 			);
 			
 		} catch (Exception e) {
