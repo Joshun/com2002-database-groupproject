@@ -1,5 +1,8 @@
 package com2002.team021.gui;
 
+import com2002.team021.Practitioner;
+import com2002.team021.Query;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,8 +19,11 @@ public class ChoiceScreenTwo extends JFrame {
     static JButton viewCal, logTreat, editCal, ptnMan;
     static Container contentPane;
     static String practitionerRole = "";
+    static Practitioner practitioner;
 
-    public ChoiceScreenTwo (String title) {
+
+    public ChoiceScreenTwo (Practitioner practitioner) {
+        this.practitioner = practitioner;
         //Look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -27,7 +33,7 @@ public class ChoiceScreenTwo extends JFrame {
         } catch (UnsupportedLookAndFeelException e) {
         }
 
-        choiceScreen = new JFrame(title);
+        choiceScreen = new JFrame();
         choiceScreen.setSize(500,300);
         choiceScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -35,7 +41,7 @@ public class ChoiceScreenTwo extends JFrame {
         contentPane.setLayout(null);
 
         //Create buttons
-        if (title.equals("Secretary Choice")){
+        if (practitioner == null) {
             editCal = new JButton("View / Edit Calendar");
             ptnMan = new JButton("Patient Management");
 
@@ -47,8 +53,10 @@ public class ChoiceScreenTwo extends JFrame {
 
             editCal.setBounds(100, 112, 300, 25);
             ptnMan.setBounds(100, 163, 300, 25);
+            practitioner = null;
+
         }
-        else if (title.equals("Practitioner Choice")) {
+        else if (practitioner.getRole().equals("Dentist") || practitioner.getRole().equals("Hygienist")) {
             viewCal = new JButton("View Calendar");
             logTreat = new JButton("Log Treatment");
 
@@ -67,15 +75,19 @@ public class ChoiceScreenTwo extends JFrame {
 
     }
 
-    public ChoiceScreenTwo (String title, String practitionerRole) {
-        super(title);
-        this.practitionerRole = practitionerRole;
+    public ChoiceScreenTwo () {
+        this(null);
     }
 
     static class btnEditCal_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             choiceScreen.dispose();
-            new CalendarView();
+            if (practitioner != null) {
+                new CalendarView(practitioner);
+            }
+            else {
+                new CalendarView();
+            }
         }
     }
 
@@ -88,7 +100,7 @@ public class ChoiceScreenTwo extends JFrame {
     }
 
     public static void main(String[] args) {
-        new ChoiceScreenTwo("Secretary Choice");
+        new ChoiceScreenTwo();
         //new ChoiceScreen("Practitioner Choice");
     }
 
