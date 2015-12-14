@@ -19,7 +19,7 @@ public class PatientManager extends JFrame {
 
     private DefaultTableModel patientTableModel;
     private ArrayList<Patient> patients;
-    private int selectedRow;
+    private int selectedRow = -1;
 
     private class PatientManagerButtonHandler implements ActionListener {
         private boolean modifyCurrent;
@@ -31,11 +31,13 @@ public class PatientManager extends JFrame {
 
         public void actionPerformed(ActionEvent actionEvent) {
 
-            AddPatient ap;
+            AddPatient ap = null;
             if (modifyCurrent) {
-                int index = patientManager.getSelectedRow();
-                System.out.println("Trying to modify existing patient at index, " + selectedRow);
-                ap = new AddPatient(patientManager, patientManager.patients.get(selectedRow));
+                if (selectedRow >= 0) {
+                    int index = patientManager.getSelectedRow();
+                    System.out.println("Trying to modify existing patient at index, " + selectedRow);
+                    ap = new AddPatient(patientManager, patientManager.patients.get(selectedRow));
+                }
             }
             else {
                 ap = new AddPatient(patientManager);
@@ -43,8 +45,10 @@ public class PatientManager extends JFrame {
 
 
             }
-            ap.setVisible(true);
-            setEnabled(false);
+            if (ap != null) {
+                ap.setVisible(true);
+                setEnabled(false);
+            }
         }
     }
 
