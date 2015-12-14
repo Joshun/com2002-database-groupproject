@@ -6,6 +6,7 @@ import java.sql.SQLException;
 public class Patient {
 	
 	private int id = 0;
+	private String title;
 	private String forename;
 	private String surname;
 	private Date dob;
@@ -21,6 +22,7 @@ public class Patient {
 			Patient dbPatient = new Query().getPatient(patientID);
 
 			this.id = dbPatient.getId();
+			this.title = dbPatient.getTitle();
 			this.forename = dbPatient.getForename();
 			this.surname = dbPatient.getSurname();
 			this.dob = dbPatient.getDob();
@@ -38,18 +40,24 @@ public class Patient {
 		
 	}
 	
+	public Patient (String title, String forename, String surname, Date dob, int phone, String houseNumber, String postcode, String subscription) throws SQLException {
+		this(0, title, forename, surname, dob, phone, houseNumber, postcode, subscription, 0, 0, 0);
+		
+	}
+	
 	public Patient (String forename, String surname, Date dob, int phone, String houseNumber, String postcode, String subscription) throws SQLException {
-		this(0, forename, surname, dob, phone, houseNumber, postcode, subscription, 0, 0, 0);
+		this(0, "", forename, surname, dob, phone, houseNumber, postcode, subscription, 0, 0, 0);
 		
 	}
 	
-	public Patient (int id, String forename, String surname, Date dob, int phone, String houseNumber, String postcode, String subscription) throws SQLException {
-		this(id, forename, surname, dob, phone, houseNumber, postcode, subscription, 0, 0, 0);
+	public Patient (int id, String title, String forename, String surname, Date dob, int phone, String houseNumber, String postcode, String subscription) throws SQLException {
+		this(id, title, forename, surname, dob, phone, houseNumber, postcode, subscription, 0, 0, 0);
 		
 	}
 	
-	public Patient (int id, String forename, String surname, Date dob, int phone, String houseNumber, String postcode, String subscription, int checkUps, int hygieneVisits, int repairs) throws SQLException {
+	public Patient (int id, String title, String forename, String surname, Date dob, int phone, String houseNumber, String postcode, String subscription, int checkUps, int hygieneVisits, int repairs) throws SQLException {
 		this.id = id;
+		this.title = title;
 		this.forename = forename;
 		this.surname = surname;
 		this.dob = dob;
@@ -75,6 +83,7 @@ public class Patient {
 	
 	// getters
 	public int getId () { return this.id; }
+	public String getTitle () { return this.title; }
 	public String getForename () { return this.forename; }
 	public String getSurname () { return this.surname; }
 	public Date getDob () { return this.dob; }

@@ -4,7 +4,11 @@ import static com2002.team021.config.SQL.*;
 
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
-import java.sql.*;
+import java.sql.SQLException;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Date;
 
 public class Query {
@@ -411,6 +415,7 @@ public class Query {
 			
 			return new Patient(
 				rs.getInt("id"),
+				rs.getString("title"),
 				rs.getString("forename"),
 				rs.getString("surname"),
 				new Date(rs.getLong("dob")),
@@ -442,6 +447,7 @@ public class Query {
 			while (rs.next()) {
 				patients.add(new Patient(
 					rs.getInt("id"),
+					rs.getString("title"),
 					rs.getString("forename"),
 					rs.getString("surname"),
 					new Date(rs.getLong("dob")),
@@ -831,7 +837,7 @@ public class Query {
 			// new Query().updateAppointment(a, a);
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy");
-			Patient rob = new Patient("Rob", "Ede", sdf.parse("18/9/1995"), 554342, "14", "st74hr", null);
+			Patient rob = new Patient("Mr", "Rob", "Ede", sdf.parse("18/9/1995"), 554342, "14", "st74hr", null);
 			
 			HealthcarePlan hcp = new HealthcarePlan("New One", 456, 2, 3, 4);
 			
