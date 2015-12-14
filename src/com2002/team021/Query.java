@@ -231,7 +231,6 @@ public class Query {
 			throw new SQLException("couldnt update existing appointment " + appointment + "\n" + e);
 			
 		} finally {
-			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 		}
 		
@@ -239,7 +238,7 @@ public class Query {
 			updateSessionTreatments(appointment);
 			
 		} catch (SQLException e) {
-			throw new SQLException("couldnt existing appointment session\n" + e);
+			throw new SQLException("couldnt update existing appointment session\n" + e);
 			
 		} finally {
 			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
