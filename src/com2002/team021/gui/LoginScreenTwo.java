@@ -17,11 +17,11 @@ public class LoginScreenTwo {
 
     public static void loginDialog(String title) {
 
-        if (title == "Secretary Log In") {
+        if (title.equals("Secretary Log In") ) {
                 loginScreen.dispose();
                 new ChoiceScreenTwo("Secretary Choice");
         }
-        else if ((title == "Hygienist Log In") || (title == "Dentist Log In")){
+        else if ((title.equals("Hygienist Log In")) || (title.equals("Dentist Log In"))){
                 loginScreen.dispose();
                 new ChoiceScreenTwo("Practitioner Choice");
         }
