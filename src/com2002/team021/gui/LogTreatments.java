@@ -32,35 +32,39 @@ public class LogTreatments extends JFrame {
     private class TreatmentButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            boolean hasChanged = false;
             for (TreatmentCheckbox tc : treatmentCheckboxes) {
                 Treatment associatedTreatment = tc.getAssociatedTreatment();
                 if (tc.isSelected()) {
                     if (!appointmentTreatments.contains(associatedTreatment)) {
                         System.out.println("Adding treatment " + associatedTreatment);
+                        hasChanged = true;
                         appointmentTreatments.add(associatedTreatment);
                     }
                 } else {
                     if (appointmentTreatments.contains(associatedTreatment)) {
                         System.out.println("Removing treatment " + associatedTreatment);
+                        hasChanged = true;
                         appointmentTreatments.remove(associatedTreatment);
                     }
                 }
             }
-            try {
-//                appointmentToModify.setTreatments(appointmentTreatments);
-                Date start = appointmentToModify.getStart();
-                Date end = appointmentToModify.getEnd();
-                Patient patient = appointmentToModify.getPatient();
-                Practitioner practitioner = appointmentToModify.getPractitioner();
-                Appointment newAppointment = new Appointment(start, end, patient, practitioner, appointmentTreatments);
-                Query query = new Query();
-                System.out.println(newAppointment);
-                System.out.println(appointmentToModify);
-                query.updateAppointment(newAppointment, appointmentToModify);
-            }
-            catch (java.sql.SQLException ex) {
-                System.out.println("Couldn\'t update treatments: " + ex);
-//                ex.printStackTrace();
+            if (hasChanged) {
+                try {
+                    //                appointmentToModify.setTreatments(appointmentTreatments);
+                    Date start = appointmentToModify.getStart();
+                    Date end = appointmentToModify.getEnd();
+                    Patient patient = appointmentToModify.getPatient();
+                    Practitioner practitioner = appointmentToModify.getPractitioner();
+                    Appointment newAppointment = new Appointment(start, end, patient, practitioner, appointmentTreatments);
+                    Query query = new Query();
+                    System.out.println(newAppointment);
+                    System.out.println(appointmentToModify);
+                    query.updateAppointment(newAppointment, appointmentToModify);
+                } catch (java.sql.SQLException ex) {
+                    System.out.println("Couldn\'t update treatments: " + ex);
+                    //                ex.printStackTrace();
+                }
             }
         }
     }
