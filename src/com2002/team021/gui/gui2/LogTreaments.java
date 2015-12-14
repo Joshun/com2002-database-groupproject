@@ -19,6 +19,7 @@ import java.util.*;
 public class LogTreaments extends JFrame {
     private ArrayList<Treatment> possibleTreatments;
     private ArrayList<Treatment> appointmentTreatments;
+    private ArrayList<TreatmentCheckbox> treatmentCheckboxes;
 
     private class TreatmentCheckbox extends JCheckBox {
         private Treatment associatedTreatment;
@@ -26,9 +27,34 @@ public class LogTreaments extends JFrame {
             super(associatedTreatment.getName() + " " + "(£" + associatedTreatment.getCost() + ")", checked);
             this.associatedTreatment = associatedTreatment;
         }
+        public Treatment getAssociatedTreatment() {
+            return associatedTreatment;
+        }
+    }
+
+    private class TreatmentButtonHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            for (TreatmentCheckbox tc: treatmentCheckboxes) {
+                Treatment associatedTreatment = tc.getAssociatedTreatment();
+                if (tc.isSelected()) {
+                    if (! appointmentTreatments.contains(associatedTreatment)) {
+                        System.out.println("Adding treatment " + associatedTreatment);
+                        appointmentTreatments.add(associatedTreatment);
+                    }
+                }
+                else {
+                    if (appointmentTreatments.contains(associatedTreatment)) {
+                        System.out.println("Removing treatment " + associatedTreatment);
+                        appointmentTreatments.remove(associatedTreatment);
+                    }
+                }
+            }
+        }
     }
 
     public LogTreaments(Appointment appointment) {
+        treatmentCheckboxes = new ArrayList<>();
         setTitle("Log Treatment");
         Container contentPane = getContentPane();
         contentPane.setLayout(new GridLayout(2, 1));
@@ -45,17 +71,26 @@ public class LogTreaments extends JFrame {
             System.out.println("Could not load list of possible treatments: " + e);
         }
 
+        if (appointmentTreatments == null) {
+            appointmentTreatments = new ArrayList<>();
+        }
+
+
          for (Treatment t: possibleTreatments) {
-            if (appointmentTreatments != null && appointmentTreatments.contains(t)) {
-                checkboxPanel.add(new TreatmentCheckbox(t, true));
+             TreatmentCheckbox checkbox;
+            if (appointmentTreatments.contains(t)) {
+                checkbox = new TreatmentCheckbox(t, true);
             }
-            else{
-                checkboxPanel.add(new TreatmentCheckbox(t, false));
+            else {
+                checkbox = new TreatmentCheckbox(t, false);
             }
+             checkboxPanel.add(checkbox);
+             treatmentCheckboxes.add(checkbox);
         }
 
         contentPane.add(checkboxPanel);
         JButton logTreatmentButton = new JButton("Log Treatment");
+        logTreatmentButton.addActionListener(new TreatmentButtonHandler());
         contentPane.add(logTreatmentButton);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
