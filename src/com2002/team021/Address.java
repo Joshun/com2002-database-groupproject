@@ -52,9 +52,9 @@ public class Address {
 	}
 	
 	public static boolean isValidPostcode (String pc) {
-		String pattern = "([a-z]{1,2}\\d{1,2})\\w?(\\d{1,2}[a-z]{2})";
+		String pattern = "([a-z]{1,2}\\d{1,2})\\s?(\\d{1,2}[a-z]{2})";
 		Pattern p = Pattern.compile(pattern);
-		Matcher m = p.matcher(pc.trim().toLowerCase().replace(" ", ""));
+		Matcher m = p.matcher(pc.trim().toLowerCase());
 		return m.matches();
 	}
 	
@@ -62,6 +62,8 @@ public class Address {
 		
 		try {
 			// Address address = new Address("14", "st74hr");
+			
+			System.out.println(isValidPostcode("st73 2ds"));
 			
 		} catch (Exception e) {
 			System.out.println("Couln't find address. " + e);

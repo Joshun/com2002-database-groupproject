@@ -46,6 +46,7 @@ public class Appointment {
 	public Date getEnd () { return this.end; }
 	public Patient getPatient () { return this.patient; }
 	public Practitioner getPractitioner () { return this.practitioner; }
+	public void setTreatments (ArrayList<Treatment> treatments) { this.treatments = treatments; }
 	
 	public ArrayList<Treatment> getTreatments() throws SQLException {
 		if (this.treatments == null) {
@@ -62,8 +63,6 @@ public class Appointment {
 		return this.treatments;
 		
 	}
-	
-	public void setTreatments (ArrayList<Treatment> treatments) { this.treatments = treatments; }
 	
 	public String toString () {
 		String str = "";

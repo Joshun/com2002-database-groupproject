@@ -62,7 +62,6 @@ public class AppointmentDayView extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            Query query = new Query();
             try {
 
                 if (modify){
@@ -73,7 +72,7 @@ public class AppointmentDayView extends JFrame {
 
                 }
                 else  {
-                    AddAppointment ap = new AddAppointment(query.getPatients(), query.getPractitioners(), dayView);
+                    AddAppointment ap = new AddAppointment(new Query().getPatients(), new Query().getPractitioners(), dayView);
                     setEnabled(false);
                 }
             }

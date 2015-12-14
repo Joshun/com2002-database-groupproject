@@ -638,6 +638,7 @@ public class Query {
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException("couldnt get practitioners", e);
 			
 		} finally {
@@ -820,7 +821,9 @@ public class Query {
 				// new Query().updateHealthcarePlan(hcp)
 				// new Query().getPractitioners()
 				// new Query().addAddress(add)
-				"st7 4HR".toLowerCase().replace(" ", "")
+				// new Query().getTreatments()
+				new Query().getPractitioners()
+				
 			);
 			
 		} catch (Exception e) {

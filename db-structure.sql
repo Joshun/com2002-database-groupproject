@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: stusql.dcs.shef.ac.uk
--- Generation Time: Dec 04, 2015 at 03:50 PM
+-- Generation Time: Dec 13, 2015 at 01:38 AM
 -- Server version: 5.5.44-MariaDB
 -- PHP Version: 5.6.8
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `team021`
 --
-CREATE DATABASE IF NOT EXISTS `team021` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `team021`;
 
 -- --------------------------------------------------------
 
@@ -40,6 +38,12 @@ CREATE TABLE `addresses` (
 -- Dumping data for table `addresses`
 --
 
+INSERT INTO `addresses` (`houseNumber`, `streetName`, `district`, `city`, `postcode`) VALUES
+('0', 'house road', 'cow close', 'sheffield', 's104sd'),
+('13', 'elm close', 'kidsgrove', 'stoke-on-trent', 'st74hr'),
+('14', 'elm close', 'kidsgrove', 'stoke-on-trent', 'st74hr'),
+('16', 'aif', 'onoince', 'oin', 'iosnf');
+
 -- --------------------------------------------------------
 
 --
@@ -47,13 +51,20 @@ CREATE TABLE `addresses` (
 --
 
 CREATE TABLE `appointments` (
-  `date` int(12) NOT NULL,
-  `startTime` int(12) NOT NULL,
-  `endTime` int(12) NOT NULL,
+  `start` bigint(20) NOT NULL,
+  `end` bigint(20) NOT NULL,
   `patient` int(11) NOT NULL,
-  `practitioner` varchar(200) NOT NULL,
-  `treatment` varchar(200) NOT NULL
+  `practitioner` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `appointments`
+--
+
+INSERT INTO `appointments` (`start`, `end`, `patient`, `practitioner`) VALUES
+(1449763208559, 1449766748559, 1, 'Dentist'),
+(1449765621000, 1449766761000, 1, 'Dentist'),
+(1449824402309, 1449825542309, 9, 'Hygienist');
 
 -- --------------------------------------------------------
 
@@ -73,6 +84,12 @@ CREATE TABLE `healthcarePlans` (
 -- Dumping data for table `healthcarePlans`
 --
 
+INSERT INTO `healthcarePlans` (`name`, `cost`, `checkUps`, `hygieneVisits`, `repairs`) VALUES
+('Dental Repair Plan', 3600, 2, 2, 2),
+('Maintenance Plan', 1500, 2, 2, 0),
+('NHS Free Plan', 0, 2, 2, 6),
+('Oral Health Plan', 2100, 2, 4, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -83,16 +100,48 @@ CREATE TABLE `patients` (
   `id` int(11) NOT NULL,
   `forename` varchar(50) NOT NULL,
   `surname` varchar(50) NOT NULL,
-  `dob` int(12) NOT NULL,
-  `phone` int(13) NOT NULL,
+  `dob` bigint(20) NOT NULL,
+  `phone` int(11) NOT NULL,
   `houseNumber` varchar(200) NOT NULL,
   `postcode` varchar(8) NOT NULL,
-  `subscription` varchar(200) DEFAULT NULL
+  `subscription` varchar(200) DEFAULT NULL,
+  `checkupsTaken` int(11) DEFAULT NULL,
+  `hygeineVisitsTaken` int(11) DEFAULT NULL,
+  `repairsTaken` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `patients`
 --
+
+INSERT INTO `patients` (`id`, `forename`, `surname`, `dob`, `phone`, `houseNumber`, `postcode`, `subscription`, `checkupsTaken`, `hygeineVisitsTaken`, `repairsTaken`) VALUES
+(1, 'rob', 'ede', 1448974665, 6982634, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(7, 'Rob', 'Ede', 790387740000, 554342, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(8, 'Rob', 'Ede', 790387740000, 554342, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(9, 'Rob', 'Ede', 790387740000, 554342, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(10, 'Rob', 'Ede', 790387740000, 554342, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(11, 'Rob', 'Ede', 790387740000, 554342, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(12, 'Rob', 'Ede', 790387740000, 554342, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(13, 'a', 'c', 1449878400000, 1, '14', 'st74hr', 'Oral Health Plan', NULL, NULL, NULL),
+(14, 'a', 'c', 1449878400000, 1, '14', 'st74hr', 'Oral Health Plan', NULL, NULL, NULL),
+(15, 'c', 'b', 1449878400000, 1, '14', 'st74hr', 'Dental Repair Plan', NULL, NULL, NULL),
+(16, 'test', 'patient', 1420070400000, 3, '14', 'st74hr', 'NHS Free Plan', NULL, NULL, NULL),
+(17, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', 'Oral Health Plan', NULL, NULL, NULL),
+(18, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', 'Oral Health Plan', NULL, NULL, NULL),
+(19, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', 'Dental Repair Plan', NULL, NULL, NULL),
+(20, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(21, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', 'NHS Free Plan', NULL, NULL, NULL),
+(22, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(23, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(24, 'Mr', 'Knobede', 1330819200000, 5365893, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(25, 'Mr', 'Knobede', 1330819200000, 5365893, '14', 'st74hr', NULL, NULL, NULL, NULL),
+(26, 'Mr', 'Knobede', 1330819200000, 5365893, '14', 'st74hr', 'Oral Health Plan', NULL, NULL, NULL),
+(27, 'Mr', 'Knobede', 1330819200000, 5365893, '14', 'st74hr', 'Oral Health Plan', NULL, NULL, NULL),
+(28, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', 'NHS Free Plan', NULL, NULL, NULL),
+(29, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', 'Oral Health Plan', NULL, NULL, NULL),
+(30, 'Rob', 'Ede', 790387200000, 554342, '14', 'st74hr', 'Dental Repair Plan', NULL, NULL, NULL),
+(31, 'Bob', 'Jones', -430794000000, 8340235, '14', 'st74hr', 'Maintenance Plan', NULL, NULL, NULL),
+(32, 'Moritz', 'ede', 1378800000, 6982634, '14', 'st74hr', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -101,9 +150,17 @@ CREATE TABLE `patients` (
 --
 
 CREATE TABLE `practitioners` (
-  `name` int(50) NOT NULL,
+  `name` varchar(200) NOT NULL,
   `role` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `practitioners`
+--
+
+INSERT INTO `practitioners` (`name`, `role`) VALUES
+('Phil Green', 'Dentist'),
+('John Cena', 'Hygienist');
 
 -- --------------------------------------------------------
 
@@ -112,8 +169,7 @@ CREATE TABLE `practitioners` (
 --
 
 CREATE TABLE `sessions` (
-  `date` int(12) NOT NULL,
-  `startTime` int(12) NOT NULL,
+  `start` bigint(20) NOT NULL,
   `practitioner` varchar(200) NOT NULL,
   `treatmentName` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -133,6 +189,10 @@ CREATE TABLE `treatments` (
 -- Dumping data for table `treatments`
 --
 
+INSERT INTO `treatments` (`name`, `cost`) VALUES
+('Checkup', 40),
+('Cleaning', 70);
+
 --
 -- Indexes for dumped tables
 --
@@ -147,9 +207,8 @@ ALTER TABLE `addresses`
 -- Indexes for table `appointments`
 --
 ALTER TABLE `appointments`
-  ADD PRIMARY KEY (`date`,`startTime`,`practitioner`),
+  ADD PRIMARY KEY (`start`,`practitioner`),
   ADD KEY `appointmentPractitioner` (`practitioner`),
-  ADD KEY `appointmentTreatment` (`treatment`),
   ADD KEY `appointmentPatient` (`patient`) USING BTREE;
 
 --
@@ -176,10 +235,9 @@ ALTER TABLE `practitioners`
 -- Indexes for table `sessions`
 --
 ALTER TABLE `sessions`
-  ADD PRIMARY KEY (`date`,`startTime`,`practitioner`,`treatmentName`),
+  ADD PRIMARY KEY (`start`,`practitioner`,`treatmentName`),
   ADD KEY `practitioner` (`practitioner`),
-  ADD KEY `startTime` (`startTime`),
-  ADD KEY `date` (`date`),
+  ADD KEY `start` (`start`),
   ADD KEY `treatmentName` (`treatmentName`);
 
 --
@@ -196,7 +254,7 @@ ALTER TABLE `treatments`
 -- AUTO_INCREMENT for table `patients`
 --
 ALTER TABLE `patients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 --
 -- Constraints for dumped tables
 --
@@ -206,22 +264,21 @@ ALTER TABLE `patients`
 --
 ALTER TABLE `appointments`
   ADD CONSTRAINT `appointmentPatient` FOREIGN KEY (`patient`) REFERENCES `patients` (`id`),
-  ADD CONSTRAINT `appointmentPractitioner` FOREIGN KEY (`practitioner`) REFERENCES `practitioners` (`role`),
-  ADD CONSTRAINT `appointmentTreatment` FOREIGN KEY (`treatment`) REFERENCES `treatments` (`name`);
+  ADD CONSTRAINT `appointmentPractitioner` FOREIGN KEY (`practitioner`) REFERENCES `practitioners` (`role`);
 
 --
 -- Constraints for table `patients`
 --
 ALTER TABLE `patients`
-  ADD CONSTRAINT `patientSubscription` FOREIGN KEY (`subscription`) REFERENCES `healthcarePlans` (`name`),
-  ADD CONSTRAINT `patientAddress` FOREIGN KEY (`houseNumber`,`postcode`) REFERENCES `addresses` (`houseNumber`, `postcode`);
+  ADD CONSTRAINT `patientAddress` FOREIGN KEY (`houseNumber`,`postcode`) REFERENCES `addresses` (`houseNumber`, `postcode`),
+  ADD CONSTRAINT `patientSubscription` FOREIGN KEY (`subscription`) REFERENCES `healthcarePlans` (`name`);
 
 --
 -- Constraints for table `sessions`
 --
 ALTER TABLE `sessions`
-  ADD CONSTRAINT `sessionTreatment` FOREIGN KEY (`treatmentName`) REFERENCES `treatments` (`name`),
-  ADD CONSTRAINT `sessionAppointment` FOREIGN KEY (`date`,`startTime`,`practitioner`) REFERENCES `appointments` (`date`, `startTime`, `practitioner`);
+  ADD CONSTRAINT `sessionAppointment` FOREIGN KEY (`start`,`practitioner`) REFERENCES `appointments` (`start`, `practitioner`),
+  ADD CONSTRAINT `sessionTreatment` FOREIGN KEY (`treatmentName`) REFERENCES `treatments` (`name`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

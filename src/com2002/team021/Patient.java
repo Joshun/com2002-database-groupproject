@@ -15,7 +15,7 @@ public class Patient {
 	private int checkUps;
 	private int hygieneVisits;
 	private int repairs;
-
+	
 	public Patient (int patientID) throws SQLException {
 		try {
 			Patient dbPatient = new Query().getPatient(patientID);
@@ -117,5 +117,5 @@ public class Patient {
 
 		}
 	}
-
+	
 }
