@@ -94,6 +94,15 @@ public class AppointmentDayView extends JFrame {
         }
     }
 
+    public class LogAppHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            if (selectedRow >= 0) {
+                new LogTreatments(appointments.get(selectedRow));
+            }
+        }
+    }
+
     public AppointmentDayView(Date day) {
         this(day, null);
     }
@@ -117,11 +126,16 @@ public class AppointmentDayView extends JFrame {
         delAppButt.addActionListener(new DelAppHandler());
         JButton changeAppButt = new JButton("Reschedule");
         changeAppButt.addActionListener(new AddAppHandler(this, true));
+        JButton logAppButt = new JButton("Log Treament");
+        logAppButt.addActionListener(new LogAppHandler());
 
         if (practitioner == null) {
             contentPane.add(addAppButt);
             contentPane.add(delAppButt);
             contentPane.add(changeAppButt);
+        }
+        else {
+            contentPane.add(logAppButt);
         }
 
         tableModel = new DefaultTableModel() {
