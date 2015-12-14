@@ -327,6 +327,42 @@ public class Query {
 		return true;
 	}
 	
+	public boolean deleteAppointment (Appointment appointment) throws SQLException {
+		
+		try {
+			String query = "DELETE FROM sessions WHERE start = ? AND practitioner = ?;";
+			
+			stmt = con.prepareStatement(query);
+			stmt.setLong(1, appointment.getStart().getTime());
+			stmt.setString(2, appointment.getPractitioner().getRole());
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt delete existing treatments from " + appointment + "\n" + e);
+			
+		} finally {
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+		}
+		System.out.println("successfully deleted all treatments for appointment");
+		
+		try {
+			String query = "DELETE FROM appointments WHERE start = ? AND practitioner = ?;";
+			stmt = con.prepareStatement(query);
+			stmt.setLong(1, appointment.getStart().getTime());
+			stmt.setString(2, appointment.getPractitioner().getRole());
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new SQLException("Could insert one of the treatments\n" + e);
+			
+		} finally {
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
+		}
+		
+		return true;
+	}
+	
 	public ArrayList<Appointment> getAppointmentsOnDay (Date day) throws SQLException {
 		ArrayList<Appointment> filtered = new ArrayList<Appointment>();
 		ArrayList<Appointment> all;
