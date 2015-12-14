@@ -32,6 +32,10 @@ public class Treatment {
 	public String toString() {
 		return this.name + " (£" + this.cost + ")";
 	}
+
+	public boolean equals(Treatment t2) {
+		return this.name.equals(t2.getName()) && this.cost == t2.getCost();
+	}
 	
 	public static void main (String args[]) {
 		try {
