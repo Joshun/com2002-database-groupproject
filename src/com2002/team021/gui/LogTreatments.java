@@ -60,7 +60,8 @@ public class LogTreatments extends JFrame {
                     Query query = new Query();
                     System.out.println(newAppointment);
                     System.out.println(appointmentToModify);
-                    query.updateAppointment(newAppointment, appointmentToModify);
+                    query.updateSessionTreatments(newAppointment);
+//                    query.updateAppointment(newAppointment, appointmentToModify);
                 } catch (java.sql.SQLException ex) {
                     System.out.println("Couldn\'t update treatments: " + ex);
                     //                ex.printStackTrace();
