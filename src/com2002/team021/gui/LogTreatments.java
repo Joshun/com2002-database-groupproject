@@ -83,7 +83,6 @@ public class LogTreatments extends JFrame {
             Query q1 = new Query();
             Query q2 = new Query();
             possibleTreatments = q1.getTreatments();
-//            appointmentTreatments = query.getTreatments();
             appointmentTreatments = q2.getAppointmentTreatments(appointment);
             System.out.println(appointmentTreatments);
         } catch (java.sql.SQLException e) {
@@ -94,11 +93,11 @@ public class LogTreatments extends JFrame {
             appointmentTreatments = new ArrayList<>();
         }
 
-
+        System.out.println(possibleTreatments);
         for (Treatment t : possibleTreatments) {
             TreatmentCheckbox checkbox;
             if (appointmentTreatments.contains(t)) {
-                System.out.println(t);
+                System.out.println("contained");
                 checkbox = new TreatmentCheckbox(t, true);
             } else {
                 checkbox = new TreatmentCheckbox(t, false);
