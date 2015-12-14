@@ -1,13 +1,8 @@
-package com2002.team021.gui.gui2;
+package com2002.team021.gui;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.MouseEvent;
-import java.util.*;
 
 /**
  * LoginScreen.java

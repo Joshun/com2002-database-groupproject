@@ -1,10 +1,8 @@
-package com2002.team021.gui.gui2;
+package com2002.team021.gui;
 
 /**
  * Created by Afamezechukwu on 03/12/2015.
  */
-
-import com2002.team021.gui.AppointmentDayView;
 
 import javax.swing.*;
 import javax.swing.table.*;
