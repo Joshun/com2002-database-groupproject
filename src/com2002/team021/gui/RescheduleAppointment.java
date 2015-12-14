@@ -73,6 +73,7 @@ public class RescheduleAppointment extends JFrame {
 
             ArrayList<Treatment> emptyTreatment = new ArrayList<>();
 
+            System.out.println("start " + startTimestamp +" end " + endTimestamp);
             Appointment newAppointment = new Appointment(startTimestamp, endTimestamp, patient, practitioner, emptyTreatment);
             System.out.println("Old appointment: " + appointmentToModify);
             System.out.println("Updated to: " + newAppointment);
@@ -89,9 +90,11 @@ public class RescheduleAppointment extends JFrame {
         int endHour = endEntry.getHourEntryModel().getNumber().intValue();
         int endMinute = endEntry.getMinuteEntryModel().getNumber().intValue();
         Calendar startTimeCal = Calendar.getInstance();
+        startTimeCal.setTime(startTimestamp);
         startTimeCal.set(Calendar.HOUR_OF_DAY, startHour);
         startTimeCal.set(Calendar.MINUTE, startMinute);
         Calendar endTimeCal = Calendar.getInstance();
+        endTimeCal.setTime(endTimestamp);
         endTimeCal.set(Calendar.HOUR_OF_DAY, endHour);
         endTimeCal.set(Calendar.MINUTE, endMinute);
         startTimestamp = startTimeCal.getTime();
