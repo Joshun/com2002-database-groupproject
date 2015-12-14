@@ -54,11 +54,13 @@ public class LogTreaments extends JFrame {
                 Practitioner practitioner = appointmentToModify.getPractitioner();
                 Appointment newAppointment = new Appointment(start, end, patient, practitioner, appointmentTreatments);
                 Query query = new Query();
-//                query.updateSessionTreatments(appointmentToModify);
+                System.out.println(newAppointment);
+                System.out.println(appointmentToModify);
                 query.updateAppointment(newAppointment, appointmentToModify);
             }
             catch (java.sql.SQLException ex) {
                 System.out.println("Couldn\'t update treatments: " + ex);
+//                ex.printStackTrace();
             }
         }
     }
@@ -73,10 +75,12 @@ public class LogTreaments extends JFrame {
         checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.PAGE_AXIS));
 
         try {
-            Query query = new Query();
-            possibleTreatments = query.getTreatments();
+            Query q1 = new Query();
+            Query q2 = new Query();
+            possibleTreatments = q1.getTreatments();
 //            appointmentTreatments = query.getTreatments();
-            appointmentTreatments = query.getAppointmentTreatments(appointment);
+            appointmentTreatments = q2.getAppointmentTreatments(appointment);
+            System.out.println(appointmentTreatments);
         } catch (java.sql.SQLException e) {
             System.out.println("Could not load list of possible treatments: " + e);
         }
@@ -89,6 +93,7 @@ public class LogTreaments extends JFrame {
         for (Treatment t : possibleTreatments) {
             TreatmentCheckbox checkbox;
             if (appointmentTreatments.contains(t)) {
+                System.out.println(t);
                 checkbox = new TreatmentCheckbox(t, true);
             } else {
                 checkbox = new TreatmentCheckbox(t, false);

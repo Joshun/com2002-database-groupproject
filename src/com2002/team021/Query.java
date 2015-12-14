@@ -202,6 +202,7 @@ public class Query {
 			}
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			throw new SQLException("couldnt update appointment " + appointment + "\n" + e);
 			
 		} finally {
