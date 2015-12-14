@@ -1,7 +1,6 @@
 package com2002.team021.gui;
 
 import com2002.team021.Practitioner;
-import com2002.team021.Query;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +12,7 @@ import java.awt.event.*;
  */
 
 
-public class ChoiceScreenTwo extends JFrame {
+public class ChoiceScreen extends JFrame {
 
     static JFrame choiceScreen;
     static JButton viewCal, logTreat, editCal, ptnMan;
@@ -22,7 +21,7 @@ public class ChoiceScreenTwo extends JFrame {
     static Practitioner practitioner;
 
 
-    public ChoiceScreenTwo (Practitioner practitioner) {
+    public ChoiceScreen(Practitioner practitioner) {
         this.practitioner = practitioner;
         //Look and feel
         try {
@@ -75,7 +74,7 @@ public class ChoiceScreenTwo extends JFrame {
 
     }
 
-    public ChoiceScreenTwo () {
+    public ChoiceScreen() {
         this(null);
     }
 
@@ -101,7 +100,7 @@ public class ChoiceScreenTwo extends JFrame {
     }
 
     public static void main(String[] args) {
-        new ChoiceScreenTwo();
+        new ChoiceScreen();
         //new ChoiceScreen("Practitioner Choice");
     }
 

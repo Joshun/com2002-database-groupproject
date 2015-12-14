@@ -11,7 +11,7 @@ import java.awt.event.*;
  * LoginScreen.java
  */
 
-public class LoginScreenTwo {
+public class LoginScreen {
 
     static JFrame loginScreen;
     static JButton secretary, hygienist, dentist, exit, okay, cancel;
@@ -22,7 +22,7 @@ public class LoginScreenTwo {
 
         if (title.equals("Secretary Log In") ) {
                 loginScreen.dispose();
-                new ChoiceScreenTwo();
+                new ChoiceScreen();
         }
         else if (title.equals("Hygienist Log In")) {
             try {
@@ -30,7 +30,7 @@ public class LoginScreenTwo {
                 Query query = new Query();
                 Practitioner hygienist = query.getPractitioner("Hygienist");
                 loginScreen.dispose();
-                new ChoiceScreenTwo(hygienist);
+                new ChoiceScreen(hygienist);
             }
             catch (java.sql.SQLException e) {
 
@@ -43,7 +43,7 @@ public class LoginScreenTwo {
                 Query query = new Query();
                 Practitioner dentist = query.getPractitioner("Dentist");
                 loginScreen.dispose();
-                new ChoiceScreenTwo(dentist);
+                new ChoiceScreen(dentist);
             }
             catch (java.sql.SQLException e) {
 
