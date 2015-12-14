@@ -10,4 +10,5 @@
 - Get appointment based on patient
 - Add title to Patient
 - Add paid to Appointment
+- ~~Delete appointment~~
 - ~~Get appointment by day and practitioner~~

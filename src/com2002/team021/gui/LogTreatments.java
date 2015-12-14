@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.sql.SQLException
 
 /**
  * Created by joshua on 14/12/15.
@@ -51,20 +52,17 @@ public class LogTreatments extends JFrame {
             }
             if (hasChanged) {
                 try {
-                    //                appointmentToModify.setTreatments(appointmentTreatments);
+                    // appointmentToModify.setTreatments(appointmentTreatments);
                     Date start = appointmentToModify.getStart();
                     Date end = appointmentToModify.getEnd();
                     Patient patient = appointmentToModify.getPatient();
                     Practitioner practitioner = appointmentToModify.getPractitioner();
                     Appointment newAppointment = new Appointment(start, end, patient, practitioner, appointmentTreatments);
-                    Query query = new Query();
                     System.out.println(newAppointment);
                     System.out.println(appointmentToModify);
-                    query.updateSessionTreatments(newAppointment);
-//                    query.updateAppointment(newAppointment, appointmentToModify);
+                    new Query().updateSessionTreatments(newAppointment);
                 } catch (java.sql.SQLException ex) {
                     System.out.println("Couldn\'t update treatments: " + ex);
-                    //                ex.printStackTrace();
                 }
             }
         }
@@ -80,12 +78,10 @@ public class LogTreatments extends JFrame {
         checkboxPanel.setLayout(new BoxLayout(checkboxPanel, BoxLayout.PAGE_AXIS));
 
         try {
-            Query q1 = new Query();
-            Query q2 = new Query();
-            possibleTreatments = q1.getTreatments();
-            appointmentTreatments = q2.getAppointmentTreatments(appointment);
+            possibleTreatments = new Query().getTreatments();
+            appointmentTreatments = new Query().getAppointmentTreatments(appointment);
             System.out.println(appointmentTreatments);
-        } catch (java.sql.SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Could not load list of possible treatments: " + e);
         }
 
@@ -119,8 +115,7 @@ public class LogTreatments extends JFrame {
     public static void main(String[] args) {
         ArrayList<Appointment> appointments = null;
         try {
-            Query query = new Query();
-            appointments = query.getAppointments();
+            appointments = new Query().getAppointments();
         } catch (java.sql.SQLException e) {
             System.out.println("error");
         }
