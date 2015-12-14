@@ -38,8 +38,8 @@ public class LogTreaments extends JFrame {
         try {
             Query query = new Query();
             possibleTreatments = query.getTreatments();
-            appointmentTreatments = query.getTreatments();
-//            appointmentTreatments = query.getAppointmentTreatments(appointment);
+//            appointmentTreatments = query.getTreatments();
+            appointmentTreatments = query.getAppointmentTreatments(appointment);
         }
         catch (java.sql.SQLException e) {
             System.out.println("Could not load list of possible treatments: " + e);
