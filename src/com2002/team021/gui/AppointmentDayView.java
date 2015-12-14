@@ -18,7 +18,8 @@ import java.text.SimpleDateFormat;
  * Created by joshua on 08/12/15.
  */
 public class AppointmentDayView extends JFrame {
-    Date day;
+    private Date day;
+    private Practitioner practitioner;
     private DefaultTableModel tableModel;
     private ArrayList<Appointment> appointments;
     // Stores the currently selected row, set to -1 when none are selected
@@ -94,7 +95,11 @@ public class AppointmentDayView extends JFrame {
     }
 
     public AppointmentDayView(Date day) {
+        this(day, null);
+    }
+    public AppointmentDayView(Date day, Practitioner practitioner) {
         this.day = day;
+        this.practitioner = practitioner;
 
         if (day != null) {
             setTitle("Appointment listing for " + day.toString());
@@ -111,9 +116,12 @@ public class AppointmentDayView extends JFrame {
         delAppButt.addActionListener(new DelAppHandler());
         JButton changeAppButt = new JButton("Reschedule");
         changeAppButt.addActionListener(new AddAppHandler(this, true));
-        contentPane.add(addAppButt);
-        contentPane.add(delAppButt);
-        contentPane.add(changeAppButt);
+
+        if (practitioner == null) {
+            contentPane.add(addAppButt);
+            contentPane.add(delAppButt);
+            contentPane.add(changeAppButt);
+        }
 
         tableModel = new DefaultTableModel() {
             @Override

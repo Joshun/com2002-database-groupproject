@@ -33,8 +33,10 @@ public class Treatment {
 		return this.name + " (£" + this.cost + ")";
 	}
 
-	public boolean equals(Treatment t2) {
-		return this.name.equals(t2.getName()) && this.cost == t2.getCost();
+	@Override
+	public boolean equals(Object t2) {
+		Treatment t2Casted = (Treatment) t2;
+		return this.name.equals(t2Casted.getName()) && this.cost == t2Casted.getCost();
 	}
 	
 	public static void main (String args[]) {

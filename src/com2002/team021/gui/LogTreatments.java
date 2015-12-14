@@ -32,35 +32,40 @@ public class LogTreatments extends JFrame {
     private class TreatmentButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            boolean hasChanged = false;
             for (TreatmentCheckbox tc : treatmentCheckboxes) {
                 Treatment associatedTreatment = tc.getAssociatedTreatment();
                 if (tc.isSelected()) {
                     if (!appointmentTreatments.contains(associatedTreatment)) {
                         System.out.println("Adding treatment " + associatedTreatment);
+                        hasChanged = true;
                         appointmentTreatments.add(associatedTreatment);
                     }
                 } else {
                     if (appointmentTreatments.contains(associatedTreatment)) {
                         System.out.println("Removing treatment " + associatedTreatment);
+                        hasChanged = true;
                         appointmentTreatments.remove(associatedTreatment);
                     }
                 }
             }
-            try {
-//                appointmentToModify.setTreatments(appointmentTreatments);
-                Date start = appointmentToModify.getStart();
-                Date end = appointmentToModify.getEnd();
-                Patient patient = appointmentToModify.getPatient();
-                Practitioner practitioner = appointmentToModify.getPractitioner();
-                Appointment newAppointment = new Appointment(start, end, patient, practitioner, appointmentTreatments);
-                Query query = new Query();
-                System.out.println(newAppointment);
-                System.out.println(appointmentToModify);
-                query.updateAppointment(newAppointment, appointmentToModify);
-            }
-            catch (java.sql.SQLException ex) {
-                System.out.println("Couldn\'t update treatments: " + ex);
-//                ex.printStackTrace();
+            if (hasChanged) {
+                try {
+                    //                appointmentToModify.setTreatments(appointmentTreatments);
+                    Date start = appointmentToModify.getStart();
+                    Date end = appointmentToModify.getEnd();
+                    Patient patient = appointmentToModify.getPatient();
+                    Practitioner practitioner = appointmentToModify.getPractitioner();
+                    Appointment newAppointment = new Appointment(start, end, patient, practitioner, appointmentTreatments);
+                    Query query = new Query();
+                    System.out.println(newAppointment);
+                    System.out.println(appointmentToModify);
+                    query.updateSessionTreatments(newAppointment);
+//                    query.updateAppointment(newAppointment, appointmentToModify);
+                } catch (java.sql.SQLException ex) {
+                    System.out.println("Couldn\'t update treatments: " + ex);
+                    //                ex.printStackTrace();
+                }
             }
         }
     }
@@ -78,7 +83,6 @@ public class LogTreatments extends JFrame {
             Query q1 = new Query();
             Query q2 = new Query();
             possibleTreatments = q1.getTreatments();
-//            appointmentTreatments = query.getTreatments();
             appointmentTreatments = q2.getAppointmentTreatments(appointment);
             System.out.println(appointmentTreatments);
         } catch (java.sql.SQLException e) {
@@ -89,11 +93,11 @@ public class LogTreatments extends JFrame {
             appointmentTreatments = new ArrayList<>();
         }
 
-
+        System.out.println(possibleTreatments);
         for (Treatment t : possibleTreatments) {
             TreatmentCheckbox checkbox;
             if (appointmentTreatments.contains(t)) {
-                System.out.println(t);
+                System.out.println("contained");
                 checkbox = new TreatmentCheckbox(t, true);
             } else {
                 checkbox = new TreatmentCheckbox(t, false);

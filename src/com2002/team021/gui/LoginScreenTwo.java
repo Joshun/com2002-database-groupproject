@@ -1,5 +1,8 @@
 package com2002.team021.gui;
 
+import com2002.team021.Practitioner;
+import com2002.team021.Query;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -17,13 +20,33 @@ public class LoginScreenTwo {
 
     public static void loginDialog(String title) {
 
-        if (title == "Secretary Log In") {
+        if (title.equals("Secretary Log In") ) {
                 loginScreen.dispose();
-                new ChoiceScreenTwo("Secretary Choice");
+                new ChoiceScreenTwo();
         }
-        else if ((title == "Hygienist Log In") || (title == "Dentist Log In")){
+        else if (title.equals("Hygienist Log In")) {
+            try {
+                Query query = new Query();
+                Practitioner hygienist = query.getPractitioner("Hygienist");
                 loginScreen.dispose();
-                new ChoiceScreenTwo("Practitioner Choice");
+                new ChoiceScreenTwo(hygienist);
+            }
+            catch (java.sql.SQLException e) {
+
+            }
+        }
+
+        else if (title.equals("Dentist Log In")) {
+            try {
+                Query query = new Query();
+                Practitioner dentist = query.getPractitioner("Dentist");
+                loginScreen.dispose();
+                new ChoiceScreenTwo(dentist);
+            }
+            catch (java.sql.SQLException e) {
+
+            }
+
         }
 
     }

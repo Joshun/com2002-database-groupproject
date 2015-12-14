@@ -4,6 +4,8 @@ package com2002.team021.gui;
  * Created by Afamezechukwu on 03/12/2015.
  */
 
+import com2002.team021.Practitioner;
+
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -24,8 +26,14 @@ public class CalendarView {
     static JScrollPane scrollPane;
     static JTable table;
     static Point selectedCell;
+    static Practitioner practitioner;
 
     public CalendarView() {
+        this(null);
+    }
+
+    public CalendarView(Practitioner practitioner) {
+        CalendarView.practitioner = practitioner;
         //Look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
