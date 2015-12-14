@@ -65,7 +65,7 @@ public class LogTreatments extends JFrame {
         }
     }
 
-    public LogTreaments(Appointment appointment) {
+    public LogTreatments(Appointment appointment) {
         this.appointmentToModify = appointment;
         treatmentCheckboxes = new ArrayList<>();
         setTitle("Log Treatment");
@@ -120,6 +120,6 @@ public class LogTreatments extends JFrame {
         } catch (java.sql.SQLException e) {
             System.out.println("error");
         }
-        new LogTreaments(appointments.get(0));
+        new LogTreatments(appointments.get(0));
     }
 }
