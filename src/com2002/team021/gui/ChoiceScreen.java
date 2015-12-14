@@ -15,7 +15,7 @@ import java.awt.event.*;
 public class ChoiceScreen extends JFrame {
 
     static JFrame choiceScreen;
-    static JButton viewCal, logTreat, editCal, ptnMan;
+    static JButton viewCal, editCal, ptnMan;
     static Container contentPane;
     static String practitionerRole = "";
     static Practitioner practitioner;
@@ -57,7 +57,6 @@ public class ChoiceScreen extends JFrame {
         }
         else if (practitioner.getRole().equals("Dentist") || practitioner.getRole().equals("Hygienist")) {
             viewCal = new JButton("View Calendar");
-            logTreat = new JButton("Log Treatment");
 
             viewCal.addActionListener(new btnEditCal_Action());
             //logTreat.addActionListener(new btnLogTreat_Action());
@@ -65,7 +64,6 @@ public class ChoiceScreen extends JFrame {
             contentPane.add(viewCal);
 
             viewCal.setBounds(100, 112, 300, 25);
-            logTreat.setBounds(100, 163, 300, 25);
         }
 
         choiceScreen.setResizable(false);
