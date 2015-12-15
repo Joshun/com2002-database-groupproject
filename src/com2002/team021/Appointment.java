@@ -11,18 +11,30 @@ public class Appointment {
 	private Patient patient;
 	private Practitioner practitioner;
 	private ArrayList<Treatment> treatments;
+	private boolean paid;
 	
-	public Appointment (Date start, Date end, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
+	public Appointment (Date start, Date end, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments, boolean paid) {
 		this.start = start;
 		this.end = end;
 		this.patient = patient;
 		this.practitioner = practitioner;
 		this.treatments = treatments;
+		this.paid = paid;
+		
+	}
+	
+	public Appointment (long start, long end, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments, boolean paid) {
+		this(new Date(start), new Date(end), patient, practitioner, treatments, paid);
+		
+	}
+	
+	public Appointment (Date start, Date end, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
+		this(start, end, patient, practitioner, treatments, false);
 		
 	}
 	
 	public Appointment (long start, long end, Patient patient, Practitioner practitioner, ArrayList<Treatment> treatments) {
-		this(new Date(start), new Date(end), patient, practitioner, treatments);
+		this(new Date(start), new Date(end), patient, practitioner, treatments, false);
 		
 	}
 	
@@ -35,6 +47,7 @@ public class Appointment {
 			this.patient = dbAppointment.getPatient();
 			this.practitioner = dbAppointment.getPractitioner();
 			this.treatments = dbAppointment.getTreatments();
+			this.paid = dbAppointment.getPaid();
 			
 		} catch (SQLException e) {
 			throw new SQLException("Couldnt find treatment: " + start.getTime() + " " + practitioner.getRole() + "\n" + e);
@@ -46,6 +59,8 @@ public class Appointment {
 	public Date getEnd () { return this.end; }
 	public Patient getPatient () { return this.patient; }
 	public Practitioner getPractitioner () { return this.practitioner; }
+	public boolean getPaid () { return this.paid; }
+	
 	public void setTreatments (ArrayList<Treatment> treatments) { this.treatments = treatments; }
 	
 	public ArrayList<Treatment> getTreatments() throws SQLException {
