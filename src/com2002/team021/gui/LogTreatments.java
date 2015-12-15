@@ -22,7 +22,7 @@ public class LogTreatments extends JFrame {
         private Treatment associatedTreatment;
 
         public TreatmentCheckbox(Treatment associatedTreatment, boolean checked) {
-            super(associatedTreatment.getName() + " " + "(£" + associatedTreatment.getCost() + ")", checked);
+            super(associatedTreatment.getName() + " " + "(£" + (associatedTreatment.getCost()/100) + ")", checked);
             this.associatedTreatment = associatedTreatment;
         }
 
