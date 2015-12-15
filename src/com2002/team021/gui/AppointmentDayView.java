@@ -115,6 +115,11 @@ public class AppointmentDayView extends JFrame {
 
     private class PayAppHandler implements ActionListener {
         private AppointmentDayView outerclass;
+
+        public PayAppHandler(AppointmentDayView outerclass) {
+            this.outerclass = outerclass;
+        }
+
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if (selectedRow >= 0) {
@@ -165,7 +170,7 @@ public class AppointmentDayView extends JFrame {
         JButton logAppButt = new JButton("Log Treatment");
         logAppButt.addActionListener(new LogAppHandler(this));
         JButton payAppButt = new JButton("Pay...");
-        payAppButt.addActionListener(new PayAppHandler());
+        payAppButt.addActionListener(new PayAppHandler(this));
 
 
         if (practitioner == null) {
