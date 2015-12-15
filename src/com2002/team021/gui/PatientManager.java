@@ -84,6 +84,7 @@ public class PatientManager extends JFrame {
 
 
     public PatientManager() {
+        this.errorHandler = new ErrorHandler(this, true);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -193,11 +194,11 @@ public class PatientManager extends JFrame {
     }
 
     public void addPatient(Patient p) {
-        patients.add(p);
-        patientTableModel.addRow(patientToRow(p));
         try {
             Query query = new Query();
             query.addPatient(p);
+            patients.add(p);
+            patientTableModel.addRow(patientToRow(p));
         }
         catch (java.sql.SQLException e) {
             errorHandler.showDialog("Failed to add patient", e);
