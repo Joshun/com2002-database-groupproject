@@ -218,7 +218,7 @@ public class Query {
 	
 	
 	public boolean updateExistingAppointment (Appointment appointment, Appointment old) throws SQLException {
-		String query = "UPDATE appointments SET start = ?, end = ?, patient = ?, practitioner = ? WHERE start = ? AND practitioner = ?;";
+		String query = "UPDATE appointments SET start = ?, end = ?, patient = ?, practitioner = ?, amountDue = ? WHERE start = ? AND practitioner = ?;";
 		int success;
 		
 		try {
@@ -227,9 +227,10 @@ public class Query {
 			stmt.setLong(2, appointment.getEnd().getTime());
 			stmt.setInt(3, appointment.getPatient().getId());
 			stmt.setString(4, appointment.getPractitioner().getRole());
+			stmt.setInt(5, appointment.getAmountDue());
 			
-			stmt.setLong(5, old.getStart().getTime());
-			stmt.setString(6, old.getPractitioner().getRole());
+			stmt.setLong(6, old.getStart().getTime());
+			stmt.setString(7, old.getPractitioner().getRole());
 			success = stmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -254,7 +255,7 @@ public class Query {
 	}
 	
 	public boolean addAppointment (Appointment appointment) throws SQLException {
-		String query = "INSERT INTO appointments VALUES (?, ?, ?, ?);";
+		String query = "INSERT INTO appointments VALUES (?, ?, ?, ?, ?);";
 		int success;
 		
 		try {
@@ -263,6 +264,7 @@ public class Query {
 			stmt.setLong(2, appointment.getEnd().getTime());
 			stmt.setInt(3, appointment.getPatient().getId());
 			stmt.setString(4, appointment.getPractitioner().getRole());
+			stmt.setInt(5, appointment.getAmountDue());
 			success = stmt.executeUpdate();
 			
 		} catch (SQLException e) {
