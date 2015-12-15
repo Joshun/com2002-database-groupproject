@@ -199,7 +199,7 @@ public class AppointmentDayView extends JFrame {
             addAppButt.setBounds(10, 60, 225, 25);
             delAppButt.setBounds(10, 110, 225, 25);
             changeAppButt.setBounds(10, 160, 225, 25);
-            payAppButt.setBounds(10, 220, 255, 25);
+            payAppButt.setBounds(10, 210, 225, 25);
 
         }
         else {

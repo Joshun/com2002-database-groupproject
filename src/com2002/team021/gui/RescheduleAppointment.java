@@ -28,7 +28,6 @@ public class RescheduleAppointment extends JFrame {
     private JButton rescheduleButton;
     private Date startTimestamp;
     private Date endTimestamp;
-    private DateWidget dateEntry;
 
 
     private class TimeEntry {
@@ -68,8 +67,6 @@ public class RescheduleAppointment extends JFrame {
     private class RescheduleButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            startTimestamp = dateEntry.getDate();
-            System.out.println("Start: " + startTimestamp);
             computeTimestamps();
             Patient patient = appointmentToModify.getPatient();
             Practitioner practitioner = appointmentToModify.getPractitioner();
@@ -81,8 +78,8 @@ public class RescheduleAppointment extends JFrame {
             System.out.println("Old appointment: " + appointmentToModify);
             System.out.println("Updated to: " + newAppointment);
             dayView.updateAppointment(appointmentToModify, newAppointment);
+            setVisible(false);
             dayView.setEnabled(true);
-            dispose();
         }
     }
 
@@ -116,7 +113,7 @@ public class RescheduleAppointment extends JFrame {
         this.appointmentToModify = appointmentToModify;
         setTitle("Reschedule Appointment");
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(6, 2));
+        contentPane.setLayout(new GridLayout(5, 2));
 
         Practitioner practitioner = appointmentToModify.getPractitioner();
         Patient patient = appointmentToModify.getPatient();
@@ -125,10 +122,6 @@ public class RescheduleAppointment extends JFrame {
         contentPane.add(new JLabel(patient.getName()));
         contentPane.add(new JLabel("Practitioner: "));
         contentPane.add(new JLabel(practitioner.getName()));
-
-        contentPane.add(new JLabel("Date: "));
-        dateEntry = new DateWidget(appointmentToModify.getStart());
-        contentPane.add(dateEntry);
 
         startEntry = new TimeEntry();
         endEntry = new TimeEntry();
