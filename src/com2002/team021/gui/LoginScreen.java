@@ -11,15 +11,14 @@ import java.awt.event.*;
  * LoginScreen.java
  */
 
-public class LoginScreen {
+public class LoginScreen extends JFrame {
 
-    static JFrame loginScreen;
-    static JButton secretary, hygienist, dentist, exit;
-    static Container contentPane;
+    private JButton secretary, hygienist, dentist, exit;
+    private Container contentPane;
 
-    public static void loginDialog(String title) {
+    public void loginDialog(String title) {
         if (title.equals("Secretary Log In") ) {
-                loginScreen.dispose();
+                dispose();
                 new ChoiceScreen();
         }
         else {
@@ -32,17 +31,17 @@ public class LoginScreen {
         }
     }
 
-    public static void practitionerLogin (String partner){
+    public void practitionerLogin (String partner){
         try {
             Query query = new Query();
             Practitioner practitioner = query.getPractitioner(partner);
-            loginScreen.dispose();
+            dispose();
             new ChoiceScreen(practitioner);
         }
         catch (java.sql.SQLException e) {}
     }
 
-    public static void main(String[] args) {
+    public LoginScreen() {
 
         try {UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());}
         catch (ClassNotFoundException e) {}
@@ -51,11 +50,11 @@ public class LoginScreen {
         catch (UnsupportedLookAndFeelException e) {}
 
 
-        loginScreen = new JFrame("Login Screen");
-        loginScreen.setSize(900,500);
-        loginScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Login Screen");
+        setSize(900,500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        contentPane = loginScreen.getContentPane();
+        contentPane = getContentPane();
         contentPane.setLayout(null);
 
         //Create buttons
@@ -83,31 +82,35 @@ public class LoginScreen {
         exit.setBounds(300, 330, 300, 25);
 
         //Make fram visible
-        loginScreen.setResizable(false);
-        loginScreen.setVisible(true);
+        setResizable(false);
+        setVisible(true);
     }
 
-    static class btnSec_Action implements ActionListener {
+    private class btnSec_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             loginDialog("Secretary Log In");
         }
     }
 
-    static class btnHyg_Action implements ActionListener {
+    private class btnHyg_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             loginDialog("Hygienist Log In");
         }
     }
 
-    static class btnDent_Action implements ActionListener {
+    private class btnDent_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             loginDialog("Dentist Log In");
         }
     }
 
-    static class btnExit_Action implements ActionListener {
+    private class btnExit_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             System.exit(0);
         }
+    }
+
+    public static void main(String[] args) {
+        new LoginScreen();
     }
 }

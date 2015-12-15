@@ -14,14 +14,22 @@ import java.awt.event.*;
 
 public class ChoiceScreen extends JFrame {
 
-    static Container contentPane;
-    static JButton viewCal, editCal, ptnMan;
-    static JFrame choiceScreen;
-    static Practitioner practitioner;
+    private Container contentPane;
+    private JButton viewCal, editCal, ptnMan;
+    private JFrame choiceScreen;
+    private Practitioner practitioner;
 
     public ChoiceScreen() { this(null); }
 
     public ChoiceScreen(Practitioner practitioner) {
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                new LoginScreen();
+//                setVisible(false);
+            }
+        });
+
 
         this.practitioner = practitioner;
 
@@ -36,7 +44,6 @@ public class ChoiceScreen extends JFrame {
 
         choiceScreen = new JFrame();
         choiceScreen.setSize(500,300);
-        choiceScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         contentPane = choiceScreen.getContentPane();
         contentPane.setLayout(null);
@@ -70,9 +77,9 @@ public class ChoiceScreen extends JFrame {
     }
 
 
-    static class btnEditCal_Action implements ActionListener {
+    private class btnEditCal_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            choiceScreen.dispose();
+            dispose();
             if (practitioner != null) {
                 System.out.println("Practitioner " + practitioner);
                 new CalendarView(practitioner);
@@ -83,9 +90,10 @@ public class ChoiceScreen extends JFrame {
         }
     }
 
-    static class btnPtnMan_Action implements ActionListener {
+
+    private class btnPtnMan_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            choiceScreen.dispose();
+            dispose();
             new PatientManager();
         }
     }
