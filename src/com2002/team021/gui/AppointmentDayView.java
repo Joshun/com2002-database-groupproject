@@ -92,8 +92,7 @@ public class AppointmentDayView extends JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if (selectedRow >= 0) {
-                appointments.remove(selectedRow);
-                tableModel.removeRow(selectedRow);
+                removeAppointment(appointments.get(selectedRow));
                 selectedRow = -1;
             }
         }
@@ -304,9 +303,14 @@ public class AppointmentDayView extends JFrame {
     }
 
     public void removeAppointment(Appointment a) {
-        tableModel.removeRow(appointments.indexOf(a));
-        appointments.remove(a);
-
+        try {
+            new Query().deleteAppointment(a);
+            tableModel.removeRow(appointments.indexOf(a));
+            appointments.remove(a);
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Failed to remove appointment " + e);
+        }
     }
 
     public void updateAppointment(Appointment oldAppointment, Appointment newAppointment) {
