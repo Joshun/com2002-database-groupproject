@@ -113,6 +113,17 @@ public class AppointmentDayView extends JFrame {
         }
     }
 
+    private class PayAppHandler implements ActionListener {
+        private AppointmentDayView outerclass;
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            if (selectedRow >= 0) {
+                setEnabled(false);
+                new PaySummary(appointments.get(selectedRow), outerclass);
+            }
+        }
+    }
+
     private class highlightRowRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused, int row, int column) {
             super.getTableCellRendererComponent(table, value, selected, focused, row, column);
@@ -151,18 +162,23 @@ public class AppointmentDayView extends JFrame {
         delAppButt.addActionListener(new DelAppHandler());
         JButton changeAppButt = new JButton("Reschedule");
         changeAppButt.addActionListener(new AddAppHandler(this, true));
-        JButton logAppButt = new JButton("Log Treament");
+        JButton logAppButt = new JButton("Log Treatment");
         logAppButt.addActionListener(new LogAppHandler(this));
+        JButton payAppButt = new JButton("Pay...");
+        payAppButt.addActionListener(new PayAppHandler());
 
 
         if (practitioner == null) {
             contentPane.add(addAppButt);
             contentPane.add(delAppButt);
             contentPane.add(changeAppButt);
+            contentPane.add(payAppButt);
 
             addAppButt.setBounds(10, 60, 225, 25);
             delAppButt.setBounds(10, 110, 225, 25);
             changeAppButt.setBounds(10, 160, 225, 25);
+            payAppButt.setBounds(10, 220, 255, 25);
+
         }
         else {
             contentPane.add(logAppButt);
