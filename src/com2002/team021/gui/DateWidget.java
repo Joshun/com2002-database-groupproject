@@ -54,6 +54,17 @@ public class DateWidget extends JPanel {
         add(yearEntry);
     }
 
+    public void setDate(Date d) {
+        int yearNow = Calendar.getInstance().get(Calendar.YEAR);
+        calendar.setTime(d);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentYear = calendar.get(Calendar.YEAR);
+        dayEntry.setSelectedIndex(currentDay-1);
+        monthEntry.setSelectedIndex(currentMonth);
+        yearEntry.setSelectedIndex(yearNow - currentYear);
+    }
+
     public Date getDate() {
         int day = (int) dayEntry.getSelectedItem();
         int month = (int) monthEntry.getSelectedItem() - 1;

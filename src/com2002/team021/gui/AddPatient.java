@@ -22,9 +22,6 @@ import java.sql.SQLException;
 public class AddPatient extends JFrame {
     private JTextField forenameEntry;
     private JTextField surnameEntry;
-//    private JComboBox<Integer> dOBDayEntry;
-//    private JComboBox<Integer> dOBMonthEntry;
-//    private JComboBox<Integer> dOBYearEntry;
     private DateWidget dOBEntry;
     private JTextField houseNoEntry;
     private JTextField postcodeEntry;
@@ -46,26 +43,11 @@ public class AddPatient extends JFrame {
         public void actionPerformed(ActionEvent actionEvent) {
             String forename = forenameEntry.getText().trim();
             String surname = surnameEntry.getText().trim();
-//            int dOBDay = (Integer) dOBDayEntry.getSelectedItem();
-//            int dOBMonth = (Integer) dOBMonthEntry.getSelectedItem() - 1;
-//            int dOBYear = (Integer) dOBYearEntry.getSelectedItem();
 
-            GregorianCalendar dOBCal = new GregorianCalendar();
-//            dOBCal.clear();
-//            dOBCal.set(Calendar.DAY_OF_MONTH, dOBDay);
-//            dOBCal.set(Calendar.MONTH, dOBMonth);
-//            dOBCal.set(Calendar.YEAR, dOBYear);
-//            Date dOBTimestamp = dOBCal.getTime();
             Date dOBTimestamp = dOBEntry.getDate();
-            System.out.println(dOBCal);
-
             String houseNo = houseNoEntry.getText().trim();
             String postcode = postcodeEntry.getText().trim();
-//            String phone = phoneEntry.getText();
             String phoneString = phoneEntry.getText().trim();
-
-//            HealthcarePlan plan = (HealthcarePlan) planEntry.getSelectedItem();
-//            String planString = plan.getName();
             String planString = (String) planEntry.getSelectedItem();
 
             if (forename.length() == 0
@@ -141,43 +123,11 @@ public class AddPatient extends JFrame {
         surnameEntry = new JTextField(null, 10);
         contentPane.add(surnameEntry);
 
-        JPanel dOBContainer = new JPanel(new GridLayout(2, 3));
-        dOBContainer.add(new JLabel("Day"));
-        dOBContainer.add(new JLabel("Month"));
-        dOBContainer.add(new JLabel("Year"));
-
-        int currentYear = calendar.get(Calendar.YEAR);
-
         Calendar dOBInitial = Calendar.getInstance();
         dOBInitial.set(Calendar.DAY_OF_MONTH, 1);
         dOBInitial.set(Calendar.MONTH, 0);
         dOBEntry = new DateWidget(dOBInitial.getTime());
 
-//        dOBDayEntry = new JComboBox<>();
-//        dOBMonthEntry = new JComboBox<>();
-//        dOBYearEntry = new JComboBox<>();
-//
-//        for (int i = 0; i < 31; i++) {
-//            dOBDayEntry.addItem(new Integer(i + 1));
-//        }
-//        for (int i = 0; i < 12; i++) {
-//            dOBMonthEntry.addItem(new Integer(i + 1));
-//        }
-//
-//        for (int i = 0; i < 120; i++) {
-//            dOBYearEntry.addItem(new Integer(currentYear - i));
-//        }
-//
-//        dOBContainer.add(dOBDayEntry);
-//        dOBContainer.add(dOBMonthEntry);
-//        dOBContainer.add(dOBYearEntry);
-
-
-        Calendar calendar = new GregorianCalendar();
-        int year = calendar.get(Calendar.YEAR);
-//        dOBYearEntry = new JSpinner(dOBYearEntryModel);
-
-//        contentPane.add(dOBContainer);
         contentPane.add(new JLabel("Date of Birth:"));
         contentPane.add(dOBEntry);
 
@@ -234,19 +184,8 @@ public class AddPatient extends JFrame {
         forenameEntry.setText(patientToModify.getForename());
         surnameEntry.setText(patientToModify.getSurname());
 
-        int currentYear = calendar.get(Calendar.YEAR);
-
         Date dobDate = patientToModify.getDob();
-        GregorianCalendar dobCal = new GregorianCalendar();
-        dobCal.setTime(dobDate);
-        int dOBDay = dobCal.get(Calendar.DAY_OF_MONTH);
-        int dOBMonth = dobCal.get(Calendar.MONTH);
-        int dOBYear = dobCal.get(Calendar.YEAR);
-        int yearIndex = currentYear - dOBYear;
-
-//        dOBDayEntry.setSelectedIndex(dOBDay - 1);
-//        dOBMonthEntry.setSelectedIndex(dOBMonth);
-//        dOBYearEntry.setSelectedIndex(yearIndex);
+        dOBEntry.setDate(dobDate);
 
         houseNoEntry.setText(patientToModify.getHouseNumber());
         postcodeEntry.setText(patientToModify.getPostcode());
