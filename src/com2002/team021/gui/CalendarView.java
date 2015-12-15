@@ -19,7 +19,7 @@ public class CalendarView {
     static DefaultTableModel tableModel;
     static int year, month, day, actualDay, actualYear, actualMonth;
     static JButton prev, next, listing;
-    static JComboBox comboBox;
+    static JComboBox<String> comboBox;
     static JFrame mainFrame;
     static JLabel label;
     static JPanel panel;
@@ -33,7 +33,9 @@ public class CalendarView {
     }
 
     public CalendarView(Practitioner practitioner) {
+
         CalendarView.practitioner = practitioner;
+
         //Look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -55,12 +57,10 @@ public class CalendarView {
 
         //Buttons, Table, Table Model, Combo Box, Label
         label = new JLabel("January");
-        comboBox = new JComboBox();
+        comboBox = new JComboBox<>();
         prev = new JButton("<<");
         next = new JButton(">>");
         listing = new JButton("Appointments List");
-//        newApt = new JButton("New Appointment");
-//        delApt = new JButton("Delete Appointment");
         tableModel = new DefaultTableModel() {public boolean isCellEditable(int r, int c) {return false;}};
         table = new JTable(tableModel);
         scrollPane = new JScrollPane(table);
@@ -70,8 +70,6 @@ public class CalendarView {
         //Register action listeners
         prev.addActionListener(new prev_Action());
         next.addActionListener(new next_Action());
-//        newApt.addActionListener(new newApt_Action());
-//        delApt.addActionListener(new delApt_Action());
         listing.addActionListener(new AppointmentListing());
         comboBox.addActionListener(new comboBox_Action());
         table.addMouseListener(new table_Action());
@@ -82,8 +80,6 @@ public class CalendarView {
         panel.add(comboBox);
         panel.add(prev);
         panel.add(next);
-//        panel.add(newApt);
-//        panel.add(delApt);
         panel.add(listing);
         panel.add(scrollPane);
 
@@ -91,8 +87,6 @@ public class CalendarView {
         panel.setBounds(0, 0, 880, 465);
         comboBox.setBounds(795, 430, 80, 20);
         listing.setBounds(131, 432, 243, 25);
-//        newApt.setBounds(131, 432, 243, 25);
-//        delApt.setBounds(494, 432, 244, 25);
         prev.setBounds(10, 25, 50, 25);
         next.setBounds(825, 25, 50, 25);
         scrollPane.setBounds(10, 50, 865, 380);
@@ -169,7 +163,7 @@ public class CalendarView {
 
         //Draw calendar
         for (int i = 1; i <= numberOfDays; i++) {
-            int row = new Integer((i + startOfMonth - 2) / 7);
+            int row = (i + startOfMonth - 2) / 7;
             int column = (i + startOfMonth - 2) % 7;
             tableModel.setValueAt(i, row, column);
         }
@@ -227,22 +221,6 @@ public class CalendarView {
         }
     }
 
-//    static class newApt_Action implements ActionListener {
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//
-//            System.out.println(actualDay + "/" + actualMonth + "/" + actualYear);
-//
-//        }
-//    }
-//
-//    static class delApt_Action implements ActionListener {
-//        @Override
-//        public void actionPerformed(ActionEvent e) {
-//
-//        }
-//    }
-
     private class AppointmentListing implements  ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -279,11 +257,11 @@ public class CalendarView {
         public void mouseClicked(MouseEvent e) {
             //get the source of the event
             Object day = e.getSource();
-            int x = table.getSelectedColumn();
-            int y = table.getSelectedRow();
+            int x = table.getSelectedRow();
+            int y = table.getSelectedColumn();
 
             tblCalendarRenderer a = new tblCalendarRenderer();
-            Point point = new Point(y,x);
+            Point point = new Point(x,y);
             selectedCell = point;
 
             Object value = tableModel.getValueAt(point.x, point.y);

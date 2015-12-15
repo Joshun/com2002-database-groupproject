@@ -17,12 +17,14 @@ public class ChoiceScreen extends JFrame {
     static JFrame choiceScreen;
     static JButton viewCal, editCal, ptnMan;
     static Container contentPane;
-    static String practitionerRole = "";
     static Practitioner practitioner;
 
+    public ChoiceScreen() { this(null); }
 
     public ChoiceScreen(Practitioner practitioner) {
+
         this.practitioner = practitioner;
+
         //Look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -52,14 +54,11 @@ public class ChoiceScreen extends JFrame {
 
             editCal.setBounds(100, 112, 300, 25);
             ptnMan.setBounds(100, 163, 300, 25);
-            practitioner = null;
-
         }
         else if (practitioner.getRole().equals("Dentist") || practitioner.getRole().equals("Hygienist")) {
             viewCal = new JButton("View Calendar");
 
             viewCal.addActionListener(new btnEditCal_Action());
-            //logTreat.addActionListener(new btnLogTreat_Action());
 
             contentPane.add(viewCal);
 
@@ -68,12 +67,8 @@ public class ChoiceScreen extends JFrame {
 
         choiceScreen.setResizable(false);
         choiceScreen.setVisible(true);
-
     }
 
-    public ChoiceScreen() {
-        this(null);
-    }
 
     static class btnEditCal_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -92,7 +87,6 @@ public class ChoiceScreen extends JFrame {
         public void actionPerformed(ActionEvent e) {
             choiceScreen.dispose();
             new PatientManager();
-
         }
     }
 
@@ -100,6 +94,4 @@ public class ChoiceScreen extends JFrame {
         new ChoiceScreen();
         //new ChoiceScreen("Practitioner Choice");
     }
-
-
 }
