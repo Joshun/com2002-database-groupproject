@@ -234,7 +234,6 @@ public class CalendarView extends JFrame {
             cal.set(Calendar.YEAR, actualYear);
             cal.set(Calendar.MONTH, actualMonth);
             cal.set(Calendar.DAY_OF_MONTH, actualDay);
-            System.out.println("Calendar: " + cal);
 
             System.out.println("===PLEASE STAND BY===");
             if (practitioner != null) {
@@ -274,8 +273,6 @@ public class CalendarView extends JFrame {
             //if it was a click on JTable
             if (day instanceof JTable ) {
                 if (value != null){
-                    System.out.print(value + " at ");
-                    System.out.println(point.x + ", " + point.y);
                     actualDay = (int) value;
                     refresh(actualMonth, actualYear);
                 }
