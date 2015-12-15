@@ -13,20 +13,19 @@ import java.awt.event.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
 
-public class CalendarView {
+public class CalendarView extends JFrame {
 
-    static Container contentPane;
-    static DefaultTableModel tableModel;
-    static int year, month, day, actualDay, actualYear, actualMonth;
-    static JButton prev, next, listing;
-    static JComboBox<String> comboBox;
-    static JFrame mainFrame;
-    static JLabel label;
-    static JPanel panel;
-    static JScrollPane scrollPane;
-    static JTable table;
-    static Point selectedCell;
-    static Practitioner practitioner;
+    private Container contentPane;
+    private DefaultTableModel tableModel;
+    private int year, month, day, actualDay, actualYear, actualMonth;
+    private JButton prev, next, listing;
+    private JComboBox<String> comboBox;
+    private JLabel label;
+    private JPanel panel;
+    private JScrollPane scrollPane;
+    private JTable table;
+    private Point selectedCell;
+    private Practitioner practitioner;
 
     public CalendarView() {
         this(null);
@@ -34,7 +33,7 @@ public class CalendarView {
 
     public CalendarView(Practitioner practitioner) {
 
-        CalendarView.practitioner = practitioner;
+        this.practitioner = practitioner;
 
         //Look and feel
         try {
@@ -46,12 +45,12 @@ public class CalendarView {
         }
 
         //Frame
-        mainFrame = new JFrame("Appointments Manager");             //Set Title
-        mainFrame.setSize(900, 500);                                //Set size
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //Exit Frame when 'X' is pressed
+        setTitle("Appointments Manager");                           // Set title
+        setSize(900, 500);                                //Set size
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //Exit Frame when 'X' is pressed
 
         //Pane
-        contentPane = mainFrame.getContentPane();                 //Get content pane
+        contentPane = getContentPane();                 //Get content pane
         contentPane.setLayout(null);                              //Pane has a null layout
 
 
@@ -92,8 +91,8 @@ public class CalendarView {
         scrollPane.setBounds(10, 50, 865, 380);
 
         //Make frame visible
-        mainFrame.setResizable(false);
-        mainFrame.setVisible(true);
+        setResizable(false);
+        setVisible(true);
 
         //Get real month/year
         GregorianCalendar cal = new GregorianCalendar();    //Gregorian Calendar
@@ -131,7 +130,7 @@ public class CalendarView {
     }
 
 
-    public static void refresh(int mnth, int yr) {
+    public void refresh(int mnth, int yr) {
 
         String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         int numberOfDays, startOfMonth;
@@ -173,7 +172,7 @@ public class CalendarView {
     }
 
 
-    static class tblCalendarRenderer extends DefaultTableCellRenderer {
+    private class tblCalendarRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused, int row, int column) {
             super.getTableCellRendererComponent(table, value, selected, focused, row, column);
             if (column == 0 || column == 6) { //Week-end
@@ -197,7 +196,7 @@ public class CalendarView {
         }
     }
 
-    static class prev_Action implements ActionListener {
+    private class prev_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (actualMonth == 0) { //Back one year
                 actualMonth = 11;
@@ -209,7 +208,7 @@ public class CalendarView {
         }
     }
 
-    static class next_Action implements ActionListener {
+    private class next_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (actualMonth == 11) { //Foward one year
                 actualMonth = 0;
@@ -242,7 +241,7 @@ public class CalendarView {
         }
     }
 
-    static class comboBox_Action implements ActionListener {
+    private class comboBox_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if (comboBox.getSelectedItem() != null) {
                 String b = comboBox.getSelectedItem().toString();
@@ -252,7 +251,7 @@ public class CalendarView {
         }
     }
 
-    static class table_Action implements MouseListener {
+    private class table_Action implements MouseListener {
 
         public void mouseClicked(MouseEvent e) {
             //get the source of the event
