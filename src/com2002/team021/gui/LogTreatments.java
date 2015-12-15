@@ -101,11 +101,9 @@ public class LogTreatments extends JFrame {
             appointmentTreatments = new ArrayList<>();
         }
 
-        System.out.println(possibleTreatments);
         for (Treatment t : possibleTreatments) {
             TreatmentCheckbox checkbox;
             if (appointmentTreatments.contains(t)) {
-                System.out.println("contained");
                 checkbox = new TreatmentCheckbox(t, true);
             } else {
                 checkbox = new TreatmentCheckbox(t, false);
