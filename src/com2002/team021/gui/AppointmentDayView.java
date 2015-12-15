@@ -108,7 +108,7 @@ public class AppointmentDayView extends JFrame {
         }
     }
 
-    public class highlightRowRenderer extends DefaultTableCellRenderer {
+    private class highlightRowRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused, int row, int column) {
             super.getTableCellRendererComponent(table, value, selected, focused, row, column);
             if(row == table.getSelectedRow()) {
@@ -138,7 +138,6 @@ public class AppointmentDayView extends JFrame {
         setSize(1135,525);
 
         Container contentPane = getContentPane();
-        //contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         contentPane.setLayout(null);
 
         JButton addAppButt = new JButton("Add Appointment");

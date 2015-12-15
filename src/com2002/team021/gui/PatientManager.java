@@ -52,6 +52,18 @@ public class PatientManager extends JFrame {
         }
     }
 
+    private class highlightRowRenderer extends DefaultTableCellRenderer {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused, int row, int column) {
+            super.getTableCellRendererComponent(table, value, selected, focused, row, column);
+            if(row == table.getSelectedRow()) {
+
+                // highlight row with a border colour
+                setBorder(BorderFactory.createMatteBorder(2, 1, 2, 1, Color.BLACK));
+            }
+            return this;
+        }
+    }
+
     public String[] patientToRow(Patient p) {
         HealthcarePlan plan = p.getSubscription();
         String patientString[] = {
@@ -72,6 +84,8 @@ public class PatientManager extends JFrame {
 
     public PatientManager() {
         setTitle("Patient Manager");
+        setSize(1135,525);
+
         patients = null;
 
 //        patients.add(new Patient("", "b", new Date(), 1, "14", "st74hr", null));
@@ -87,7 +101,8 @@ public class PatientManager extends JFrame {
         }
 
         Container contentPane = getContentPane();
-        contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+        //contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
+        contentPane.setLayout(null);
 
         JButton addPatientButton = new JButton("Add patient");
         JButton modifyPatientButton = new JButton("More Information / Modify patient");
@@ -95,6 +110,8 @@ public class PatientManager extends JFrame {
         modifyPatientButton.addActionListener(new PatientManagerButtonHandler(this, true));
         contentPane.add(addPatientButton);
         contentPane.add(modifyPatientButton);
+        addPatientButton.setBounds(10, 60, 225, 25);
+        modifyPatientButton.setBounds(10, 110, 225, 25);
 
         patientTableModel = new DefaultTableModel() {
             @Override
@@ -107,6 +124,9 @@ public class PatientManager extends JFrame {
             patientTableModel.addColumn(s);
         }
         JTable patientTable = new JTable(patientTableModel);
+        patientTable.getTableHeader().setResizingAllowed(false);
+        patientTable.getTableHeader().setReorderingAllowed(false);
+        patientTable.setRowHeight(20);
         patientTable.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent event) {
@@ -122,10 +142,38 @@ public class PatientManager extends JFrame {
 
         JScrollPane tableContainer = new JScrollPane(patientTable);
         contentPane.add(tableContainer);
+        tableContainer.setBounds(250, 60, 865, 420);
+
+        JLabel label = new JLabel("Search: ");
+        contentPane.add(label);
+        label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 12));
+        label.setBounds(900, 19, 70, 20);
+
+        JTextField searchField = new JTextField();
+        searchField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String value = searchField.getText();
+                for (int x = 0; x < patientTable.getRowCount(); x++) {
+                    for (int y = 0; y < patientTable.getColumnCount(); y++){
+                        if (value.equals(patientTable.getValueAt(x, y))){
+                            patientTable.scrollRectToVisible(patientTable.getCellRect(x, 0, true));  //make scroll go to location of x (row)
+                            patientTable.setRowSelectionInterval(x, x);  //focus on searched input
+                            for (int i = 0; i <= patientTable.getColumnCount() - 1; i++) {
+                                patientTable.getColumnModel().getColumn(i).setCellRenderer(new highlightRowRenderer());
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        contentPane.add(searchField);
+        searchField.setBounds(965, 20, 150, 20);
 
         reload();
 
-        pack();
+        //pack();
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
