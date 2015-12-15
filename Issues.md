@@ -7,8 +7,11 @@
 - ~~All the connections in Query.java need closing~~
 - ~~Date needs removing from everything (start and end only)~~
 - ~~DOB needs to have Date constuctor~~
-- Get appointment based on patient
-- Add title to Patient
-- Add paid to Appointment
 - ~~Delete appointment~~
 - ~~Get appointment by day and practitioner~~
+- ~~Add title to Patient~~
+- ~~Add paid to Appointment~~
+- Add address in addPatient if not exists
+- Patient search
+- Calulate cost method
+- Stop appointment overlapping

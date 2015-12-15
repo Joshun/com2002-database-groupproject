@@ -486,7 +486,10 @@ public class Query {
 				rs.getInt("phone"),
 				rs.getString("houseNumber"),
 				rs.getString("postcode"),
-				rs.getString("subscription")
+				rs.getString("subscription"),
+				rs.getInt("checkupsTaken"),
+				rs.getInt("hygeineVisitsTaken"),
+				rs.getInt("repairsTaken")
 			);
 			
 		} catch (SQLException e) {
@@ -640,7 +643,8 @@ public class Query {
 				rs.getLong("end"),
 				new Patient(rs.getInt("patient")),
 				new Practitioner(rs.getString("practitioner")),
-				null
+				new Query().getAppointmentTreatments(rs.getLong("start"), rs.getString("practitioner")),
+				rs.getBoolean("paid")
 			);
 			
 		} catch (SQLException e) {
@@ -668,7 +672,8 @@ public class Query {
 				rs.getLong("end"),
 				new Patient(rs.getInt("patient")),
 				new Practitioner(rs.getString("practitioner")),
-				new ArrayList<Treatment>()
+				new Query().getAppointmentTreatments(rs.getLong("start"), rs.getString("practitioner")),
+				rs.getBoolean("paid")
 				));
 				
 			}
@@ -886,12 +891,42 @@ public class Query {
 		
 	}
 	
+	public ArrayList<Treatment> getAppointmentTreatments (long start, String practitioner) throws SQLException {
+		String query = "SELECT * FROM sessions WHERE start = ? AND practitioner = ?;";
+		ArrayList<Treatment> treatments = new ArrayList<Treatment>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setLong(1, start);
+			stmt.setString(2, practitioner);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				treatments.add(new Treatment(
+					rs.getString("treatmentName")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("Could not find treatments for appointment: " + new Date(start) + " - " + practitioner + "\n" + e);
+			
+		} finally {
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
+		}
+		
+		return treatments;
+		
+	}
+	
 	public static void main (String args[]) {
 		
 		try {
-			Patient pa = new Patient(1);
+			Patient pa = new Patient(34);
 			Practitioner pr = new Practitioner("Dentist");
-			Treatment tr1 = new Treatment("Cleaning");
+			Treatment tr1 = new Treatment("Hygiene");
 			Treatment tr2 = new Treatment("Checkup");
 			ArrayList<Treatment> trs = new ArrayList<Treatment>();
 			trs.add(tr1);
@@ -910,19 +945,21 @@ public class Query {
 			
 			Address add = new Address("13", "elm close", "kidsgrove", "stoke-on-trent", "st74hr");
 			
-			System.out.println(
-				// new Query().updateHealthcarePlan(hcp)
-				// new Query().getPractitioners()
-				new Query().addPatient(pa)
-				// new Query().getTreatments()
-				// new Query().getPractitioners()
-				// new Query().getPractitionerAppointmentsOnDay(date, prac)
-			);
+			// System.out.println(
+				new Query().updateHealthcarePlan(hcp);
+				new Query().getPractitioners();
+				new Query().addPatient(pa);
+				new Query().getTreatments();
+				new Query().getPractitioners();
+				new Query().getPractitionerAppointmentsOnDay(date, prac);
+			// );
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 		}
+		
+		
 		
 	}
 	
