@@ -13,14 +13,21 @@ public class DateWidget extends JPanel {
     private JComboBox<Integer> monthEntry;
     private JComboBox<Integer> yearEntry;
 
-    public DateWidget() {
+    public DateWidget(Date currentDate) {
         setLayout(new GridLayout(2, 3));
         dayEntry = new JComboBox<>();
         monthEntry = new JComboBox<>();
         yearEntry = new JComboBox<>();
 
-        Calendar current = Calendar.getInstance();
-        int currentYear = current.get(Calendar.YEAR);
+        Calendar now = Calendar.getInstance();
+        int yearNow = now.get(Calendar.YEAR);
+
+        Calendar previousCal = Calendar.getInstance();
+        previousCal.setTime(currentDate);
+        int currentDay = now.get(Calendar.DAY_OF_MONTH);
+        int currentMonth = now.get(Calendar.MONTH);
+        int currentYear = now.get(Calendar.YEAR);
+
 
         for (int i = 0; i < 31; i++) {
             dayEntry.addItem(new Integer(i + 1));
@@ -30,9 +37,12 @@ public class DateWidget extends JPanel {
         }
 
         for (int i = 0; i < 120; i++) {
-            yearEntry.addItem(new Integer(currentYear - i));
+            yearEntry.addItem(new Integer(yearNow - i));
         }
 
+        dayEntry.setSelectedIndex(currentDay-1);
+        monthEntry.setSelectedIndex(currentMonth);
+        yearEntry.setSelectedIndex(yearNow - currentYear);
 
         add(new JLabel("Day"));
         add(new JLabel("Month"));
