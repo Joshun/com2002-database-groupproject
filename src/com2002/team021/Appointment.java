@@ -47,7 +47,7 @@ public class Appointment {
 			this.patient = dbAppointment.getPatient();
 			this.practitioner = dbAppointment.getPractitioner();
 			this.treatments = dbAppointment.getTreatments();
-			this.amountDue = dbAppointment.getamountDue();
+			this.amountDue = dbAppointment.getAmountDue();
 			
 		} catch (SQLException e) {
 			throw new SQLException("Couldnt find treatment: " + start.getTime() + " " + practitioner.getRole() + "\n" + e);
@@ -59,7 +59,7 @@ public class Appointment {
 	public Date getEnd () { return this.end; }
 	public Patient getPatient () { return this.patient; }
 	public Practitioner getPractitioner () { return this.practitioner; }
-	public int getamountDue () { return this.amountDue; }
+	public int getAmountDue () { return this.amountDue; }
 	
 	public void setTreatments (ArrayList<Treatment> treatments) { this.treatments = treatments; }
 	
