@@ -32,6 +32,13 @@ public class CalendarView extends JFrame {
     }
 
     public CalendarView(Practitioner practitioner) {
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                new ChoiceScreen(practitioner);
+                dispose();
+            }
+        });
 
         this.practitioner = practitioner;
 
@@ -47,7 +54,6 @@ public class CalendarView extends JFrame {
         //Frame
         setTitle("Appointments Manager");                           // Set title
         setSize(900, 500);                                //Set size
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //Exit Frame when 'X' is pressed
 
         //Pane
         contentPane = getContentPane();                 //Get content pane
