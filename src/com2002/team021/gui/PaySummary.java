@@ -59,7 +59,7 @@ public class PaySummary extends JFrame {
             appointmentTreatments = appointment.getTreatments();
 
             for (Treatment t: appointmentTreatments) {
-                contentPane.add(new JLabel(t.getName() + " | " + t.getCost()));
+                contentPane.add(new JLabel(t.getName() + " | " + (t.getCost()/100)));
             }
             contentPane.add(new JLabel("=================="));
             contentPane.add(new JLabel("Total: £" + appointmentTotalCost));
