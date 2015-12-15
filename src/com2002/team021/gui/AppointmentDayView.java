@@ -186,7 +186,7 @@ public class AppointmentDayView extends JFrame {
         changeAppButt.addActionListener(new AddAppHandler(this, true));
         JButton logAppButt = new JButton("Log Treatment");
         logAppButt.addActionListener(new LogAppHandler(this));
-        JButton payAppButt = new JButton("Pay");
+        JButton payAppButt = new JButton("Pay...");
         payAppButt.addActionListener(new PayAppHandler(this));
 
 
