@@ -66,8 +66,8 @@ public class LogTreatments extends JFrame {
                     System.out.println("Couldn\'t update treatments: " + ex);
                 }
             }
-            setVisible(false);
             dayView.setEnabled(true);
+            dispose();
         }
     }
 
@@ -75,8 +75,8 @@ public class LogTreatments extends JFrame {
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                setVisible(false);
                 dayView.setEnabled(true);
+                dispose();
             }
         });
 
