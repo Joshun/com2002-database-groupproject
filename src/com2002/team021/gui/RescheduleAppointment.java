@@ -68,6 +68,8 @@ public class RescheduleAppointment extends JFrame {
     private class RescheduleButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            startTimestamp = dateEntry.getDate();
+            System.out.println("Start: " + startTimestamp);
             computeTimestamps();
             Patient patient = appointmentToModify.getPatient();
             Practitioner practitioner = appointmentToModify.getPractitioner();
@@ -125,7 +127,7 @@ public class RescheduleAppointment extends JFrame {
         contentPane.add(new JLabel(practitioner.getName()));
 
         contentPane.add(new JLabel("Date: "));
-        dateEntry = new DateWidget();
+        dateEntry = new DateWidget(appointmentToModify.getStart());
         contentPane.add(dateEntry);
 
         startEntry = new TimeEntry();
