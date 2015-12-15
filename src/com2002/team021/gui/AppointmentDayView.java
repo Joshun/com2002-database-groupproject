@@ -29,6 +29,7 @@ public class AppointmentDayView extends JFrame {
     private int selectedRow = -1;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+    private ErrorHandler errorHandler;
 
 
     public String[] appointmentToRow(Appointment a) {
@@ -83,7 +84,7 @@ public class AppointmentDayView extends JFrame {
                 }
             }
             catch (java.sql.SQLException ex) {
-                System.out.println("Couldn't add appointment " + ex);
+                errorHandler.showDialog("Couldn't add appointment", ex);
             }
         }
     }
@@ -145,6 +146,7 @@ public class AppointmentDayView extends JFrame {
     }
 
     public AppointmentDayView(Date day, Practitioner practitioner) {
+        errorHandler = new ErrorHandler(this, true);
         this.day = day;
         this.practitioner = practitioner;
         System.out.println(practitioner);
@@ -275,7 +277,7 @@ public class AppointmentDayView extends JFrame {
             reload();
         }
         catch (java.sql.SQLException e) {
-            System.out.println("Couldn\'t connect to db " + e);
+            errorHandler.showDialog("Couldn\'t connect to db ", e);
         }
 
 //        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -298,7 +300,7 @@ public class AppointmentDayView extends JFrame {
             tableModel.addRow(appointmentToRow(a));
         }
         catch (java.sql.SQLException e) {
-            System.out.println("Failed to add appointment " + e);
+            errorHandler.showDialog("Failed to add appointment", e);
         }
     }
 
@@ -309,7 +311,7 @@ public class AppointmentDayView extends JFrame {
             appointments.remove(a);
         }
         catch (java.sql.SQLException e) {
-            System.out.println("Failed to remove appointment " + e);
+            errorHandler.showDialog("Failed to remove appointment", e);
         }
     }
 
@@ -352,7 +354,7 @@ public class AppointmentDayView extends JFrame {
             }
         }
         catch (java.sql.SQLException e) {
-            System.out.println("Failed to update appointment " + e);
+            errorHandler.showDialog("Failed to update appointment ", e);
         }
 //        tableModel.setValueAt("role", indexOfOld, 6);
     }

@@ -7,9 +7,15 @@ import javax.swing.*;
  */
 public class ErrorHandler {
     private JFrame parentFrame;
+    private boolean showDebug;
+
+    public ErrorHandler(JFrame parentFrame, boolean showDebug) {
+        this.parentFrame = parentFrame;
+        this.showDebug = showDebug;
+    }
 
     public ErrorHandler(JFrame parentFrame) {
-        this.parentFrame = parentFrame;
+        this(parentFrame, false);
     }
 
     public void showDialog(String message) {
@@ -17,6 +23,11 @@ public class ErrorHandler {
     }
 
     public void showDialog(String message, Exception e) {
-        showDialog(message + " (" + e.toString() + ")");
+        if (showDebug) {
+            showDialog(message + " (" + e.toString() + ")");
+        }
+        else {
+            showDialog(message);
+        }
     }
 }
