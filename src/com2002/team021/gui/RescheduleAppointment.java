@@ -28,7 +28,6 @@ public class RescheduleAppointment extends JFrame {
     private JButton rescheduleButton;
     private Date startTimestamp;
     private Date endTimestamp;
-    private DateWidget dateEntry;
 
 
     private class TimeEntry {
@@ -68,8 +67,6 @@ public class RescheduleAppointment extends JFrame {
     private class RescheduleButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            startTimestamp = dateEntry.getDate();
-            System.out.println("Start: " + startTimestamp);
             computeTimestamps();
             Patient patient = appointmentToModify.getPatient();
             Practitioner practitioner = appointmentToModify.getPractitioner();
@@ -81,8 +78,8 @@ public class RescheduleAppointment extends JFrame {
             System.out.println("Old appointment: " + appointmentToModify);
             System.out.println("Updated to: " + newAppointment);
             dayView.updateAppointment(appointmentToModify, newAppointment);
+            setVisible(false);
             dayView.setEnabled(true);
-            dispose();
         }
     }
 
@@ -115,32 +112,46 @@ public class RescheduleAppointment extends JFrame {
         this.dayView = dayView;
         this.appointmentToModify = appointmentToModify;
         setTitle("Reschedule Appointment");
+        setSize(300,400);
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(6, 2));
+        //contentPane.setLayout(new GridLayout(5, 2));
+        contentPane.setLayout(null);
 
         Practitioner practitioner = appointmentToModify.getPractitioner();
         Patient patient = appointmentToModify.getPatient();
 
-        contentPane.add(new JLabel("Patient: "));
-        contentPane.add(new JLabel(patient.getName()));
-        contentPane.add(new JLabel("Practitioner: "));
-        contentPane.add(new JLabel(practitioner.getName()));
+        JLabel patientLabel = new JLabel("Patient: ");
+        contentPane.add(patientLabel);
+        JLabel patientName = new JLabel(patient.getName());
+        contentPane.add(patientName);
+        patientLabel.setBounds(45,50,50,20);
+        patientName.setBounds(125,50,150,20);
 
-        contentPane.add(new JLabel("Date: "));
-        dateEntry = new DateWidget(appointmentToModify.getStart());
-        contentPane.add(dateEntry);
+        JLabel practitionerLabel = new JLabel("Practitioner: ");
+        contentPane.add(practitionerLabel);
+        JLabel practitionerName = new JLabel(practitioner.getName());
+        contentPane.add(practitionerName);
+        practitionerLabel.setBounds(19,90,100,20);
+        practitionerName.setBounds(125,90,150,20);
 
         startEntry = new TimeEntry();
         endEntry = new TimeEntry();
-        contentPane.add(new JLabel("Start time"));
+        JLabel startTime = new JLabel("Start time:");
+        contentPane.add(startTime);
+        startTime.setBounds(30,130,100,58);
         contentPane.add(startEntry.getTimeContainer());
-        contentPane.add(new JLabel("End time"));
+        startEntry.getTimeContainer().setBounds(125,130,150,40);
+        JLabel endTime = new JLabel("End time:");
+        contentPane.add(endTime);
+        endTime.setBounds(35,170,100,58);
         contentPane.add(endEntry.getTimeContainer());
+        endEntry.getTimeContainer().setBounds(125,170,150,40);
 
         contentPane.add(new JLabel());
         rescheduleButton = new JButton("Reschedule");
         rescheduleButton.addActionListener(new RescheduleButtonHandler());
         contentPane.add(rescheduleButton);
+        rescheduleButton.setBounds(125,220,150,20);
 
         // Get current time values of appointment
         startTimestamp = appointmentToModify.getStart();
@@ -164,7 +175,8 @@ public class RescheduleAppointment extends JFrame {
         endEntry.getHourEntryModel().setValue(endHour);
         endEntry.getMinuteEntryModel().setValue(endMinute);
 
-        pack();
+        //pack();
+        setResizable(false);
         setVisible(true);
     }
 
