@@ -13,6 +13,7 @@ public class DateWidget extends JPanel {
     private JComboBox<Integer> monthEntry;
     private JComboBox<Integer> yearEntry;
     private Calendar calendar;
+    private final static int PAST_YEARS = 120;
 
     public DateWidget(Date currentDate) {
         System.out.println("d " + currentDate);
@@ -38,7 +39,7 @@ public class DateWidget extends JPanel {
             monthEntry.addItem(new Integer(i + 1));
         }
 
-        for (int i = 0; i < 120; i++) {
+        for (int i = 0; i < PAST_YEARS; i++) {
             yearEntry.addItem(new Integer(yearNow - i));
         }
 
