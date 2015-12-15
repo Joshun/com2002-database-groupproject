@@ -83,6 +83,13 @@ public class PatientManager extends JFrame {
 
 
     public PatientManager() {
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                new ChoiceScreen();
+                dispose();
+            }
+        });
         setTitle("Patient Manager");
         setSize(1135,525);
 
@@ -174,7 +181,6 @@ public class PatientManager extends JFrame {
 
         //pack();
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
