@@ -14,9 +14,9 @@ import java.awt.event.*;
 
 public class ChoiceScreen extends JFrame {
 
-    static JFrame choiceScreen;
-    static JButton viewCal, editCal, ptnMan;
     static Container contentPane;
+    static JButton viewCal, editCal, ptnMan;
+    static JFrame choiceScreen;
     static Practitioner practitioner;
 
     public ChoiceScreen() { this(null); }
