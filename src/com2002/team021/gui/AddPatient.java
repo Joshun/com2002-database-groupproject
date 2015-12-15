@@ -89,8 +89,8 @@ public class AddPatient extends JFrame {
                     else {
                         patientManager.updatePatient(patientToModify, newPatient);
                     }
-                    setVisible(false);
                     patientManager.setEnabled(true);
+                    dispose();
                 } catch (java.lang.NumberFormatException e) {
                     errorDialog("Invalid phone number.");
                 }
