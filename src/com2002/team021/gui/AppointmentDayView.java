@@ -54,6 +54,10 @@ public class AppointmentDayView extends JFrame {
         }
     }
 
+    private void noRowSelectedMessage() {
+        errorHandler.showInfo("Please select a row and try again.");
+    }
+
     public class AddAppHandler implements ActionListener {
         private AppointmentDayView dayView;
         private boolean modify;
@@ -76,6 +80,9 @@ public class AppointmentDayView extends JFrame {
                         RescheduleAppointment ra = new RescheduleAppointment(appointments.get(selectedRow), dayView);
                         setEnabled(false);
                     }
+                    else {
+                        noRowSelectedMessage();
+                    }
 
                 }
                 else  {
@@ -97,7 +104,7 @@ public class AppointmentDayView extends JFrame {
                 selectedRow = -1;
             }
             else {
-                errorHandler.showInfo("Please select a row and try again.");
+                noRowSelectedMessage();
             }
         }
     }
@@ -112,6 +119,9 @@ public class AppointmentDayView extends JFrame {
             if (selectedRow >= 0) {
                 setEnabled(false);
                 new LogTreatments(appointments.get(selectedRow), outerclass);
+            }
+            else {
+                noRowSelectedMessage();
             }
         }
     }
@@ -128,6 +138,9 @@ public class AppointmentDayView extends JFrame {
             if (selectedRow >= 0) {
                 setEnabled(false);
                 new PaySummary(appointments.get(selectedRow), outerclass);
+            }
+            else {
+                noRowSelectedMessage();
             }
         }
     }
