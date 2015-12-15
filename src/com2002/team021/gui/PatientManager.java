@@ -20,6 +20,7 @@ public class PatientManager extends JFrame {
     private DefaultTableModel patientTableModel;
     private ArrayList<Patient> patients;
     private int selectedRow = -1;
+    private ErrorHandler errorHandler;
 
     private class PatientManagerButtonHandler implements ActionListener {
         private boolean modifyCurrent;
@@ -103,16 +104,15 @@ public class PatientManager extends JFrame {
             patients = query.getPatients();
         }
         catch (java.sql.SQLException e) {
-            System.out.println("Failed to get list of patients " + e);
-            System.exit(1);
+            errorHandler.showDialog("Failed to get list of patients", e);
         }
 
         Container contentPane = getContentPane();
         //contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         contentPane.setLayout(null);
 
-        JButton addPatientButton = new JButton("Add patient");
-        JButton modifyPatientButton = new JButton("More Information / Modify patient");
+        JButton addPatientButton = new JButton("Add");
+        JButton modifyPatientButton = new JButton("More Information / Modify");
         addPatientButton.addActionListener(new PatientManagerButtonHandler(this, false));
         modifyPatientButton.addActionListener(new PatientManagerButtonHandler(this, true));
         contentPane.add(addPatientButton);
@@ -200,7 +200,7 @@ public class PatientManager extends JFrame {
             query.addPatient(p);
         }
         catch (java.sql.SQLException e) {
-            System.out.println("Failed to add patient " + e);
+            errorHandler.showDialog("Failed to add patient", e);
         }
     }
 
@@ -227,7 +227,7 @@ public class PatientManager extends JFrame {
             query.updatePatient(newPatient);
         }
         catch (java.sql.SQLException e) {
-            System.out.println("Failed to update patient " + e);
+            errorHandler.showDialog("Failed to update patient", e);
         }
     }
 
