@@ -43,6 +43,14 @@ public class ChoiceScreen extends JFrame {
 
 //        choiceScreen = new JFrame();
         setSize(500,300);
+        String windowTitle = "Welcome, ";
+        if (practitioner != null) {
+            windowTitle = windowTitle + practitioner.getRole() + " " + practitioner.getName();
+        }
+        else {
+            windowTitle = windowTitle + "Secretary";
+        }
+        setTitle(windowTitle);
 
         contentPane = getContentPane();
         contentPane.setLayout(null);
