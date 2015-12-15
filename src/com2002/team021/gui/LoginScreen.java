@@ -14,43 +14,32 @@ import java.awt.event.*;
 public class LoginScreen {
 
     static JFrame loginScreen;
-    static JButton secretary, hygienist, dentist, exit, okay, cancel;
-    static JTextField name, username;
+    static JButton secretary, hygienist, dentist, exit;
     static Container contentPane;
 
     public static void loginDialog(String title) {
-
         if (title.equals("Secretary Log In") ) {
                 loginScreen.dispose();
                 new ChoiceScreen();
         }
-        else if (title.equals("Hygienist Log In")) {
-            try {
-                System.out.println("Hygienist login");
-                Query query = new Query();
-                Practitioner hygienist = query.getPractitioner("Hygienist");
-                loginScreen.dispose();
-                new ChoiceScreen(hygienist);
+        else {
+            if (title.equals("Hygienist Log In")) {
+                practitionerLogin("Hygienist");
             }
-            catch (java.sql.SQLException e) {
-
+            else if (title.equals("Dentist Log In")) {
+                practitionerLogin("Dentist");
             }
         }
+    }
 
-        else if (title.equals("Dentist Log In")) {
-            try {
-                System.out.println("Dentist login");
-                Query query = new Query();
-                Practitioner dentist = query.getPractitioner("Dentist");
-                loginScreen.dispose();
-                new ChoiceScreen(dentist);
-            }
-            catch (java.sql.SQLException e) {
-
-            }
-
+    public static void practitionerLogin (String partner){
+        try {
+            Query query = new Query();
+            Practitioner practitioner = query.getPractitioner(partner);
+            loginScreen.dispose();
+            new ChoiceScreen(practitioner);
         }
-
+        catch (java.sql.SQLException e) {}
     }
 
     public static void main(String[] args) {
@@ -82,7 +71,6 @@ public class LoginScreen {
         exit.addActionListener(new btnExit_Action());
 
         //Add buttons
-
         contentPane.add(secretary);
         contentPane.add(hygienist);
         contentPane.add(dentist);
@@ -101,21 +89,18 @@ public class LoginScreen {
 
     static class btnSec_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //loginScreen.dispose();
             loginDialog("Secretary Log In");
         }
     }
 
     static class btnHyg_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //loginScreen.dispose();
             loginDialog("Hygienist Log In");
         }
     }
 
     static class btnDent_Action implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //loginScreen.dispose();
             loginDialog("Dentist Log In");
         }
     }
