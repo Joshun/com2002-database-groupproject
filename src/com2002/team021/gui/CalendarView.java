@@ -240,6 +240,11 @@ public class CalendarView extends JFrame {
             cal.set(Calendar.DAY_OF_MONTH, actualDay);
 
             System.out.println("===PLEASE STAND BY===");
+            System.out.println("Please stand by what?");
+            System.out.println("A door?");
+            System.out.println("A person?");
+            System.out.println("A catfish?");
+            System.out.println("I NEED ANSWERS PEOPLE?");
             if (practitioner != null) {
                 new AppointmentDayView(cal.getTime(), practitioner);
             }

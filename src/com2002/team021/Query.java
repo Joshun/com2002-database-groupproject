@@ -218,6 +218,34 @@ public class Query {
 		
 	}
 	
+	// public int calculateCost (Appointment appointment) throws SQLException {
+	// 	String query = "SELECT COUNT(*) as count FROM appointments WHERE start = ? AND practitioner = ?;";
+		
+	// 	try {
+	// 		stmt = con.prepareStatement(query);
+	// 		stmt.setLong(1, old.getStart().getTime());
+	// 		stmt.setString(2, old.getPractitioner().getRole());
+	// 		rs = stmt.executeQuery();
+			
+	// 		rs.first();
+			
+	// 		if (rs.getInt("count") > 0) {
+	// 			return updateExistingAppointment(appointment, old);
+	// 		} else {
+	// 			return addAppointment(appointment);
+	// 		}
+			
+	// 	} catch (SQLException e) {
+	// 		e.printStackTrace();
+	// 		throw new SQLException("couldnt update appointment " + appointment + "\n" + e);
+			
+	// 	} finally {
+	// 		try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+	// 		try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+	// 	}
+		
+	// }
+	
 	
 	public boolean updateExistingAppointment (Appointment appointment, Appointment old) throws SQLException {
 		String query = "UPDATE appointments SET start = ?, end = ?, patient = ?, practitioner = ?, amountDue = ? WHERE start = ? AND practitioner = ?;";
@@ -441,7 +469,7 @@ public class Query {
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 		}
 		
-		query = "INSERT INTO patients (title, forename, surname, dob, phone, houseNumber, postcode, subscription)  VALUES (?, ?, ?, ?, ?, ?, ?);";
+		query = "INSERT INTO patients (title, forename, surname, dob, phone, houseNumber, postcode, subscription)  VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 		int success;
 		
 		try {
@@ -559,7 +587,6 @@ public class Query {
 			stmt.setString(8, fn + "%");
 			stmt.setString(9, "%" + fn + "%");
 			stmt.setString(10, "%" + sn + "%");
-			System.out.println(stmt);
 			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
