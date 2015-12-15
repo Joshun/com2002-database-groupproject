@@ -13,5 +13,6 @@
 - ~~Add paid to Appointment~~
 - Add address in addPatient if not exists
 - Patient search
-- Calulate cost method
-- Stop appointment overlapping
+- Calculate cost method
+- Stop appointment overlapping and display error
+- Method of paying and displaying total cost
