@@ -53,7 +53,6 @@ public class LogTreatments extends JFrame {
             }
             if (hasChanged) {
                 try {
-                    // appointmentToModify.setTreatments(appointmentTreatments);
                     Date start = appointmentToModify.getStart();
                     Date end = appointmentToModify.getEnd();
                     Patient patient = appointmentToModify.getPatient();
@@ -62,6 +61,7 @@ public class LogTreatments extends JFrame {
                     System.out.println(newAppointment);
                     System.out.println(appointmentToModify);
                     new Query().updateSessionTreatments(newAppointment);
+                    // TODO: run routine for requesting a calculation of total treatment cost
                 } catch (java.sql.SQLException ex) {
                     System.out.println("Couldn\'t update treatments: " + ex);
                 }
@@ -121,13 +121,4 @@ public class LogTreatments extends JFrame {
         setVisible(true);
     }
 
-//    public static void main(String[] args) {
-//        ArrayList<Appointment> appointments = null;
-//        try {
-//            appointments = new Query().getAppointments();
-//        } catch (java.sql.SQLException e) {
-//            System.out.println("error");
-//        }
-//        new LogTreatments(appointments.get(0));
-//    }
 }
