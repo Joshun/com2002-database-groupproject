@@ -16,7 +16,7 @@ public class ChoiceScreen extends JFrame {
 
     private Container contentPane;
     private JButton viewCal, editCal, ptnMan;
-    private JFrame choiceScreen;
+//    private JFrame choiceScreen;
     private Practitioner practitioner;
 
     public ChoiceScreen() { this(null); }
@@ -26,7 +26,6 @@ public class ChoiceScreen extends JFrame {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 new LoginScreen();
-//                setVisible(false);
             }
         });
 
@@ -42,10 +41,10 @@ public class ChoiceScreen extends JFrame {
         } catch (UnsupportedLookAndFeelException e) {
         }
 
-        choiceScreen = new JFrame();
-        choiceScreen.setSize(500,300);
+//        choiceScreen = new JFrame();
+        setSize(500,300);
 
-        contentPane = choiceScreen.getContentPane();
+        contentPane = getContentPane();
         contentPane.setLayout(null);
 
         //Create buttons
@@ -72,8 +71,8 @@ public class ChoiceScreen extends JFrame {
             viewCal.setBounds(100, 112, 300, 25);
         }
 
-        choiceScreen.setResizable(false);
-        choiceScreen.setVisible(true);
+        setResizable(false);
+        setVisible(true);
     }
 
 
