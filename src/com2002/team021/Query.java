@@ -644,7 +644,7 @@ public class Query {
 				new Patient(rs.getInt("patient")),
 				new Practitioner(rs.getString("practitioner")),
 				new Query().getAppointmentTreatments(rs.getLong("start"), rs.getString("practitioner")),
-				rs.getBoolean("paid")
+				rs.getInt("amountDue")
 			);
 			
 		} catch (SQLException e) {
@@ -673,7 +673,7 @@ public class Query {
 				new Patient(rs.getInt("patient")),
 				new Practitioner(rs.getString("practitioner")),
 				new Query().getAppointmentTreatments(rs.getLong("start"), rs.getString("practitioner")),
-				rs.getBoolean("paid")
+				rs.getInt("amountDue")
 				));
 				
 			}
@@ -938,7 +938,7 @@ public class Query {
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy");
 			Patient rob = new Patient("Mr", "Rob", "Ede", sdf.parse("18/9/1995"), 554342, "14", "st74hr", null);
 			
-			HealthcarePlan hcp = new HealthcarePlan("New One", 456, 2, 3, 4);
+			// HealthcarePlan hcp = new HealthcarePlan("New One", 456, 2, 3, 4);
 			
 			Practitioner prac = new Practitioner("Dentist");
 			Date date = new Date(1449763208559L);
@@ -946,7 +946,7 @@ public class Query {
 			Address add = new Address("13", "elm close", "kidsgrove", "stoke-on-trent", "st74hr");
 			
 			// System.out.println(
-				new Query().updateHealthcarePlan(hcp);
+				// new Query().updateHealthcarePlan(hcp);
 				new Query().getPractitioners();
 				new Query().addPatient(pa);
 				new Query().getTreatments();
