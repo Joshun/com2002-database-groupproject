@@ -135,7 +135,7 @@ public class AppointmentDayView extends JFrame {
         else {
             setTitle("Appointment listing");
         }
-        setSize(1150,525);
+        setSize(1135,525);
 
         Container contentPane = getContentPane();
         //contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));

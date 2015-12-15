@@ -82,32 +82,46 @@ public class AddAppointment extends JFrame {
         this.dayView = dayView;
         this.startTimeStamp = new Date(this.day.getTime());
         this.endTimeStamp = new Date(this.day.getTime());
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(6, 2));
 
-        contentPane.add(new JLabel("Patient"));
+        setTitle("Book Appointment");
+        setSize(300,400);
+        Container contentPane = getContentPane();
+        contentPane.setLayout(null);
+
+        JLabel patient = new JLabel("Patient:");
+        contentPane.add(patient);
         patientJComboBox = new JComboBox<>();
         for (Patient p: allPatients) {
             patientJComboBox.addItem(p);
         }
-
         contentPane.add(patientJComboBox);
+        patient.setBounds(45,50,50,20);
+        patientJComboBox.setBounds(95,50,150,20);
 
-        contentPane.add(new JLabel("Practitioner"));
+
+        JLabel practitioner = new JLabel("Practitioner:");
+        contentPane.add(practitioner);
         practitionerJComboBox = new JComboBox<>();
         for (Practitioner p: allPractitioners) {
             practitionerJComboBox.addItem(p);
         }
         contentPane.add(practitionerJComboBox);
+        practitioner.setBounds(25,90,100,20);
+        practitionerJComboBox.setBounds(95,90,150,20);
 
-        contentPane.add(new JLabel("Type"));
+        JLabel type = new JLabel("Type:");
+        contentPane.add(type);
         appointmentJComboBox = new JComboBox<>(appointmentTypes);
         appointmentJComboBox.addActionListener(new ComboChangeListener());
         contentPane.add(appointmentJComboBox);
+        type.setBounds(55,130,50,20);
+        appointmentJComboBox.setBounds(95,130,150,20);
 
         JPanel timeContainer = new JPanel(new GridLayout(2, 2));
         timeContainer.add(new JLabel("HH"));
         timeContainer.add(new JLabel("MM"));
+        timeContainer.setBounds(95,170,150,40);
+
         startHourEntryModel = new SpinnerNumberModel(9, 9, 16, 1);
         startMinuteEntryModel = new SpinnerNumberModel(0, 0, 59, 1);
         JSpinner startHourEntry = new JSpinner(startHourEntryModel);
@@ -119,23 +133,31 @@ public class AddAppointment extends JFrame {
 
         timeContainer.add(startHourEntry);
         timeContainer.add(startMinuteEntry);
-        contentPane.add(new JLabel("Start time"));
+
+        JLabel startTime = new JLabel("Start time:");
+        contentPane.add(startTime);
+        startTime.setBounds(35,190,100,20);
         contentPane.add(timeContainer);
 
-        contentPane.add(new JLabel("End time"));
+        JLabel endTime = new JLabel("End time:");
+        contentPane.add(endTime);
+        endTime.setBounds(40,230,100,20);
         endTimeLabel = new JLabel("-");
         contentPane.add(endTimeLabel);
+        endTimeLabel.setBounds(95,230,150,20);
         updateEndTimeLabel(endTimeStamp);
 
         contentPane.add(new JLabel());
         addAppointmentButton = new JButton("Add appointment");
         addAppointmentButton.addActionListener(new AddAppointmentButtonListener());
         contentPane.add(addAppointmentButton);
+        addAppointmentButton.setBounds(95,270,150,20);
 
         timeChanged();
 
 
-        pack();
+        //pack();
+        setResizable(false);
         setVisible(true);
     }
 
