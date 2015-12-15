@@ -30,7 +30,7 @@ public class Treatment {
 	public int getCost() { return this.cost; }
 	
 	public String toString() {
-		return this.name + " (£" + this.cost + ")";
+		return this.name + " (£" + (this.cost/100) + ")";
 	}
 
 	@Override
