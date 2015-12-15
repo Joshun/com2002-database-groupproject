@@ -28,6 +28,7 @@ public class RescheduleAppointment extends JFrame {
     private JButton rescheduleButton;
     private Date startTimestamp;
     private Date endTimestamp;
+    private DateWidget dateEntry;
 
 
     private class TimeEntry {
@@ -113,7 +114,7 @@ public class RescheduleAppointment extends JFrame {
         this.appointmentToModify = appointmentToModify;
         setTitle("Reschedule Appointment");
         Container contentPane = getContentPane();
-        contentPane.setLayout(new GridLayout(5, 2));
+        contentPane.setLayout(new GridLayout(6, 2));
 
         Practitioner practitioner = appointmentToModify.getPractitioner();
         Patient patient = appointmentToModify.getPatient();
@@ -122,6 +123,10 @@ public class RescheduleAppointment extends JFrame {
         contentPane.add(new JLabel(patient.getName()));
         contentPane.add(new JLabel("Practitioner: "));
         contentPane.add(new JLabel(practitioner.getName()));
+
+        contentPane.add(new JLabel("Date: "));
+        dateEntry = new DateWidget();
+        contentPane.add(dateEntry);
 
         startEntry = new TimeEntry();
         endEntry = new TimeEntry();
