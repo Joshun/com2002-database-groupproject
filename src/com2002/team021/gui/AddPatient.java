@@ -34,10 +34,8 @@ public class AddPatient extends JFrame {
     private ArrayList<String> healthcarePlans;
     private String noPlan = "<No plan>";
 
+    private ErrorHandler errorHandler;
 
-    private void errorDialog(String message) {
-        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
-    }
 
     private class AddPatientButtonHandler implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
@@ -55,7 +53,7 @@ public class AddPatient extends JFrame {
                     || houseNo.length() == 0
                     || postcode.length() == 0
                     || phoneString.length() == 0) {
-                errorDialog("Fields cannot be empty.");
+                errorHandler.showDialog("Fields cannot be empty.");
             } else {
                 int phone = 0;
                 Patient newPatient = null;
@@ -76,12 +74,12 @@ public class AddPatient extends JFrame {
                     patientManager.setEnabled(true);
                     dispose();
                 } catch (java.lang.NumberFormatException e) {
-                    errorDialog("Invalid phone number.");
+                    errorHandler.showDialog("Invalid phone number.");
                 }
                 catch (java.sql.SQLException e) {
                     String error = "Coudln\'t create patient.\n" + e;
                     System.out.println(error);
-                    errorDialog(error);
+                    errorHandler.showDialog(error);
                 }
 
                 System.out.println("Created new patient " + newPatient);
@@ -91,6 +89,7 @@ public class AddPatient extends JFrame {
     }
 
     public AddPatient(PatientManager patientManager) {
+        errorHandler = new ErrorHandler(this);
         patientToModify = null;
         this.patientManager = patientManager;
         healthcarePlans = new ArrayList<>();
