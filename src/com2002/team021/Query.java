@@ -544,13 +544,22 @@ public class Query {
 	}
 	
 	public ArrayList<Patient> getPatientsByName (String fn, String sn) throws SQLException {
-		String query = "SELECT * FROM patients WHERE forename LIKE ? AND surname LIKE ? ORDER BY id DESC;";
+		String query = "SELECT * FROM patients WHERE forename LIKE ? AND surname LIKE ? ORDER BY CASE WHEN forename = ? AND surname = ? THEN 0 WHEN forename LIKE ? AND surname = ? THEN 1 WHEN forename LIKE ? AND surname LIKE ? THEN 2 WHEN forename LIKE ? AND surname LIKE ? THEN 3 ELSE 4 END, id DESC;";
 		ArrayList<Patient> patients = new ArrayList<Patient>();
 		
 		try {
 			stmt = con.prepareStatement(query);
-			stmt.setString(1, fn);
-			stmt.setString(2, sn);
+			stmt.setString(1, "%" + fn + "%");
+			stmt.setString(2, "%" + sn + "%");
+			stmt.setString(3, fn);
+			stmt.setString(4, sn);
+			stmt.setString(5, fn + "%");
+			stmt.setString(6, sn);
+			stmt.setString(7, fn + "%");
+			stmt.setString(8, fn + "%");
+			stmt.setString(9, "%" + fn + "%");
+			stmt.setString(10, "%" + sn + "%");
+			System.out.println(stmt);
 			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
