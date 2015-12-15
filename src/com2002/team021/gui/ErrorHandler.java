@@ -22,6 +22,10 @@ public class ErrorHandler {
         JOptionPane.showMessageDialog(parentFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    public void showInfo(String message) {
+        JOptionPane.showMessageDialog(parentFrame, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     public void showDialog(String message, Exception e) {
         if (showDebug) {
             showDialog(message + " (" + e.toString() + ")");

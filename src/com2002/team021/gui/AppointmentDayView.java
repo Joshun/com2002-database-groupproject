@@ -96,6 +96,9 @@ public class AppointmentDayView extends JFrame {
                 removeAppointment(appointments.get(selectedRow));
                 selectedRow = -1;
             }
+            else {
+                errorHandler.showInfo("Please select a row and try again.");
+            }
         }
     }
 
