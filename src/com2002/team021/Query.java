@@ -1,7 +1,7 @@
 package com2002.team021;
 
-import static com2002.team021.config.SQL.*;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.sql.SQLException;
@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
+
+import static com2002.team021.config.SQL.*;
 
 public class Query {
 	
@@ -303,7 +305,6 @@ public class Query {
 		} finally {
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
 		}
-		System.out.println("successfully deleted all treatments for appointment");
 		
 		try {
 		
@@ -364,6 +365,7 @@ public class Query {
 		
 		return true;
 	}
+	
 	
 	public ArrayList<Appointment> getAppointmentsOnDay (Date day) throws SQLException {
 		ArrayList<Appointment> filtered = new ArrayList<Appointment>();
@@ -539,6 +541,65 @@ public class Query {
 		
 		return patients;
 		
+	}
+	
+	public ArrayList<Patient> getPatientsByName (String fn, String sn) throws SQLException {
+		String query = "SELECT * FROM patients WHERE forename LIKE ? AND surname LIKE ? ORDER BY id DESC;";
+		ArrayList<Patient> patients = new ArrayList<Patient>();
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, fn);
+			stmt.setString(2, sn);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				patients.add(new Patient(
+					rs.getInt("id"),
+					rs.getString("title"),
+					rs.getString("forename"),
+					rs.getString("surname"),
+					new Date(rs.getLong("dob")),
+					rs.getInt("phone"),
+					rs.getString("houseNumber"),
+					rs.getString("postcode"),
+					rs.getString("subscription")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt search patients\n" + e);
+			
+		} finally {
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
+		}
+		
+		return patients;
+		
+	}
+	
+	public ArrayList<Patient> getPatientsByName (String name) throws SQLException {
+		String fn = null;
+		String sn = null;
+		
+		Pattern p = Pattern.compile("(.*)\\s(\\w+)$");
+		Matcher m = p.matcher(name);
+		if (m.find()) {
+			fn = m.group(1);
+			sn = m.group(2);
+		} else {
+			System.out.println("Complete name needs to be specified");
+			return new ArrayList<Patient>();
+		}
+		
+		try {
+			return getPatientsByName(fn, sn);
+		} catch (SQLException e) {
+			throw new SQLException("couldnt search patients\n" + e);
+		}
 	}
 	
 	public Address getPatientAddress (int patientID) throws SQLException {
@@ -947,13 +1008,15 @@ public class Query {
 			
 			Address add = new Address("13", "elm close", "kidsgrove", "stoke-on-trent", "st74hr");
 			
+			System.out.println(new Query().getPatientsByName("Rob Ede"));
+			
 			// System.out.println(
 				// new Query().updateHealthcarePlan(hcp);
-				new Query().getPractitioners();
-				new Query().addPatient(pa);
-				new Query().getTreatments();
-				new Query().getPractitioners();
-				new Query().getPractitionerAppointmentsOnDay(date, prac);
+				// new Query().getPractitioners();
+				// new Query().addPatient(pa);
+				// new Query().getTreatments();
+				// new Query().getPractitioners();
+				// new Query().getPractitionerAppointmentsOnDay(date, prac);
 			// );
 			
 		} catch (Exception e) {
