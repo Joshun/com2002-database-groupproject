@@ -297,12 +297,33 @@ public class AppointmentDayView extends JFrame {
         appointments.set(indexOfOld, newAppointment);
         Patient p = newAppointment.getPatient();
         Practitioner practitioner = newAppointment.getPractitioner();
-        tableModel.setValueAt(p.getSurname(), indexOfOld, 0);
-        tableModel.setValueAt(p.getForename(), indexOfOld, 1);
-        tableModel.setValueAt(practitioner.getRole(), indexOfOld, 2);
-        tableModel.setValueAt(practitioner.getName(), indexOfOld, 3);
-        tableModel.setValueAt(dateFormat.format(newAppointment.getStart()), indexOfOld, 4);
-        tableModel.setValueAt(dateFormat.format(newAppointment.getEnd()), indexOfOld, 5);
+
+        Calendar oldAppCal = Calendar.getInstance();
+        oldAppCal.setTime(oldAppointment.getStart());
+        Calendar newAppCal = Calendar.getInstance();
+        newAppCal.setTime(newAppointment.getStart());
+
+        int d1 = oldAppCal.get(Calendar.DAY_OF_MONTH);
+        int m1 = oldAppCal.get(Calendar.MONTH);
+        int y1 = oldAppCal.get(Calendar.YEAR);
+
+        int d2 = newAppCal.get(Calendar.DAY_OF_MONTH);
+        int m2 = newAppCal.get(Calendar.MONTH);
+        int y2 = newAppCal.get(Calendar.YEAR);
+
+        if (d1 != d2
+                || m1 != m2
+                || y1 != y2) {
+            tableModel.removeRow(indexOfOld);
+        }
+        else {
+            tableModel.setValueAt(p.getSurname(), indexOfOld, 0);
+            tableModel.setValueAt(p.getForename(), indexOfOld, 1);
+            tableModel.setValueAt(practitioner.getRole(), indexOfOld, 2);
+            tableModel.setValueAt(practitioner.getName(), indexOfOld, 3);
+            tableModel.setValueAt(dateFormat.format(newAppointment.getStart()), indexOfOld, 4);
+            tableModel.setValueAt(dateFormat.format(newAppointment.getEnd()), indexOfOld, 5);
+        }
         try {
             Query query = new Query();
             query.updateAppointment(newAppointment, oldAppointment);
