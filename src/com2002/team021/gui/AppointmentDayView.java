@@ -100,10 +100,15 @@ public class AppointmentDayView extends JFrame {
     }
 
     public class LogAppHandler implements ActionListener {
+        private AppointmentDayView outerclass;
+        public LogAppHandler(AppointmentDayView outerclass) {
+            this.outerclass = outerclass;
+        }
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             if (selectedRow >= 0) {
-                new LogTreatments(appointments.get(selectedRow));
+                setEnabled(false);
+                new LogTreatments(appointments.get(selectedRow), outerclass);
             }
         }
     }
@@ -147,7 +152,7 @@ public class AppointmentDayView extends JFrame {
         JButton changeAppButt = new JButton("Reschedule");
         changeAppButt.addActionListener(new AddAppHandler(this, true));
         JButton logAppButt = new JButton("Log Treament");
-        logAppButt.addActionListener(new LogAppHandler());
+        logAppButt.addActionListener(new LogAppHandler(this));
 
 
         if (practitioner == null) {

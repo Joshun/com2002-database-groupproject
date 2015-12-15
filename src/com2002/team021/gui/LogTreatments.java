@@ -13,6 +13,7 @@ import java.sql.SQLException;
  */
 public class LogTreatments extends JFrame {
     private Appointment appointmentToModify;
+    private AppointmentDayView dayView;
     private ArrayList<Treatment> possibleTreatments;
     private ArrayList<Treatment> appointmentTreatments;
     private ArrayList<TreatmentCheckbox> treatmentCheckboxes;
@@ -65,11 +66,22 @@ public class LogTreatments extends JFrame {
                     System.out.println("Couldn\'t update treatments: " + ex);
                 }
             }
+            setVisible(false);
+            dayView.setEnabled(true);
         }
     }
 
-    public LogTreatments(Appointment appointment) {
+    public LogTreatments(Appointment appointment, AppointmentDayView dayView) {
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                setVisible(false);
+                dayView.setEnabled(true);
+            }
+        });
+
         this.appointmentToModify = appointment;
+        this.dayView = dayView;
         treatmentCheckboxes = new ArrayList<>();
         setTitle("Log Treatment");
         Container contentPane = getContentPane();
@@ -107,18 +119,17 @@ public class LogTreatments extends JFrame {
         logTreatmentButton.addActionListener(new TreatmentButtonHandler());
         contentPane.add(logTreatmentButton);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        ArrayList<Appointment> appointments = null;
-        try {
-            appointments = new Query().getAppointments();
-        } catch (java.sql.SQLException e) {
-            System.out.println("error");
-        }
-        new LogTreatments(appointments.get(0));
-    }
+//    public static void main(String[] args) {
+//        ArrayList<Appointment> appointments = null;
+//        try {
+//            appointments = new Query().getAppointments();
+//        } catch (java.sql.SQLException e) {
+//            System.out.println("error");
+//        }
+//        new LogTreatments(appointments.get(0));
+//    }
 }
