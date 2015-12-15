@@ -52,7 +52,11 @@ public class CalendarView extends JFrame {
         }
 
         //Frame
-        setTitle("Appointments Manager");                           // Set title
+        String user = (practitioner != null)
+                ? practitioner.getRole() + " " + practitioner.getName()
+                : "Secretary";
+
+        setTitle("Appointments Manager (" + user + ")");                           // Set title
         setSize(900, 500);                                //Set size
 
         //Pane
