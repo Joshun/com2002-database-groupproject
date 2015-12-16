@@ -27,6 +27,7 @@ public class ErrorHandler {
     }
 
     public void showDialog(String message, Exception e) {
+        System.out.println("Error: " + message + " " + e.toString());
         if (showDebug) {
             showDialog(message + " (" + e.toString() + ")");
         }
