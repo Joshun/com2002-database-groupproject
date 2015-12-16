@@ -214,7 +214,50 @@ public class Query {
 	}
 	
 	
-	public boolean isAppointmentCollision (Appointment appointment) throws AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException {
+	public boolean isAppointmentCollision (Appointment appointment) throws SQLException, AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException {
+		ArrayList<Appointment> all;
+		Appointment a = appointment;
+		
+		try {
+			all = new Query().getAppointmentsByPractitioner(appointment.getPractitioner());
+		} catch (SQLException e) {
+			throw new SQLException("Couldnt get all appointment to check collisions with\n" + e);
+		}
+		
+		// check duplicate starts
+		for (Appointment t : all) {
+			if (t.getStart().getTime() == a.getStart().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Duplicate start");
+			}
+		}
+		
+		// check duplicate ends
+		for (Appointment t : all) {
+			if (t.getEnd().getTime() == a.getEnd().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Duplicate end");
+			}
+		}
+		
+		// check start not within another appointment
+		for (Appointment t : all) {
+			if (a.getStart().getTime() < t.getEnd().getTime() && a.getStart().getTime() > t.getStart().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Start is within another appointment");
+			}
+		}
+		
+		// check end not within another appointment
+		for (Appointment t : all) {
+			if (a.getEnd().getTime() < t.getEnd().getTime() && a.getEnd().getTime() > t.getStart().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("End is within another appointment");
+			}
+		}
+		
+		// check !(endTime > a.endTime && startTime < a.startTime)
+		for (Appointment t : all) {
+			if (a.getStart().getTime() < t.getStart().getTime() && a.getEnd().getTime() > t.getEnd().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Appointment entirely overlaps another");
+			}
+		}
 		
 		return false;
 	}
@@ -534,6 +577,26 @@ public class Query {
 			}
 		}
 		
+		return filtered;
+		
+	}
+	
+	public ArrayList<Appointment> getAppointmentsByPractitioner (Practitioner prac) throws SQLException {
+		ArrayList<Appointment> filtered = new ArrayList<Appointment>();
+		ArrayList<Appointment> all;
+		
+		try {
+			all = new Query().getAppointments();
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get all appointments\n" + e);
+		}
+		
+		for (Appointment a : all) {
+			if (a.getPractitioner().getRole().equals(prac.getRole())) {
+				filtered.add(a);
+			}
+		}
 		
 		return filtered;
 		
@@ -1236,7 +1299,7 @@ public class Query {
 			
 			Address add = new Address("13", "elm close", "kidsgrove", "stoke-on-trent", "st74hr");
 			
-			// Appointment ap = new Query().getAppointments().get(0);
+			Appointment ap = new Query().getAppointments().get(0);
 			// ap.setTreatments(trs);
 			// System.out.println(new Query().updateAppointment(ap, ap));
 			
@@ -1249,7 +1312,8 @@ public class Query {
 				// new Query().getPractitionerAppointmentsOnDay(date, prac)
 				// new Query().getPatientsByName("rob")
 				// new Query().calculateCost(ap)
-				new Query().getAddressByPostcode("st74hr")
+				// new Query().getAddressByPostcode("st74hr")
+				// new Query().addAppointment(ap)
 			);
 			
 		} catch (Exception e) {

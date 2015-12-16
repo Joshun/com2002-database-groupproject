@@ -79,6 +79,10 @@ public class Appointment {
 		
 	}
 	
+	public void setStart(Date start) { this.start = start; }
+	public void setEnd(Date end) { this.end = end; }
+	public void setStart(long start) { this.start = new Date(start); }
+	public void setEnd(long end) { this.end = new Date(end); }
 	public void setAmountDue(int amountDue) { this.amountDue = amountDue; }
 	
 	public String toString () {
