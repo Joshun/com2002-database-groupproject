@@ -1,3 +1,5 @@
+package com2002.team021;
+
 import com2002.team021.gui.LoginScreen;
 
 
