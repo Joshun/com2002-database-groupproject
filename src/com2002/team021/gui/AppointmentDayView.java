@@ -1,9 +1,6 @@
 package com2002.team021.gui;
 
-import com2002.team021.Appointment;
-import com2002.team021.Patient;
-import com2002.team021.Practitioner;
-import com2002.team021.Query;
+import com2002.team021.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -307,7 +304,7 @@ public class AppointmentDayView extends JFrame {
         this(null);
     }
 
-    public void addAppointment(Appointment a) {
+    public boolean addAppointment(Appointment a) {
 
         try {
             Query query = new Query();
@@ -315,9 +312,15 @@ public class AppointmentDayView extends JFrame {
             appointments.add(a);
             tableModel.addRow(appointmentToRow(a));
         }
+        catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
+            errorHandler.showDialog("Appointment collides with another appointment", e);
+            return false;
+        }
         catch (java.sql.SQLException e) {
             errorHandler.showDialog("Failed to add appointment", e);
+            return false;
         }
+        return true;
     }
 
     public void removeAppointment(Appointment a) {
@@ -331,7 +334,7 @@ public class AppointmentDayView extends JFrame {
         }
     }
 
-    public void updateAppointment(Appointment oldAppointment, Appointment newAppointment) {
+    public boolean updateAppointment(Appointment oldAppointment, Appointment newAppointment) {
 
         try {
             Query query = new Query();
@@ -369,10 +372,15 @@ public class AppointmentDayView extends JFrame {
                 tableModel.setValueAt(dateFormat.format(newAppointment.getEnd()), indexOfOld, 5);
             }
         }
+        catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
+            errorHandler.showDialog("Appointment collides with another appointment ", e);
+            return false;
+        }
         catch (java.sql.SQLException e) {
             errorHandler.showDialog("Failed to update appointment ", e);
+            return false;
         }
-//        tableModel.setValueAt("role", indexOfOld, 6);
+        return true;
     }
 
     public Date getDay() {

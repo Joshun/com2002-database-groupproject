@@ -4,6 +4,7 @@ package com2002.team021.gui;
  * Created by Afamezechukwu on 03/12/2015.
  */
 
+import com2002.team021.Appointment;
 import com2002.team021.Practitioner;
 
 import javax.swing.*;

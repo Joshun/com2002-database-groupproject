@@ -79,9 +79,10 @@ public class RescheduleAppointment extends JFrame {
             Appointment newAppointment = new Appointment(startTimestamp, endTimestamp, patient, practitioner, emptyTreatment);
             System.out.println("Old appointment: " + appointmentToModify);
             System.out.println("Updated to: " + newAppointment);
-            dayView.updateAppointment(appointmentToModify, newAppointment);
-            setVisible(false);
-            dayView.setEnabled(true);
+            if (dayView.updateAppointment(appointmentToModify, newAppointment)) {
+                setVisible(false);
+                dayView.setEnabled(true);
+            }
         }
     }
 

@@ -46,18 +46,10 @@ public class AddAppointment extends JFrame {
             System.out.println("End: " + endTimeStamp);
             Appointment newAppointment = new Appointment(startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
 
-                dayView.addAppointment(newAppointment);
-//                try {
-//                    Query query = new Query();
-//                    query.addAppointment(newAppointment);
-//                }
-//                catch (java.sql.SQLException ex) {
-//                    System.out.println("Failed to update appointment " + ex);
-//                }
-
-
-            setVisible(false);
-            dayView.setEnabled(true);
+            if (dayView.addAppointment(newAppointment)) {
+                setVisible(false);
+                dayView.setEnabled(true);
+            }
 
             System.out.println(patient.toString() + practitioner.toString() + appointmentType);
         }
