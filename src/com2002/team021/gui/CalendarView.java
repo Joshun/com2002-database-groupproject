@@ -181,6 +181,10 @@ public class CalendarView extends JFrame {
         table.setDefaultRenderer(table.getColumnClass(0), new tblCalendarRenderer());
     }
 
+    private boolean isWeekend(int col) {
+        return (col==0 || col==6);
+    }
+
 
     private class tblCalendarRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused, int row, int column) {
@@ -233,6 +237,10 @@ public class CalendarView extends JFrame {
     private class AppointmentListing implements  ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            // Prevent booking appointments on weekends
+            if (isWeekend(table.getSelectedColumn())) {
+                return;
+            }
             Calendar cal = Calendar.getInstance();
             cal.clear();
             cal.set(Calendar.YEAR, actualYear);
