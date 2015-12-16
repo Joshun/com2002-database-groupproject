@@ -1,5 +1,5 @@
 # Remaining issues / TODO
-- Add address in addPatient if not exists
+- Add address in addPatient if not exist
 - Calculate cost method
 - Stop appointment overlapping and display error
 - Method of paying and displaying total cost
