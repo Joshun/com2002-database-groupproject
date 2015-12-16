@@ -47,13 +47,7 @@ public class PaySummary extends JFrame {
     public PaySummary(Appointment appointment, AppointmentDayView dayView) {
         this.appointment = appointment;
         this.dayView = dayView;
-        int appointmentTotalCost = 0;
-        try {
-            appointmentTotalCost = new Query().calculateCost(appointment);
-        }
-        catch (java.sql.SQLException e) {
-            System.out.println("Couldn't calculate total cost " + e);
-        }
+        int appointmentTotalCost = appointment.getAmountDue();
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
@@ -73,6 +67,10 @@ public class PaySummary extends JFrame {
 
         JButton markPaid = new JButton("Mark Paid");
         markPaid.addActionListener(new MarkPaidHandler());
+        if (appointment.getAmountDue() == 0) {
+            markPaid.setText("All Costs Paid");
+            markPaid.setEnabled(false);
+        }
         JButton cancel = new JButton("Cancel");
         cancel.addActionListener(new CancelHandler());
         JPanel buttonGrid = new JPanel(new GridLayout(1, 2));

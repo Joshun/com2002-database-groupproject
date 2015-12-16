@@ -115,6 +115,10 @@ public class LogTreatments extends JFrame {
 
         contentPane.add(checkboxPanel);
         JButton logTreatmentButton = new JButton("Log Treatment");
+        if (appointmentTreatments.size() > 0) {
+            logTreatmentButton.setText("Treatment Logged");
+            logTreatmentButton.setEnabled(false);
+        }
         logTreatmentButton.addActionListener(new TreatmentButtonHandler());
         contentPane.add(logTreatmentButton);
 
