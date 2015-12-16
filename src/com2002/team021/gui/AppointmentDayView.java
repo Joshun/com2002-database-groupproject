@@ -34,12 +34,6 @@ public class AppointmentDayView extends JFrame {
         Practitioner practitioner = a.getPractitioner();
         Date startTime = a.getStart();
         Date endTime = a.getEnd();
-//        GregorianCalendar startCal = new GregorianCalendar();
-//        GregorianCalendar endCal = new GregorianCalendar();
-//        startCal.setTime(startTime);
-//        endCal.setTime(endTime);
-        System.out.println(practitioner);
-        System.out.println(patient);
 
         String[] appString = { patient.getSurname(), patient.getForename(), practitioner.getRole(), practitioner.getName(), dateFormat.format(startTime), dateFormat.format(endTime)};
         return appString;
@@ -162,7 +156,6 @@ public class AppointmentDayView extends JFrame {
         errorHandler = new ErrorHandler(this);
         this.day = day;
         this.practitioner = practitioner;
-        System.out.println(practitioner);
 
         if (day != null) {
             setTitle("Appointment listing for " + day.toString());
@@ -231,7 +224,6 @@ public class AppointmentDayView extends JFrame {
                 int row = table.rowAtPoint(rowPoint);
                 if (row >= 0) {
                     selectedRow = row;
-                    System.out.println("Selected: " + selectedRow);
                 }
             }
         });
@@ -270,23 +262,17 @@ public class AppointmentDayView extends JFrame {
             Query query = new Query();
 
             if (day != null) {
-                System.out.println(day);
-                System.out.println(day.getTime());
-//                java.sql.Date sqlDate = new java.sql.Date(day.getTime());
-//                this.appointments = query.getAppointmentsOnDay(sqlDate);
-//                this.appointments = query.getAppointmentsOnDay(day);
+
                 if (practitioner != null) {
                     this.appointments = query.getPractitionerAppointmentsOnDay(day, practitioner);
                 }
                 else {
                     this.appointments = query.getAppointmentsOnDay(day);
                 }
-                System.out.println(appointments);
             }
             else {
                 this.appointments = query.getAppointments();
             }
-            System.out.println(appointments.size());
             reload();
         }
         catch (java.sql.SQLException e) {

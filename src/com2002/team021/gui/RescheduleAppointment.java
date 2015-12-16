@@ -75,10 +75,7 @@ public class RescheduleAppointment extends JFrame {
 
             ArrayList<Treatment> emptyTreatment = new ArrayList<>();
 
-            System.out.println("start " + startTimestamp +" end " + endTimestamp);
             Appointment newAppointment = new Appointment(startTimestamp, endTimestamp, patient, practitioner, emptyTreatment);
-            System.out.println("Old appointment: " + appointmentToModify);
-            System.out.println("Updated to: " + newAppointment);
             if (dayView.updateAppointment(appointmentToModify, newAppointment)) {
                 setVisible(false);
                 dayView.setEnabled(true);
@@ -167,42 +164,24 @@ public class RescheduleAppointment extends JFrame {
         // Get current time values of appointment
         startTimestamp = appointmentToModify.getStart();
         endTimestamp = appointmentToModify.getEnd();
-        System.out.println("Start: " + startTimestamp + "End: " + endTimestamp);
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(startTimestamp);
         int startHour = startCal.get(Calendar.HOUR_OF_DAY);
         int startMinute = startCal.get(Calendar.MINUTE);
         startEntry.getHourEntryModel().setValue(startHour);
         startEntry.getMinuteEntryModel().setValue(startMinute);
-        System.out.println("end " + endTimestamp);
 
         Calendar endCal = Calendar.getInstance();
-        System.out.println(endTimestamp);
+
         endCal.setTime(endTimestamp);
-        System.out.println(endCal);
+
         int endHour = endCal.get(Calendar.HOUR_OF_DAY);
         int endMinute = endCal.get(Calendar.MINUTE);
-        System.out.println(endHour + ":" + endMinute);
         endEntry.getHourEntryModel().setValue(endHour);
         endEntry.getMinuteEntryModel().setValue(endMinute);
 
         //pack();
         setResizable(false);
         setVisible(true);
-    }
-
-    public static void main(String[] args) {
-
-        try {
-            Query query = new Query();
-            ArrayList<Appointment> appointments = query.getAppointments();
-            Appointment anAppointment = appointments.get(0);
-            new RescheduleAppointment(anAppointment, new AppointmentDayView(new Date()));
-
-
-        }
-        catch (java.sql.SQLException e) {
-            System.out.println("Error connecting to database");
-        }
     }
 }

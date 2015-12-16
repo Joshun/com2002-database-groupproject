@@ -17,6 +17,7 @@ public class LogTreatments extends JFrame {
     private ArrayList<Treatment> possibleTreatments;
     private ArrayList<Treatment> appointmentTreatments;
     private ArrayList<TreatmentCheckbox> treatmentCheckboxes;
+    private ErrorHandler errorHandler;
 
     private class TreatmentCheckbox extends JCheckBox {
         private Treatment associatedTreatment;
@@ -39,13 +40,11 @@ public class LogTreatments extends JFrame {
                 Treatment associatedTreatment = tc.getAssociatedTreatment();
                 if (tc.isSelected()) {
                     if (!appointmentTreatments.contains(associatedTreatment)) {
-                        System.out.println("Adding treatment " + associatedTreatment);
                         hasChanged = true;
                         appointmentTreatments.add(associatedTreatment);
                     }
                 } else {
                     if (appointmentTreatments.contains(associatedTreatment)) {
-                        System.out.println("Removing treatment " + associatedTreatment);
                         hasChanged = true;
                         appointmentTreatments.remove(associatedTreatment);
                     }
@@ -58,12 +57,12 @@ public class LogTreatments extends JFrame {
                     Patient patient = appointmentToModify.getPatient();
                     Practitioner practitioner = appointmentToModify.getPractitioner();
                     Appointment newAppointment = new Appointment(start, end, patient, practitioner, appointmentTreatments);
-                    System.out.println(newAppointment);
-                    System.out.println(appointmentToModify);
+
                     new Query().updateSessionTreatments(newAppointment); 
                     new Query().calculateCost(newAppointment);
                 } catch (SQLException ex) {
-                    System.out.println("Couldn\'t update treatments: " + ex);
+
+                    errorHandler.showDialog("Couldn\'t update treatments: ", ex);
                 }
             }
             dayView.setEnabled(true);
@@ -72,6 +71,7 @@ public class LogTreatments extends JFrame {
     }
 
     public LogTreatments(Appointment appointment, AppointmentDayView dayView) {
+        errorHandler = new ErrorHandler(this);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -92,9 +92,8 @@ public class LogTreatments extends JFrame {
         try {
             possibleTreatments = new Query().getTreatments();
             appointmentTreatments = new Query().getAppointmentTreatments(appointment);
-            System.out.println(appointmentTreatments);
         } catch (SQLException e) {
-            System.out.println("Could not load list of possible treatments: " + e);
+            errorHandler.showDialog("Could not load list of possible treatments: ", e);
         }
 
         if (appointmentTreatments == null) {

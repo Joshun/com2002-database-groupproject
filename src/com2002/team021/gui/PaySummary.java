@@ -15,6 +15,7 @@ import java.util.Date;
 public class PaySummary extends JFrame {
     private Appointment appointment;
     private AppointmentDayView dayView;
+    private ErrorHandler errorHandler;
 
     private class MarkPaidHandler implements ActionListener {
         @Override
@@ -31,7 +32,7 @@ public class PaySummary extends JFrame {
                 dispose();
             }
             catch (java.sql.SQLException ex) {
-                System.out.println("Couldn't mark paid " + ex);
+                errorHandler.showDialog("Couldn't mark paid ", ex);
             }
         }
     }
@@ -45,6 +46,7 @@ public class PaySummary extends JFrame {
     }
 
     public PaySummary(Appointment appointment, AppointmentDayView dayView) {
+        errorHandler = new ErrorHandler(this);
         this.appointment = appointment;
         this.dayView = dayView;
         int appointmentTotalCost = appointment.getAmountDue();
@@ -62,7 +64,7 @@ public class PaySummary extends JFrame {
             contentPane.add(new JLabel("Total: £" + (appointmentTotalCost/100)));
         }
         catch (java.sql.SQLException e) {
-            System.out.println("Couldn't get treatments " + e);
+            errorHandler.showDialog("Couldn't get treatments ", e);
         }
 
         JButton markPaid = new JButton("Mark Paid");

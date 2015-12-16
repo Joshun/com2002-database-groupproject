@@ -41,9 +41,6 @@ public class AddAppointment extends JFrame {
             Practitioner practitioner = (Practitioner) practitionerJComboBox.getSelectedItem();
             String appointmentType = (String) appointmentJComboBox.getSelectedItem();
             ArrayList<Treatment> emptyArrLis = new ArrayList<>();
-            System.out.println("Date: " + day);
-            System.out.println("Start: " + startTimeStamp);
-            System.out.println("End: " + endTimeStamp);
             Appointment newAppointment = new Appointment(startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
 
             if (dayView.addAppointment(newAppointment)) {
@@ -51,7 +48,6 @@ public class AddAppointment extends JFrame {
                 dayView.setEnabled(true);
             }
 
-            System.out.println(patient.toString() + practitioner.toString() + appointmentType);
         }
     }
 
@@ -157,9 +153,7 @@ public class AddAppointment extends JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             timeChanged();
-            System.out.println("changed");
             if ( ((String) appointmentJComboBox.getSelectedItem()).equals("Treatment") ) {
-                System.out.println("treatment");
 //                startMinuteEntryModel.setMaximum(0);
                 if ( startHourEntryModel.getNumber().intValue() == 16 && startHourEntryModel.getNumber().intValue() > 0) {
                     startMinuteEntryModel.setValue(0);

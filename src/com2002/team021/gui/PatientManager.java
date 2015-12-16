@@ -38,7 +38,6 @@ public class PatientManager extends JFrame {
             if (modifyCurrent) {
                 if (selectedRow >= 0) {
                     int index = patientManager.getSelectedRow();
-                    System.out.println("Trying to modify existing patient at index, " + selectedRow);
                     if (searchList == null) {
                         // Nothing is being searched so use the list of all the patients
                         ap = new AddPatient(patientManager, patientManager.patients.get(selectedRow));
@@ -68,6 +67,18 @@ public class PatientManager extends JFrame {
             searchField.setText("");
             clear();
             reload();
+        }
+    }
+
+    private class AddAddressHandler implements ActionListener {
+        private PatientManager outerclass;
+        public AddAddressHandler(PatientManager outerclass) {
+            this.outerclass = outerclass;
+        }
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            new AddAddress(outerclass);
+            setEnabled(false);
         }
     }
 
@@ -146,14 +157,18 @@ public class PatientManager extends JFrame {
         //contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         contentPane.setLayout(null);
 
-        JButton addPatientButton = new JButton("Add");
+        JButton addPatientButton = new JButton("Add Patient");
         JButton modifyPatientButton = new JButton("More Information / Modify");
+        JButton addAddressButton = new JButton("Add Address");
         addPatientButton.addActionListener(new PatientManagerButtonHandler(this, false));
         modifyPatientButton.addActionListener(new PatientManagerButtonHandler(this, true));
+        addAddressButton.addActionListener(new AddAddressHandler(this));
         contentPane.add(addPatientButton);
         contentPane.add(modifyPatientButton);
+        contentPane.add(addAddressButton);
         addPatientButton.setBounds(10, 60, 225, 25);
         modifyPatientButton.setBounds(10, 110, 225, 25);
+        addAddressButton.setBounds(10, 160, 225, 25);
 
         patientTableModel = new DefaultTableModel() {
             @Override
@@ -176,7 +191,6 @@ public class PatientManager extends JFrame {
                 int row = patientTable.rowAtPoint(rowPoint);
                 if (row >= 0) {
                     selectedRow = row;
-                    System.out.println("Selected: " + selectedRow);
                 }
             }
         });
@@ -274,7 +288,6 @@ public class PatientManager extends JFrame {
             query.updatePatient(newPatient);
             HealthcarePlan subscription = newPatient.getSubscription();
             int indexOfOld = patients.indexOf(oldPatient);
-            System.out.println(indexOfOld);
             patients.set(indexOfOld, newPatient);
             patientTableModel.setValueAt(newPatient.getId(), indexOfOld, 0);
             patientTableModel.setValueAt(newPatient.getForename(), indexOfOld, 1);
