@@ -71,6 +71,18 @@ public class PatientManager extends JFrame {
         }
     }
 
+    private class AddAddressHandler implements ActionListener {
+        private PatientManager outerclass;
+        public AddAddressHandler(PatientManager outerclass) {
+            this.outerclass = outerclass;
+        }
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            new AddAddress(outerclass);
+            setEnabled(false);
+        }
+    }
+
     private class highlightRowRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focused, int row, int column) {
             super.getTableCellRendererComponent(table, value, selected, focused, row, column);
@@ -146,14 +158,18 @@ public class PatientManager extends JFrame {
         //contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
         contentPane.setLayout(null);
 
-        JButton addPatientButton = new JButton("Add");
+        JButton addPatientButton = new JButton("Add Patient");
         JButton modifyPatientButton = new JButton("More Information / Modify");
+        JButton addAddressButton = new JButton("Add Address");
         addPatientButton.addActionListener(new PatientManagerButtonHandler(this, false));
         modifyPatientButton.addActionListener(new PatientManagerButtonHandler(this, true));
+        addAddressButton.addActionListener(new AddAddressHandler(this));
         contentPane.add(addPatientButton);
         contentPane.add(modifyPatientButton);
+        contentPane.add(addAddressButton);
         addPatientButton.setBounds(10, 60, 225, 25);
         modifyPatientButton.setBounds(10, 110, 225, 25);
+        addAddressButton.setBounds(10, 160, 225, 25);
 
         patientTableModel = new DefaultTableModel() {
             @Override
