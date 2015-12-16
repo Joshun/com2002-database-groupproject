@@ -137,10 +137,12 @@ public class RescheduleAppointment extends JFrame {
         practitionerName.setBounds(125,90,150,20);
 
 
-        contentPane.add(new JLabel("Date: "));
+        JLabel dateLabel = new JLabel("Date: ");
+        dateLabel.setBounds(19, 130, 100, 20);
+        contentPane.add(dateLabel);
         dateEntry = new DateWidget(appointmentToModify.getStart());
         contentPane.add(dateEntry);
-        dateEntry.setBounds(30, 130, 150, 40);
+        dateEntry.setBounds(125, 130, 150, 40);
 
         startEntry = new TimeEntry();
         endEntry = new TimeEntry();
