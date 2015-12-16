@@ -237,6 +237,7 @@ public class CalendarView extends JFrame {
     private class AppointmentListing implements  ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            // Prevent booking appointments on weekends
             if (isWeekend(table.getSelectedColumn())) {
                 return;
             }
