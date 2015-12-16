@@ -200,18 +200,27 @@ public class Query {
 		
 	}
 	
-	public boolean updateAppointment (Appointment appointment) throws SQLException {
+	public boolean updateAppointment (Appointment appointment) throws SQLException, AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException {
 		System.out.println("updateAppointment(Appointment appointment) method may produce unexpected results");
 		System.out.println("updateAppointment(Appointment appointment) please make sure appointment start time ahs not changed");
 		try {
 			return new Query().updateAppointment(appointment, appointment);
 		} catch (SQLException e) {
 			throw new SQLException("could not update appointment (using updateAppointment(appointment)) \n" + e);
+		} catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
+			throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException(e);
 		}
 		
 	}
 	
-	public boolean updateAppointment (Appointment appointment, Appointment old) throws SQLException {
+	
+	public boolean isAppointmentCollision (Appointment appointment) throws AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException {
+		
+		return false;
+	}
+	
+	
+	public boolean updateAppointment (Appointment appointment, Appointment old) throws SQLException, AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException {
 		String query = "SELECT COUNT(*) as count FROM appointments WHERE start = ? AND practitioner = ?;";
 		
 		try {
@@ -231,6 +240,8 @@ public class Query {
 		} catch (SQLException e) {
 			throw new SQLException("couldnt update appointment " + appointment + "\n" + e);
 			
+		} catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
+			throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException(e);
 		} finally {
 			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
 			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
@@ -328,16 +339,28 @@ public class Query {
 		}
 		System.out.println("amount due " + cost);
 		appointment.setAmountDue(cost);
-		System.out.println(new Query().updateAppointment(appointment, appointment));
+		
+		try {
+			System.out.println(new Query().updateAppointment(appointment, appointment));
+		} catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
+			System.out.println("in calculate cost => it really should have you know...");
+		}
 		
 		return cost;
 		
 	}
 	
 	
-	public boolean updateExistingAppointment (Appointment appointment, Appointment old) throws SQLException {
+	public boolean updateExistingAppointment (Appointment appointment, Appointment old) throws SQLException, AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException {
 		String query = "UPDATE appointments SET start = ?, end = ?, patient = ?, practitioner = ?, amountDue = ? WHERE start = ? AND practitioner = ?;";
 		int success;
+		boolean collision;
+		
+		try {
+			if (!isAppointmentCollision(appointment)) collision = false;
+		} catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
+			throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException(e);
+		}
 		
 		try {
 			stmt = con.prepareStatement(query);
@@ -372,9 +395,16 @@ public class Query {
 		
 	}
 	
-	public boolean addAppointment (Appointment appointment) throws SQLException {
+	public boolean addAppointment (Appointment appointment) throws SQLException, AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException {
 		String query = "INSERT INTO appointments VALUES (?, ?, ?, ?, ?);";
 		int success;
+		boolean collision;
+		
+		try {
+			if (!isAppointmentCollision(appointment)) collision = false;
+		} catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
+			throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException(e);
+		}
 		
 		try {
 			stmt = con.prepareStatement(query);
