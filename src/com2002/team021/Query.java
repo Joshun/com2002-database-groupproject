@@ -41,17 +41,27 @@ public class Query {
 	}
 	
 	public boolean updateExistingPatient (Patient patient) throws SQLException {
-		String query = "UPDATE patients SET forename = ?, surname = ?, dob = ?, phone = ?, phone = ?, houseNumber = ?, postcode = ?, WHERE;";
+		String query = "UPDATE patients SET title = ?, forename = ?, surname = ?, dob = ?, phone = ?, houseNumber = ?, postcode = ?, subscription = ?, checkupsTaken = ?, hygeineVisitsTaken = ?, repairsTaken = ? WHERE id = ?;";
 		int success;
 		
 		try {
 			stmt = con.prepareStatement(query);
-			stmt.setString(1, patient.getForename());
-			stmt.setString(2, patient.getSurname());
-			stmt.setLong(3, patient.getDob().getTime());
-			stmt.setInt(4, patient.getPhone());
-			stmt.setString(5, patient.getHouseNumber());
-			stmt.setString(6, patient.getPostcode());
+			stmt.setString(1, patient.getTitle());
+			stmt.setString(2, patient.getForename());
+			stmt.setString(3, patient.getSurname());
+			stmt.setLong(4, patient.getDob().getTime());
+			stmt.setInt(5, patient.getPhone());
+			stmt.setString(6, patient.getHouseNumber());
+			stmt.setString(7, patient.getPostcode());
+			if (patient.getSubscription() == null) {
+				stmt.setNull(8, java.sql.Types.VARCHAR);
+			} else {
+				stmt.setString(8, patient.getSubscription().getName());
+			}
+			stmt.setInt(9, patient.getCheckUps());
+			stmt.setInt(10, patient.getHygieneVisits());
+			stmt.setInt(11, patient.getRepairs());
+			stmt.setInt(12, patient.getId());
 			success = stmt.executeUpdate();
 			
 			return success > 0;
@@ -190,6 +200,17 @@ public class Query {
 		
 	}
 	
+	public boolean updateAppointment (Appointment appointment) throws SQLException {
+		System.out.println("this method may produce unexpected results");
+		System.out.println("please make sure appointment start time ahs not changed");
+		try {
+			return new Query().updateAppointment(appointment, appointment);
+		} catch (SQLException e) {
+			throw new SQLException("could not update appointment (using updateAppointment(appointment)) \n" + e);
+		}
+		
+	}
+	
 	public boolean updateAppointment (Appointment appointment, Appointment old) throws SQLException {
 		String query = "SELECT COUNT(*) as count FROM appointments WHERE start = ? AND practitioner = ?;";
 		
@@ -226,6 +247,30 @@ public class Query {
 		return total;
 	}
 	
+	public boolean updatePatientHCP (int id, int checkUps, int hygieneVisits, int repairs) throws SQLException {
+		String query = "UPDATE patients SET checkupsTaken = ?, hygeineVisitsTaken = ?, repairsTaken = ? WHERE id = ?;";
+		int success;
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setInt(1, checkUps);
+			stmt.setInt(2, hygieneVisits);
+			stmt.setInt(3, repairs);
+			stmt.setInt(4, id);
+			success = stmt.executeUpdate();
+			
+			return success > 0;
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt update existing Healthcare plan " + id + "\n" + e);
+			
+		} finally {
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
+		}
+		
+	}
+	
 	public int calculateCost (Appointment appointment) throws SQLException {
 		Patient p = appointment.getPatient();
 		HealthcarePlan hcp = p.getHealthcarePlan();
@@ -238,7 +283,40 @@ public class Query {
 			throw new SQLException("couldnt find treatments to calculate cost:\n" + e);
 		}
 		
-		cost = sumTreatments(treatments);
+		if (p.getHealthcarePlan() == null) {
+			cost = sumTreatments(treatments);
+			
+		} else {
+			for (Treatment t : treatments) {
+				switch (t.getCoveredBy()) {
+					case "checkUps":
+						if (!p.incrementCheckUps()) {
+							System.out.println("patient has used all checkUps");
+							cost += t.getCost();
+						}
+						
+					case "hygieneVisits":
+						if (!p.incrementHygieneVisits()) {
+							System.out.println("patient has used all hygieneVisits");
+							cost += t.getCost();
+						}
+						
+					case "repairs":
+						if (!p.incrementRepairs()) {
+							System.out.println("patient has used all repairs");
+							cost += t.getCost();
+						}
+						
+					default:
+						cost += t.getCost();
+				}
+				
+			}
+			
+		}
+		
+		appointment.setAmountDue(cost);
+		new Query().updateAppointment(appointment);
 		
 		return cost;
 		
@@ -841,12 +919,12 @@ public class Query {
 			
 			while (rs.next()) {
 				appointments.add(new Appointment(
-				rs.getLong("start"),
-				rs.getLong("end"),
-				new Patient(rs.getInt("patient")),
-				new Practitioner(rs.getString("practitioner")),
-				new Query().getAppointmentTreatments(rs.getLong("start"), rs.getString("practitioner")),
-				rs.getInt("amountDue")
+					rs.getLong("start"),
+					rs.getLong("end"),
+					new Patient(rs.getInt("patient")),
+					new Practitioner(rs.getString("practitioner")),
+					new Query().getAppointmentTreatments(rs.getLong("start"), rs.getString("practitioner")),
+					rs.getInt("amountDue")
 				));
 				
 			}
@@ -929,7 +1007,8 @@ public class Query {
 			
 			return new Treatment(
 				rs.getString("name"),
-				rs.getInt("cost")
+				rs.getInt("cost"),
+				rs.getString("coveredBy")
 			);
 			
 		} catch (SQLException e) {
@@ -1014,7 +1093,8 @@ public class Query {
 			while (rs.next()) {
 				treatments.add(new Treatment(
 					rs.getString("name"),
-					rs.getInt("cost")
+					rs.getInt("cost"),
+					rs.getString("coveredBy")
 				));
 				
 			}

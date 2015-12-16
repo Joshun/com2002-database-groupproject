@@ -74,7 +74,7 @@ public class Patient {
 		}
 		
 		try {
-			if (subscription != null) this.subscription = new HealthcarePlan(subscription);
+			if (subscription != null && "" != subscription) this.subscription = new HealthcarePlan(subscription);
 			
 		} catch (SQLException e) {
 			throw new SQLException("Subscription not in database: " + subscription, e);
@@ -110,14 +110,60 @@ public class Patient {
 			
 		}
 	}
-
+	
+	private boolean setHCP () throws SQLException {
+		try {
+			return new Query().updatePatientHCP(this.getId(), this.getCheckUps(), this.getHygieneVisits(), this.getRepairs());
+			
+		} catch (SQLException e) {
+			throw new SQLException("Couldnt update HCP values for patient \n" + e);
+		}
+		
+	}
+	
+	public boolean incrementCheckUps () throws SQLException {
+		if (this.getHealthcarePlan() != null && this.getHealthcarePlan().getCheckUps() - this.getCheckUps() > 0) {
+			this.checkUps += 1;
+			this.setHCP();
+			return true;
+			
+		} else {
+			return false;
+			
+		}
+	}
+	
+	public boolean incrementHygieneVisits () throws SQLException {
+		if (this.getHealthcarePlan() != null && this.getHealthcarePlan().getHygieneVisits() - this.getHygieneVisits() > 0) {
+			this.hygieneVisits += 1;
+			this.setHCP();
+			return true;
+			
+		} else {
+			return false;
+			
+		}
+	}
+	
+	public boolean incrementRepairs () throws SQLException {
+		if (this.getHealthcarePlan() != null && this.getHealthcarePlan().getRepairs() - this.getRepairs() > 0) {
+			this.repairs += 1;
+			this.setHCP();
+			return true;
+			
+		} else {
+			return false;
+			
+		}
+	}
+	
 	public String toString () {
 		return this.id + ": " + this.forename + " " + this.surname;
 	}
 
 	public static void main (String args[]) {
 		try {
-			Patient patient = new Patient(1);
+			Patient patient = new Patient(34);
 			System.out.println(patient);
 			System.out.println(patient.getAddress());
 

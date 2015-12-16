@@ -79,6 +79,8 @@ public class Appointment {
 		
 	}
 	
+	public void setAmountDue(int amountDue) { this.amountDue = amountDue; }
+	
 	public String toString () {
 		String str = "";
 		str += this.start + " - ";
