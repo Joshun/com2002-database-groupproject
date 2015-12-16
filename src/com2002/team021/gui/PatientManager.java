@@ -22,6 +22,7 @@ public class PatientManager extends JFrame {
     private ArrayList<Patient> searchList;
     private int selectedRow = -1;
     private ErrorHandler errorHandler;
+    private JTextField searchField;
 
     private class PatientManagerButtonHandler implements ActionListener {
         private boolean modifyCurrent;
@@ -58,6 +59,15 @@ public class PatientManager extends JFrame {
                 ap.setVisible(true);
                 setEnabled(false);
             }
+        }
+    }
+
+    private class ClearButtonHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            searchField.setText("");
+            clear();
+            reload();
         }
     }
 
@@ -179,9 +189,9 @@ public class PatientManager extends JFrame {
         JLabel label = new JLabel("Search: ");
         contentPane.add(label);
         label.setFont(new Font(label.getFont().getName(), Font.PLAIN, 12));
-        label.setBounds(900, 19, 70, 20);
+        label.setBounds(855, 19, 70, 20);
 
-        JTextField searchField = new JTextField();
+        searchField = new JTextField();
         searchField.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -219,6 +229,12 @@ public class PatientManager extends JFrame {
         });
         contentPane.add(searchField);
         searchField.setBounds(965, 20, 150, 20);
+        JButton clearButton = new JButton("Clear");
+        clearButton.addActionListener(new ClearButtonHandler());
+        contentPane.add(clearButton);
+        clearButton.setBounds(925, 20, 40, 20);
+        clearButton.setFont(new Font(label.getFont().getName(), Font.PLAIN, 12));
+
 
         reload();
 
