@@ -39,9 +39,11 @@ public class PatientManager extends JFrame {
                     int index = patientManager.getSelectedRow();
                     System.out.println("Trying to modify existing patient at index, " + selectedRow);
                     if (searchList == null) {
+                        // Nothing is being searched so use the list of all the patients
                         ap = new AddPatient(patientManager, patientManager.patients.get(selectedRow));
                     }
                     else {
+                        // Search has been carried out, get patient from this instead
                         ap = new AddPatient(patientManager, patientManager.searchList.get(selectedRow));
                     }
                 }
@@ -77,6 +79,7 @@ public class PatientManager extends JFrame {
                 String.valueOf(p.getId()),
                 p.getForename(),
                 p.getSurname(),
+                // If patient has plan display its name, otherwise just empty
                 (plan != null) ? plan.getName() : "-"
         };
         return patientString;
