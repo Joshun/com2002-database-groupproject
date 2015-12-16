@@ -159,7 +159,7 @@ public class AppointmentDayView extends JFrame {
     }
 
     public AppointmentDayView(Date day, Practitioner practitioner) {
-        errorHandler = new ErrorHandler(this, true);
+        errorHandler = new ErrorHandler(this);
         this.day = day;
         this.practitioner = practitioner;
         System.out.println(practitioner);
