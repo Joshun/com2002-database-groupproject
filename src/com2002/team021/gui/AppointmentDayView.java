@@ -299,6 +299,7 @@ public class AppointmentDayView extends JFrame {
             tableModel.addRow(appointmentToRow(a));
         }
         catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
+            System.out.println("Appointment collides with another appointment \n" + e);
             errorHandler.showDialog("Appointment collides with another appointment", e);
             return false;
         }
@@ -323,8 +324,7 @@ public class AppointmentDayView extends JFrame {
     public boolean updateAppointment(Appointment oldAppointment, Appointment newAppointment) {
 
         try {
-            Query query = new Query();
-            query.updateAppointment(newAppointment, oldAppointment);
+            new Query().updateAppointment(newAppointment, oldAppointment);
 
             int indexOfOld = appointments.indexOf(oldAppointment);
             appointments.set(indexOfOld, newAppointment);
@@ -359,7 +359,8 @@ public class AppointmentDayView extends JFrame {
             }
         }
         catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
-            errorHandler.showDialog("Appointment collides with another appointment ", e);
+            System.out.println("Appointment collides with another appointment \n" + e);
+            errorHandler.showDialog("Appointment collides with another appointment", e);
             return false;
         }
         catch (java.sql.SQLException e) {

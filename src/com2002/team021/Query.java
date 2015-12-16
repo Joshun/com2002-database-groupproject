@@ -226,6 +226,7 @@ public class Query {
 		
 		// check duplicate starts
 		for (Appointment t : all) {
+			System.out.println(t);
 			if (t.getStart().getTime() == a.getStart().getTime()) {
 				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Duplicate start");
 			}
@@ -244,17 +245,24 @@ public class Query {
 				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Start is within another appointment");
 			}
 		}
-		
+		int i = 0;
 		// check end not within another appointment
 		for (Appointment t : all) {
+			System.out.println(i++);
 			if (a.getEnd().getTime() < t.getEnd().getTime() && a.getEnd().getTime() > t.getStart().getTime()) {
 				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("End is within another appointment");
 			}
 		}
-		
-		// check !(endTime > a.endTime && startTime < a.startTime)
+		i = 0;
+		// check entire overlaps
 		for (Appointment t : all) {
-			if (a.getStart().getTime() < t.getStart().getTime() && a.getEnd().getTime() > t.getEnd().getTime()) {
+			System.out.println(i++);
+			System.out.println(a.getStart());
+			System.out.println(t.getStart());
+			System.out.println(t.getEnd());
+			System.out.println(a.getEnd());
+			System.out.println("");
+			if (a.getStart().getTime() < t.getStart().getTime() && t.getEnd().getTime() < a.getEnd().getTime()) {
 				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Appointment entirely overlaps another");
 			}
 		}
@@ -262,6 +270,61 @@ public class Query {
 		return false;
 	}
 	
+	public boolean isAppointmentCollision (Appointment appointment, Appointment minus) throws SQLException, AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException {
+		ArrayList<Appointment> all;
+		Appointment a = appointment;
+		
+		try {
+			all = new Query().getAppointmentsByPractitioner(appointment.getPractitioner(), minus);
+		} catch (SQLException e) {
+			throw new SQLException("Couldnt get all appointment to check collisions with\n" + e);
+		}
+		
+		// check duplicate starts
+		for (Appointment t : all) {
+			System.out.println(t);
+			if (t.getStart().getTime() == a.getStart().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Duplicate start");
+			}
+		}
+		
+		// check duplicate ends
+		for (Appointment t : all) {
+			if (t.getEnd().getTime() == a.getEnd().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Duplicate end");
+			}
+		}
+		
+		// check start not within another appointment
+		for (Appointment t : all) {
+			if (a.getStart().getTime() < t.getEnd().getTime() && a.getStart().getTime() > t.getStart().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Start is within another appointment");
+			}
+		}
+		int i = 0;
+		// check end not within another appointment
+		for (Appointment t : all) {
+			System.out.println(i++);
+			if (a.getEnd().getTime() < t.getEnd().getTime() && a.getEnd().getTime() > t.getStart().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("End is within another appointment");
+			}
+		}
+		i = 0;
+		// check entire overlaps
+		for (Appointment t : all) {
+			System.out.println(i++);
+			System.out.println(a.getStart());
+			System.out.println(t.getStart());
+			System.out.println(t.getEnd());
+			System.out.println(a.getEnd());
+			System.out.println("");
+			if (a.getStart().getTime() < t.getStart().getTime() && t.getEnd().getTime() < a.getEnd().getTime()) {
+				throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException("Appointment entirely overlaps another");
+			}
+		}
+		
+		return false;
+	}
 	
 	public boolean updateAppointment (Appointment appointment, Appointment old) throws SQLException, AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException {
 		String query = "SELECT COUNT(*) as count FROM appointments WHERE start = ? AND practitioner = ?;";
@@ -400,7 +463,7 @@ public class Query {
 		boolean collision;
 		
 		try {
-			if (!isAppointmentCollision(appointment)) collision = false;
+			if (!isAppointmentCollision(appointment, old)) collision = false;
 		} catch (AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException e) {
 			throw new AppointmentCollidesWithAnotherAppointmentInTheListOfAppointmentsFromTheDatabaseException(e);
 		}
@@ -442,6 +505,10 @@ public class Query {
 		String query = "INSERT INTO appointments VALUES (?, ?, ?, ?, ?);";
 		int success;
 		boolean collision;
+		
+		if (appointment.getStart().getTime() > appointment.getEnd().getTime()) {
+			throw new SQLException("Start time should be sooner than end time");
+		}
 		
 		try {
 			if (!isAppointmentCollision(appointment)) collision = false;
@@ -594,6 +661,28 @@ public class Query {
 		
 		for (Appointment a : all) {
 			if (a.getPractitioner().getRole().equals(prac.getRole())) {
+				filtered.add(a);
+			}
+		}
+		
+		return filtered;
+		
+	}
+	
+	public ArrayList<Appointment> getAppointmentsByPractitioner (Practitioner prac, Appointment minus) throws SQLException {
+		ArrayList<Appointment> filtered = new ArrayList<Appointment>();
+		ArrayList<Appointment> all;
+		
+		try {
+			all = new Query().getAppointmentsByPractitioner(prac);
+			
+		} catch (SQLException e) {
+			throw new SQLException("couldnt get all appointments\n" + e);
+		}
+		
+		for (Appointment a : all) {
+			if (a.getStart().getTime() != minus.getStart().getTime() &&
+				a.getPractitioner().equals(minus.getPractitioner())) {
 				filtered.add(a);
 			}
 		}
@@ -1302,6 +1391,9 @@ public class Query {
 			Appointment ap = new Query().getAppointments().get(0);
 			// ap.setTreatments(trs);
 			// System.out.println(new Query().updateAppointment(ap, ap));
+			
+			// ap.setStart(ap.getStart().getTime() - 1000);
+			// ap.setEnd(ap.getEnd().getTime() + 1000);
 			
 			System.out.println(
 				// new Query().updateHealthcarePlan(hcp)
