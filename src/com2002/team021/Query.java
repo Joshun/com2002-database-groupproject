@@ -208,7 +208,6 @@ public class Query {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new SQLException("couldnt update appointment " + appointment + "\n" + e);
 			
 		} finally {
@@ -218,33 +217,32 @@ public class Query {
 		
 	}
 	
-	// public int calculateCost (Appointment appointment) throws SQLException {
-	// 	String query = "SELECT COUNT(*) as count FROM appointments WHERE start = ? AND practitioner = ?;";
+	private int sumTreatments(ArrayList<Treatment> ts) {
+		int total = 0;
+		for (Treatment t : ts) {
+			total += t.getCost();
+		}
 		
-	// 	try {
-	// 		stmt = con.prepareStatement(query);
-	// 		stmt.setLong(1, old.getStart().getTime());
-	// 		stmt.setString(2, old.getPractitioner().getRole());
-	// 		rs = stmt.executeQuery();
-			
-	// 		rs.first();
-			
-	// 		if (rs.getInt("count") > 0) {
-	// 			return updateExistingAppointment(appointment, old);
-	// 		} else {
-	// 			return addAppointment(appointment);
-	// 		}
-			
-	// 	} catch (SQLException e) {
-	// 		e.printStackTrace();
-	// 		throw new SQLException("couldnt update appointment " + appointment + "\n" + e);
-			
-	// 	} finally {
-	// 		try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
-	// 		try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
-	// 	}
+		return total;
+	}
+	
+	public int calculateCost (Appointment appointment) throws SQLException {
+		Patient p = appointment.getPatient();
+		HealthcarePlan hcp = p.getHealthcarePlan();
+		ArrayList<Treatment> treatments = null;
+		int cost = 0;
 		
-	// }
+		try {
+			treatments = new Query().getAppointmentTreatments(appointment);
+		} catch (SQLException e) {
+			throw new SQLException("couldnt find treatments to calculate cost:\n" + e);
+		}
+		
+		cost = sumTreatments(treatments);
+		
+		return cost;
+		
+	}
 	
 	
 	public boolean updateExistingAppointment (Appointment appointment, Appointment old) throws SQLException {
@@ -584,7 +582,7 @@ public class Query {
 			stmt.setString(5, fn + "%");
 			stmt.setString(6, sn);
 			stmt.setString(7, fn + "%");
-			stmt.setString(8, fn + "%");
+			stmt.setString(8, sn + "%");
 			stmt.setString(9, "%" + fn + "%");
 			stmt.setString(10, "%" + sn + "%");
 			rs = stmt.executeQuery();
@@ -626,16 +624,49 @@ public class Query {
 		if (m.find()) {
 			fn = m.group(1);
 			sn = m.group(2);
-		} else {
-			System.out.println("Complete name needs to be specified");
-			return new ArrayList<Patient>();
+			return getPatientsByName(fn, sn);
 		}
 		
+		String query = "SELECT * FROM patients WHERE surname LIKE ? UNION SELECT *	 FROM patients WHERE forename LIKE ? ORDER BY CASE WHEN surname = ? THEN 0 WHEN surname LIKE ? THEN 1 WHEN surname LIKE ? THEN 2 WHEN forename = ? THEN 3 WHEN forename LIKE ? THEN 4 WHEN forename LIKE ? THEN 5 ELSE 7 END, id DESC;";
+		ArrayList<Patient> patients = new ArrayList<Patient>();
+		
 		try {
-			return getPatientsByName(fn, sn);
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, "%" + name + "%");
+			stmt.setString(2, "%" + name + "%");
+			stmt.setString(3, name);
+			stmt.setString(4, name + "%");
+			stmt.setString(5, "%" + name + "%");
+			stmt.setString(6, name);
+			stmt.setString(7, name + "%");
+			stmt.setString(8, "%" + name + "%");
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				patients.add(new Patient(
+					rs.getInt("id"),
+					rs.getString("title"),
+					rs.getString("forename"),
+					rs.getString("surname"),
+					new Date(rs.getLong("dob")),
+					rs.getInt("phone"),
+					rs.getString("houseNumber"),
+					rs.getString("postcode"),
+					rs.getString("subscription")
+				));
+				
+			}
+			
 		} catch (SQLException e) {
 			throw new SQLException("couldnt search patients\n" + e);
+			
+		} finally {
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
 		}
+		
+		return patients;
 	}
 	
 	public Address getPatientAddress (int patientID) throws SQLException {
@@ -832,7 +863,6 @@ public class Query {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new SQLException("couldnt get practitioners", e);
 			
 		} finally {
@@ -960,7 +990,7 @@ public class Query {
 	}
 	
 	public ArrayList<Treatment> getAppointmentTreatments (Appointment appointment) throws SQLException {
-		String query = "SELECT * FROM sessions WHERE start = ? AND practitioner = ?;";
+		String query = "SELECT * FROM appointments NATURAL JOIN (sessions JOIN treatments ON (treatments.name = sessions.treatmentName)) WHERE start = ? AND practitioner = ?;";
 		ArrayList<Treatment> treatments = new ArrayList<Treatment>();
 		
 		try {
@@ -1026,13 +1056,10 @@ public class Query {
 			Patient pa = new Patient(34);
 			Practitioner pr = new Practitioner("Dentist");
 			Treatment tr1 = new Treatment("Hygiene");
-			Treatment tr2 = new Treatment("Checkup");
+			Treatment tr2 = new Treatment("White Composite Resin Filling");
 			ArrayList<Treatment> trs = new ArrayList<Treatment>();
 			trs.add(tr1);
 			trs.add(tr2);
-			Appointment a = new Appointment(new Date(250), new Date(350), pa, pr, trs);
-			
-			// new Query().updateAppointment(a, a);
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yy");
 			Patient rob = new Patient("Mr", "Rob", "Ede", sdf.parse("18/9/1995"), 554342, "14", "st74hr", null);
@@ -1044,16 +1071,20 @@ public class Query {
 			
 			Address add = new Address("13", "elm close", "kidsgrove", "stoke-on-trent", "st74hr");
 			
-			System.out.println(new Query().getPatientsByName("Rob Ede"));
+			Appointment ap = new Query().getAppointments().get(0);
+			ap.setTreatments(trs);
+			System.out.println(new Query().updateAppointment(ap, ap));
 			
-			// System.out.println(
-				// new Query().updateHealthcarePlan(hcp);
-				// new Query().getPractitioners();
-				// new Query().addPatient(pa);
-				// new Query().getTreatments();
-				// new Query().getPractitioners();
-				// new Query().getPractitionerAppointmentsOnDay(date, prac);
-			// );
+			System.out.println(
+				// new Query().updateHealthcarePlan(hcp)
+				// new Query().getPractitioners()
+				// new Query().addPatient(pa)
+				// new Query().getTreatments()
+				// new Query().getPractitioners()
+				// new Query().getPractitionerAppointmentsOnDay(date, prac)
+				// new Query().getPatientsByName("rob")
+				new Query().calculateCost(ap)
+			);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -89,6 +89,7 @@ public class Patient {
 	public Date getDob () { return this.dob; }
 	public int getPhone () { return this.phone; }
 	public HealthcarePlan getSubscription () { return this.subscription; }
+	public HealthcarePlan getHealthcarePlan () { return this.subscription; }
 	public int getCheckUps () { return this.checkUps; }
 	public int getHygieneVisits () { return this.hygieneVisits; }
 	public int getRepairs () { return this.repairs; }
