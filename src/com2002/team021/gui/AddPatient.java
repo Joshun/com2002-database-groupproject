@@ -77,12 +77,8 @@ public class AddPatient extends JFrame {
                     errorHandler.showDialog("Invalid phone number.");
                 }
                 catch (java.sql.SQLException e) {
-                    String error = "Coudln\'t create patient.\n" + e;
-                    System.out.println(error);
-                    errorHandler.showDialog(error);
+                    errorHandler.showDialog("Couldn't create patient", e);
                 }
-
-                System.out.println("Created new patient " + newPatient);
             }
 
         }
@@ -149,8 +145,7 @@ public class AddPatient extends JFrame {
             plans = new Query().getHealthcarePlans();
 
         } catch (SQLException e) {
-            System.out.println("Couldn't get plans list\n" + e);
-            System.exit(1);
+            errorHandler.showDialog("Couldn't get plans list", e);
         }
 
         planEntry = new JComboBox<>();

@@ -38,7 +38,6 @@ public class PatientManager extends JFrame {
             if (modifyCurrent) {
                 if (selectedRow >= 0) {
                     int index = patientManager.getSelectedRow();
-                    System.out.println("Trying to modify existing patient at index, " + selectedRow);
                     if (searchList == null) {
                         // Nothing is being searched so use the list of all the patients
                         ap = new AddPatient(patientManager, patientManager.patients.get(selectedRow));
@@ -192,7 +191,6 @@ public class PatientManager extends JFrame {
                 int row = patientTable.rowAtPoint(rowPoint);
                 if (row >= 0) {
                     selectedRow = row;
-                    System.out.println("Selected: " + selectedRow);
                 }
             }
         });
@@ -290,7 +288,6 @@ public class PatientManager extends JFrame {
             query.updatePatient(newPatient);
             HealthcarePlan subscription = newPatient.getSubscription();
             int indexOfOld = patients.indexOf(oldPatient);
-            System.out.println(indexOfOld);
             patients.set(indexOfOld, newPatient);
             patientTableModel.setValueAt(newPatient.getId(), indexOfOld, 0);
             patientTableModel.setValueAt(newPatient.getForename(), indexOfOld, 1);

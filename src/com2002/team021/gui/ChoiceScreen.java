@@ -88,7 +88,6 @@ public class ChoiceScreen extends JFrame {
         public void actionPerformed(ActionEvent e) {
             dispose();
             if (practitioner != null) {
-                System.out.println("Practitioner " + practitioner);
                 new CalendarView(practitioner);
             }
             else {
