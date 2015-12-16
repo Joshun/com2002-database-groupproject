@@ -1,9 +1,6 @@
 package com2002.team021.gui;
 
-import com2002.team021.Appointment;
-import com2002.team021.Patient;
-import com2002.team021.Practitioner;
-import com2002.team021.Treatment;
+import com2002.team021.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +47,13 @@ public class PaySummary extends JFrame {
     public PaySummary(Appointment appointment, AppointmentDayView dayView) {
         this.appointment = appointment;
         this.dayView = dayView;
-        int appointmentTotalCost = 10;
+        int appointmentTotalCost = 0;
+        try {
+            appointmentTotalCost = new Query().calculateCost(appointment);
+        }
+        catch (java.sql.SQLException e) {
+            System.out.println("Couldn't calculate total cost " + e);
+        }
         Container contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
@@ -62,7 +65,7 @@ public class PaySummary extends JFrame {
                 contentPane.add(new JLabel(t.getName() + " | " + (t.getCost()/100)));
             }
             contentPane.add(new JLabel("=================="));
-            contentPane.add(new JLabel("Total: £" + appointmentTotalCost));
+            contentPane.add(new JLabel("Total: £" + (appointmentTotalCost/100)));
         }
         catch (java.sql.SQLException e) {
             System.out.println("Couldn't get treatments " + e);
