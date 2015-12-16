@@ -201,8 +201,8 @@ public class Query {
 	}
 	
 	public boolean updateAppointment (Appointment appointment) throws SQLException {
-		System.out.println("this method may produce unexpected results");
-		System.out.println("please make sure appointment start time ahs not changed");
+		System.out.println("updateAppointment(Appointment appointment) method may produce unexpected results");
+		System.out.println("updateAppointment(Appointment appointment) please make sure appointment start time ahs not changed");
 		try {
 			return new Query().updateAppointment(appointment, appointment);
 		} catch (SQLException e) {
@@ -277,46 +277,58 @@ public class Query {
 		ArrayList<Treatment> treatments = null;
 		int cost = 0;
 		
+		System.out.println(cost);
 		try {
 			treatments = new Query().getAppointmentTreatments(appointment);
 		} catch (SQLException e) {
 			throw new SQLException("couldnt find treatments to calculate cost:\n" + e);
 		}
+		System.out.println(treatments);
+		System.out.println(cost);
 		
 		if (p.getHealthcarePlan() == null) {
+			System.out.println("patient does not have a hcp");
 			cost = sumTreatments(treatments);
+			System.out.println(cost);
 			
 		} else {
+			System.out.println(cost);
 			for (Treatment t : treatments) {
-				switch (t.getCoveredBy()) {
-					case "checkUps":
-						if (!p.incrementCheckUps()) {
-							System.out.println("patient has used all checkUps");
-							cost += t.getCost();
-						}
-						
-					case "hygieneVisits":
-						if (!p.incrementHygieneVisits()) {
-							System.out.println("patient has used all hygieneVisits");
-							cost += t.getCost();
-						}
-						
-					case "repairs":
-						if (!p.incrementRepairs()) {
-							System.out.println("patient has used all repairs");
-							cost += t.getCost();
-						}
-						
-					default:
+				System.out.println(t.getCoveredBy());
+				System.out.println(cost);
+				if (t.getCoveredBy().equals("checkUps")) {
+					if (!p.incrementCheckUps()) {
+						System.out.println("patient has used all checkUps");
 						cost += t.getCost();
+					}
+					System.out.println(cost);
+					
+				} else if (t.getCoveredBy().equals("hygieneVisits")) {
+					if (!p.incrementHygieneVisits()) {
+						System.out.println("patient has used all hygieneVisits");
+						cost += t.getCost();
+					}
+					System.out.println(cost);
+					
+				} else if (t.getCoveredBy().equals("repairs")) {
+					if (!p.incrementRepairs()) {
+						System.out.println("patient has used all repairs");
+						cost += t.getCost();
+					}
+					System.out.println(cost);
+					
+				} else {
+					System.out.println("treatment " + t + " not covered by HCP");
+					cost += t.getCost();
+					
 				}
 				
 			}
 			
 		}
-		
+		System.out.println("amount due " + cost);
 		appointment.setAmountDue(cost);
-		new Query().updateAppointment(appointment);
+		System.out.println(new Query().updateAppointment(appointment, appointment));
 		
 		return cost;
 		

@@ -123,6 +123,7 @@ public class Patient {
 	
 	public boolean incrementCheckUps () throws SQLException {
 		if (this.getHealthcarePlan() != null && this.getHealthcarePlan().getCheckUps() - this.getCheckUps() > 0) {
+			System.out.println("incremeting chkups");
 			this.checkUps += 1;
 			this.setHCP();
 			return true;
@@ -135,6 +136,7 @@ public class Patient {
 	
 	public boolean incrementHygieneVisits () throws SQLException {
 		if (this.getHealthcarePlan() != null && this.getHealthcarePlan().getHygieneVisits() - this.getHygieneVisits() > 0) {
+			System.out.println("incremeting hygvsts");
 			this.hygieneVisits += 1;
 			this.setHCP();
 			return true;
@@ -147,6 +149,7 @@ public class Patient {
 	
 	public boolean incrementRepairs () throws SQLException {
 		if (this.getHealthcarePlan() != null && this.getHealthcarePlan().getRepairs() - this.getRepairs() > 0) {
+			System.out.println("incremeting rparis");
 			this.repairs += 1;
 			this.setHCP();
 			return true;

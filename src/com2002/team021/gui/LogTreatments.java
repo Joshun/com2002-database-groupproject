@@ -60,10 +60,9 @@ public class LogTreatments extends JFrame {
                     Appointment newAppointment = new Appointment(start, end, patient, practitioner, appointmentTreatments);
                     System.out.println(newAppointment);
                     System.out.println(appointmentToModify);
-                    new Query().updateSessionTreatments(newAppointment);
-//                     TODO: run routine for requesting a calculation of total treatment cost
+                    new Query().updateSessionTreatments(newAppointment); 
                     new Query().calculateCost(newAppointment);
-                } catch (java.sql.SQLException ex) {
+                } catch (SQLException ex) {
                     System.out.println("Couldn\'t update treatments: " + ex);
                 }
             }
