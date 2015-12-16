@@ -28,6 +28,7 @@ public class RescheduleAppointment extends JFrame {
     private JButton rescheduleButton;
     private Date startTimestamp;
     private Date endTimestamp;
+    private DateWidget dateEntry;
 
 
     private class TimeEntry {
@@ -67,6 +68,7 @@ public class RescheduleAppointment extends JFrame {
     private class RescheduleButtonHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
+            startTimestamp = dateEntry.getDate();
             computeTimestamps();
             Patient patient = appointmentToModify.getPatient();
             Practitioner practitioner = appointmentToModify.getPractitioner();
@@ -134,24 +136,30 @@ public class RescheduleAppointment extends JFrame {
         practitionerLabel.setBounds(19,90,100,20);
         practitionerName.setBounds(125,90,150,20);
 
+
+        contentPane.add(new JLabel("Date: "));
+        dateEntry = new DateWidget(appointmentToModify.getStart());
+        contentPane.add(dateEntry);
+        dateEntry.setBounds(30, 130, 150, 40);
+
         startEntry = new TimeEntry();
         endEntry = new TimeEntry();
         JLabel startTime = new JLabel("Start time:");
         contentPane.add(startTime);
-        startTime.setBounds(30,130,100,58);
+        startTime.setBounds(30,170,100,58);
         contentPane.add(startEntry.getTimeContainer());
-        startEntry.getTimeContainer().setBounds(125,130,150,40);
+        startEntry.getTimeContainer().setBounds(125,170,150,40);
         JLabel endTime = new JLabel("End time:");
         contentPane.add(endTime);
-        endTime.setBounds(35,170,100,58);
+        endTime.setBounds(35,210,100,58);
         contentPane.add(endEntry.getTimeContainer());
-        endEntry.getTimeContainer().setBounds(125,170,150,40);
+        endEntry.getTimeContainer().setBounds(125,210,150,40);
 
         contentPane.add(new JLabel());
         rescheduleButton = new JButton("Reschedule");
         rescheduleButton.addActionListener(new RescheduleButtonHandler());
         contentPane.add(rescheduleButton);
-        rescheduleButton.setBounds(125,220,150,20);
+        rescheduleButton.setBounds(125,250,150,20);
 
         // Get current time values of appointment
         startTimestamp = appointmentToModify.getStart();
