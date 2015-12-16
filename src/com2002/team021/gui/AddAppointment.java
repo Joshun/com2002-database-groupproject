@@ -31,9 +31,24 @@ public class AddAppointment extends JFrame {
     private JLabel endTimeLabel;
     private JButton addAppointmentButton;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+    private JCheckBox holidayCheckbox;
+    private final static int HOLIDAY_PATIENT_ID = -1;
 
     private String[] appointmentTypes = { "Checkup", "Hygienist", "Treatment" };
     private int[] appointmentDurations = { 20, 20, 60 };
+
+    public class HolidayCheckboxListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent changeEvent) {
+            JCheckBox butt = (JCheckBox) changeEvent.getSource();
+            if (butt.isSelected()) {
+                patientJComboBox.setEnabled(false);
+            }
+            else {
+                patientJComboBox.setEnabled(true);
+            }
+        }
+    }
 
     public class AddAppointmentButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent actionEvent) {
@@ -41,7 +56,21 @@ public class AddAppointment extends JFrame {
             Practitioner practitioner = (Practitioner) practitionerJComboBox.getSelectedItem();
             String appointmentType = (String) appointmentJComboBox.getSelectedItem();
             ArrayList<Treatment> emptyArrLis = new ArrayList<>();
-            Appointment newAppointment = new Appointment(startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
+            Appointment newAppointment;
+            if (holidayCheckbox.isSelected()) {
+                System.out.println("adding holiday appmt");
+                try {
+                    Patient holidayPatient = new Query().getPatient(HOLIDAY_PATIENT_ID);
+                    newAppointment = new Appointment(startTimeStamp.getTime(), endTimeStamp.getTime(), holidayPatient, practitioner, emptyArrLis);
+                }
+                catch (java.sql.SQLException e) {
+                    System.out.println(e.toString());
+                    return;
+                }
+            }
+            else {
+                newAppointment = new Appointment(startTimeStamp.getTime(), endTimeStamp.getTime(), patient, practitioner, emptyArrLis);
+            }
 
             if (dayView.addAppointment(newAppointment)) {
                 setVisible(false);
@@ -75,6 +104,12 @@ public class AddAppointment extends JFrame {
         setSize(300,400);
         Container contentPane = getContentPane();
         contentPane.setLayout(null);
+
+        holidayCheckbox = new JCheckBox("Holiday", false);
+        holidayCheckbox.addChangeListener(new HolidayCheckboxListener());
+        contentPane.add(holidayCheckbox);
+        holidayCheckbox.setBounds(95, 20, 150, 20);
+
 
         JLabel patient = new JLabel("Patient:");
         contentPane.add(patient);
