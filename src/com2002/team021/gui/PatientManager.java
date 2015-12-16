@@ -19,6 +19,7 @@ public class PatientManager extends JFrame {
 
     private DefaultTableModel patientTableModel;
     private ArrayList<Patient> patients;
+    private ArrayList<Patient> searchList;
     private int selectedRow = -1;
     private ErrorHandler errorHandler;
 
@@ -37,7 +38,12 @@ public class PatientManager extends JFrame {
                 if (selectedRow >= 0) {
                     int index = patientManager.getSelectedRow();
                     System.out.println("Trying to modify existing patient at index, " + selectedRow);
-                    ap = new AddPatient(patientManager, patientManager.patients.get(selectedRow));
+                    if (searchList == null) {
+                        ap = new AddPatient(patientManager, patientManager.patients.get(selectedRow));
+                    }
+                    else {
+                        ap = new AddPatient(patientManager, patientManager.searchList.get(selectedRow));
+                    }
                 }
             }
             else {
@@ -82,8 +88,23 @@ public class PatientManager extends JFrame {
         }
     }
 
+    public void clear() {
+        if (patientTableModel.getRowCount() > 0) {
+            for (int i = patientTableModel.getRowCount() - 1; i > -1; i--) {
+                patientTableModel.removeRow(i);
+            }
+        }
+    }
+
+    public void loadSearchTerms(ArrayList<Patient> searchedPatients) {
+        for (Patient p: searchedPatients) {
+            patientTableModel.addRow(patientToRow(p));
+        }
+    }
+
 
     public PatientManager() {
+        searchList = null;
         this.errorHandler = new ErrorHandler(this, true);
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -162,18 +183,36 @@ public class PatientManager extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String value = searchField.getText();
-                for (int x = 0; x < patientTable.getRowCount(); x++) {
-                    for (int y = 0; y < patientTable.getColumnCount(); y++){
-                        if (value.equals(patientTable.getValueAt(x, y))){
-                            patientTable.scrollRectToVisible(patientTable.getCellRect(x, 0, true));  //make scroll go to location of x (row)
-                            patientTable.setRowSelectionInterval(x, x);  //focus on searched input
-                            for (int i = 0; i <= patientTable.getColumnCount() - 1; i++) {
-                                patientTable.getColumnModel().getColumn(i).setCellRenderer(new highlightRowRenderer());
-                            }
-                        }
+                if (value.length() > 0) {
+                    try {
+                        searchList = new Query().getPatientsByName(value);
+                        clear();
+                        loadSearchTerms(searchList);
+                    } catch (java.sql.SQLException ex) {
+                        errorHandler.showDialog("Couldn't search for patients ", ex);
                     }
                 }
+                else {
+                    searchList = null;
+                    clear();
+                    reload();
+                }
             }
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                String value = searchField.getText();
+//                for (int x = 0; x < patientTable.getRowCount(); x++) {
+//                    for (int y = 0; y < patientTable.getColumnCount(); y++){
+//                        if (value.equals(patientTable.getValueAt(x, y))){
+//                            patientTable.scrollRectToVisible(patientTable.getCellRect(x, 0, true));  //make scroll go to location of x (row)
+//                            patientTable.setRowSelectionInterval(x, x);  //focus on searched input
+//                            for (int i = 0; i <= patientTable.getColumnCount() - 1; i++) {
+//                                patientTable.getColumnModel().getColumn(i).setCellRenderer(new highlightRowRenderer());
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         });
         contentPane.add(searchField);
         searchField.setBounds(965, 20, 150, 20);
