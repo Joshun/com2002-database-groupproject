@@ -551,7 +551,10 @@ public class Query {
 					rs.getInt("phone"),
 					rs.getString("houseNumber"),
 					rs.getString("postcode"),
-					rs.getString("subscription")
+					rs.getString("subscription"),
+					rs.getInt("checkupsTaken"),
+					rs.getInt("hygeineVisitsTaken"),
+					rs.getInt("repairsTaken")
 				));
 				
 			}
@@ -597,7 +600,10 @@ public class Query {
 					rs.getInt("phone"),
 					rs.getString("houseNumber"),
 					rs.getString("postcode"),
-					rs.getString("subscription")
+					rs.getString("subscription"),
+					rs.getInt("checkupsTaken"),
+					rs.getInt("hygeineVisitsTaken"),
+					rs.getInt("repairsTaken")
 				));
 				
 			}
@@ -652,7 +658,10 @@ public class Query {
 					rs.getInt("phone"),
 					rs.getString("houseNumber"),
 					rs.getString("postcode"),
-					rs.getString("subscription")
+					rs.getString("subscription"),
+					rs.getInt("checkupsTaken"),
+					rs.getInt("hygeineVisitsTaken"),
+					rs.getInt("repairsTaken")
 				));
 				
 			}
@@ -732,6 +741,40 @@ public class Query {
 		
 		try {
 			stmt = con.prepareStatement(query);
+			rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				addresses.add(new Address(
+					rs.getString("houseNumber"),
+					rs.getString("streetName"),
+					rs.getString("district"),
+					rs.getString("city"),
+					rs.getString("postcode")
+				));
+				
+			}
+			
+		} catch (SQLException e) {
+			throw new SQLException("Couldn't find addresses: \n" + e);
+			
+		} finally {
+			try { if (rs != null && !rs.isClosed()) rs.close(); } catch (SQLException e) { throw new SQLException("Couldnt close result set"); };
+			try { if (!stmt.isClosed()) stmt.close(); } catch (SQLException e) { throw new SQLException("Couldnt close statement"); };
+			try { if (!con.isClosed()) con.close(); } catch (SQLException e) { throw new SQLException("Couldnt close connection"); };
+		}
+		
+		return addresses;
+		
+	}
+	
+	public ArrayList<Address> getAddressByPostcode(String postcode) throws SQLException {
+		String query = "SELECT * FROM addresses WHERE postcode = ? ORDER BY houseNumber ASC;";
+		ArrayList<Address> addresses = new ArrayList<Address>();
+		postcode = postcode.toLowerCase().replace(" ", "");
+		
+		try {
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, postcode);
 			rs = stmt.executeQuery();
 			
 			while (rs.next()) {
@@ -1071,9 +1114,9 @@ public class Query {
 			
 			Address add = new Address("13", "elm close", "kidsgrove", "stoke-on-trent", "st74hr");
 			
-			Appointment ap = new Query().getAppointments().get(0);
-			ap.setTreatments(trs);
-			System.out.println(new Query().updateAppointment(ap, ap));
+			// Appointment ap = new Query().getAppointments().get(0);
+			// ap.setTreatments(trs);
+			// System.out.println(new Query().updateAppointment(ap, ap));
 			
 			System.out.println(
 				// new Query().updateHealthcarePlan(hcp)
@@ -1083,7 +1126,8 @@ public class Query {
 				// new Query().getPractitioners()
 				// new Query().getPractitionerAppointmentsOnDay(date, prac)
 				// new Query().getPatientsByName("rob")
-				new Query().calculateCost(ap)
+				// new Query().calculateCost(ap)
+				new Query().getAddressByPostcode("st74hr")
 			);
 			
 		} catch (Exception e) {
